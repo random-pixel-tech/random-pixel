@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build Android
 
 on:
   push:
@@ -16,36 +16,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: 18.x
 
-      - name: Install dependencies
-        run: |
-          npm install -g expo-cli
-          npm install
-          
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+
       - name: Authenticate with Expo
         run: expo login -u ${{ secrets.EXPO_USERNAME }} -p ${{ secrets.EXPO_PASSWORD }}
 
       - name: Build Android
         run: expo eas build -p android --profile preview
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: app
-          path: .expo/build/android
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: app
-          path: .expo/build/android
-
-      - name: Deploy to Android device
-        run: |
-          # Use a method to send the APK URL to your Android device
-          # For example, you can use curl to send an email or push notification
