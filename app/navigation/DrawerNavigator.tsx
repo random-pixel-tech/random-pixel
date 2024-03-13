@@ -1,6 +1,6 @@
 import React from 'react';
 import { createDrawerNavigator, DrawerToggleButton } from '@react-navigation/drawer';
-import { Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Entypo, Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import CustomDrawerContent from './CustomDrawerContent';
 import HomePage from '../screens/HomePage';
 import Conversation from '../screens/Conversation';
@@ -8,16 +8,24 @@ import Dashboard from '../screens/Dashboard';
 import ControlRoom from '../screens/ControlRoom';
 import Settings from '../screens/Settings';
 
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallbackText,
+  AvatarImage,
+} from '@gluestack-ui/themed';
+import ProfileAvatar from '../components/Avatar';
+
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
-      initialRouteName="Home"
+      initialRouteName="Attendance"
       screenOptions={{
         drawerPosition: 'right',
         headerLeft: () => null,
-        headerRight: () => <DrawerToggleButton />,
+        headerRight: () => <ProfileAvatar />,
       }}
       drawerContent={props => <CustomDrawerContent {...props} />}
     >
@@ -26,11 +34,11 @@ const DrawerNavigator = () => {
         component={HomePage}
         options={{
           drawerIcon: ({ color }) => (
-            <Entypo name="home" size={20} color={color} style={{ marginRight: -22 }} />
+            <FontAwesome5 name="user-check" size={20} color={color} style={{ marginRight: -22 }} />
           ),
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Conversation"
         component={Conversation}
         options={{
@@ -56,7 +64,7 @@ const DrawerNavigator = () => {
             <Ionicons name="book" size={20} color={color} style={{ marginRight: -22 }} />
           ),
         }}
-      />
+      /> */}
       <Drawer.Screen
         name="Settings"
         component={Settings}
