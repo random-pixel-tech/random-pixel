@@ -1,0 +1,48 @@
+name: Build Android
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+
+      - name: Authenticate with Expo
+        token: ${{ secrets.RANDOM_PIXEL }}
+
+      - name: Restore React Native Metro cache
+      - name: Find Metro cache
+        id: metro-cache-dir-path
+        uses: actions/github-script@v4
+        with:
+            result-encoding: string
+            script: |
+              const os = require('os');
+              const path = require('path');
+              return path.join(os.tmpdir(), 'metro-cache');
+
+      - name: Restore Metro cache
+        uses: actions/cache@v2
+        with:
+            path: ${{ steps.metro-cache-dir-path.outputs.result }}
+            key: ${{ runner.os }}-metro-cache-${{ github.ref }}
+            restore-keys: |
+              ${{ runner.os }}-metro-cache-${{ github.base_ref }}
+              ${{ runner.os }}-metro-cache-
+
+      - name: Build Android
+        run: expo eas build -p android --profile preview
