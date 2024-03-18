@@ -29,8 +29,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "702c90f1-4e00-4ec1-a71f-15995ce79445"
+        "projectId": "b109fd68-976f-4605-94c7-f05d2ff06aa8"
       }
-    }
+    },
+    "owner": "tatermohit"
   }
 }
