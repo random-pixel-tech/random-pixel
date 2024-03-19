@@ -1,12 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import Conversation from '../screens/Conversation';
-import Dashboard from '../screens/Dashboard';
-import ControlRoom from '../screens/ControlRoom';
-import HomePage from '../screens/HomePage';
+import Conversation from '../../screens/Conversation';
+import Dashboard from '../../screens/Dashboard';
+import ControlRoom from '../../screens/ControlRoom/ControlRoom';
+import HomePage from '../../screens/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
-import Profile from '../screens/Profile';
+import Profile from '../../screens/Profile';
 
 const Tab = createBottomTabNavigator();
 
@@ -38,6 +38,7 @@ const TabNavigator: React.FC = () => {
                         tabBarIcon: ({ color }) => (
                             <Ionicons name="book" size={20} color={color} />
                         ),
+                        headerShown: false
                     }}
                 />
                 <Tab.Screen
