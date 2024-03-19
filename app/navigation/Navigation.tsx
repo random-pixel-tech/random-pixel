@@ -6,7 +6,9 @@ import Conversation from '../screens/Conversation';
 import Dashboard from '../screens/Dashboard';
 import ControlRoom from '../screens/ControlRoom';
 import StackNavigator from './StackNavigator';
-
+import HomePage from '../screens/HomePage';
+import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
+import Profile from '../screens/Profile';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,9 +18,8 @@ const AppNavigation: React.FC = () => {
             <Tab.Navigator>
                 <Tab.Screen
                     name="Home"
-                    component={StackNavigator}
+                    component={HomePage}
                     options={{
-                        headerShown: false,
                         tabBarIcon: ({ color }) => (
                             <Entypo name="home" size={20} color={color} />
                         ),
@@ -48,6 +49,17 @@ const AppNavigation: React.FC = () => {
                     options={{
                         tabBarIcon: ({ color }) => (
                             <MaterialIcons name="dashboard" size={20} color={color} />
+                        ),
+                    }}
+                />
+                <Tab.Screen
+                    name="Profile"
+                    component={Profile}
+                    options={{
+                        tabBarIcon: () => (
+                            <Avatar bgColor="$primary500" size="xs" borderRadius="$full">
+                                <AvatarFallbackText>Anukrati Mehta</AvatarFallbackText>
+                            </Avatar>
                         ),
                     }}
                 />

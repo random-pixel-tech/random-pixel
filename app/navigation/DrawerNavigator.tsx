@@ -14,7 +14,7 @@ import {
   AvatarFallbackText,
   AvatarImage,
 } from '@gluestack-ui/themed';
-import ProfileAvatar from '../components/Avatar';
+// import ProfileAvatar from '../components/Avatar';
 
 const Drawer = createDrawerNavigator();
 
@@ -25,7 +25,7 @@ const DrawerNavigator = () => {
       screenOptions={{
         drawerPosition: 'right',
         headerLeft: () => null,
-        headerRight: () => <ProfileAvatar />,
+        // headerRight: () => <ProfileAvatar />,
       }}
       drawerContent={props => <CustomDrawerContent {...props} />}
     >
@@ -38,33 +38,6 @@ const DrawerNavigator = () => {
           ),
         }}
       />
-      {/* <Drawer.Screen
-        name="Conversation"
-        component={Conversation}
-        options={{
-          drawerIcon: ({ color }) => (
-            <Entypo name="chat" size={20} color={color} style={{ marginRight: -22 }} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{
-          drawerIcon: ({ color }) => (
-            <MaterialIcons name="dashboard" size={20} color={color} style={{ marginRight: -22 }} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Control Room"
-        component={ControlRoom}
-        options={{
-          drawerIcon: ({ color }) => (
-            <Ionicons name="book" size={20} color={color} style={{ marginRight: -22 }} />
-          ),
-        }}
-      /> */}
       <Drawer.Screen
         name="Settings"
         component={Settings}
