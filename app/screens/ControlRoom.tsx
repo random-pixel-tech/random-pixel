@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Text } from '@gluestack-ui/themed';
+import { Box, Center, Text } from '@gluestack-ui/themed';
+import { Entypo } from '@expo/vector-icons';
 
 const ControlRoom: React.FC = () => {
   return (
@@ -7,43 +8,55 @@ const ControlRoom: React.FC = () => {
       <Box flexDirection="row" flexWrap="wrap" justifyContent="center">
         <Box
           bg="#EBEAFF"
-          width="45%"
+          width="35%"
           aspectRatio={1}
           borderRadius={8}
           p={16}
-          m={8}
+          m={16}
         >
-          <Text>Box 1</Text>
+          <Center height="100%" justifyContent="space-evenly">
+            <Entypo name="attachment" size={56} />
+            <Text>Attendance</Text>
+          </Center>
         </Box>
         <Box
           bg="#EBEAFF"
-          width="45%"
+          width="35%"
           aspectRatio={1}
           borderRadius={8}
           p={16}
-          m={8}
+          m={16}
         >
-          <Text>Box 2</Text>
+          <Center height="100%" justifyContent="space-evenly">
+            <Entypo name="attachment" size={56} />
+            <Text>Attendance</Text>
+          </Center>
         </Box>
         <Box
           bg="#EBEAFF"
-          width="45%"
+          width="35%"
           aspectRatio={1}
           borderRadius={8}
           p={16}
-          m={8}
+          m={16}
         >
-          <Text>Box 3</Text>
+          <Center height="100%" justifyContent="space-evenly">
+            <Entypo name="attachment" size={56} />
+            <Text>Attendance</Text>
+          </Center>
         </Box>
         <Box
           bg="#EBEAFF"
-          width="45%"
+          width="35%"
           aspectRatio={1}
           borderRadius={8}
           p={16}
-          m={8}
+          m={16}
         >
-          <Text>Box 4</Text>
+          <Center height="100%" justifyContent="space-evenly">
+            <Entypo name="attachment" size={56} />
+            <Text>Attendance</Text>
+          </Center>
         </Box>
       </Box>
     </Box>
