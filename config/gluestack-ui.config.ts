@@ -504,6 +504,7 @@ export const gluestackUIConfig = createConfig({
       lg: 992,
       xl: 1280,
     },
+    // Updated media queries
     mediaQueries: {
       base: '@media screen and (min-width: 0)',
       xs: '@media screen and (min-width: 400px)',
@@ -723,11 +724,9 @@ declare module '@gluestack-ui/themed' {
   interface UIComponents extends Omit<Components, keyof IComponents>, IComponents {}
 }
 
-// Add your Divi component to the components section of the config object
 export const config = {
   ...gluestackUIConfig,
   components: {
     ...componentsConfig,
-    Divi: Divi // Add your Divi component here
   },
 };
