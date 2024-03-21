@@ -1,11 +1,12 @@
 import 'react-native-gesture-handler';
 import { GluestackUIProvider, Text, Box, Center } from '@gluestack-ui/themed';
-import { config } from '@gluestack-ui/config';
 import Auth from './app/screens/Auth';
 import { useEffect, useState } from 'react';
 import { supabase } from './app/utils/supabase';
 import { Session } from '@supabase/supabase-js';
 import AppNavigation from './app/navigation/Base/Navigation';
+
+import { config } from "./config/gluestack-ui.config"
 
 
 export default function App() {
