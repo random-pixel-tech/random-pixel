@@ -12,13 +12,16 @@ const Tab = createBottomTabNavigator();
 
 const TabNavigator: React.FC = () => {
     return (
-            <Tab.Navigator>
+            <Tab.Navigator screenOptions={{
+                tabBarActiveTintColor: '#5f31dd'
+            }}
+           >
                 <Tab.Screen
                     name="Home"
                     component={HomePage}
                     options={{
-                        tabBarIcon: ({ color }) => (
-                            <Entypo name="home" size={20} color={color} />
+                        tabBarIcon: ({ color, focused }) => (
+                            <Entypo name="home" size={focused ? 23 : 20} color={color} />
                         ),
                     }}
                 />
@@ -26,8 +29,8 @@ const TabNavigator: React.FC = () => {
                     name="Conversation"
                     component={Conversation}
                     options={{
-                        tabBarIcon: ({ color }) => (
-                            <Entypo name="chat" size={20} color={color} />
+                        tabBarIcon: ({ color, focused }) => (
+                            <Entypo name="chat" size={focused ? 23 : 20} color={color} />
                         ),
                     }}
                 />
@@ -35,18 +38,17 @@ const TabNavigator: React.FC = () => {
                     name="Control Room"
                     component={ControlRoom}
                     options={{
-                        tabBarIcon: ({ color }) => (
-                            <Ionicons name="book" size={20} color={color} />
+                        tabBarIcon: ({ color, focused }) => (
+                            <Ionicons name="book" size={focused ? 23 : 20} color={color} />
                         ),
-                        headerShown: false
                     }}
                 />
                 <Tab.Screen
                     name="Dashboard"
                     component={Dashboard}
                     options={{
-                        tabBarIcon: ({ color }) => (
-                            <MaterialIcons name="dashboard" size={20} color={color} />
+                        tabBarIcon: ({ color, focused }) => (
+                            <MaterialIcons name="dashboard" size={focused ? 23 : 20} color={color} />
                         ),
                     }}
                 />
@@ -55,7 +57,7 @@ const TabNavigator: React.FC = () => {
                     component={Profile}
                     options={{
                         tabBarIcon: () => (
-                            <Avatar bgColor="$primary500" size="xs" borderRadius="$full">
+                            <Avatar size="xs" rounded="$full">
                                 <AvatarFallbackText>Anukrati Mehta</AvatarFallbackText>
                             </Avatar>
                         ),

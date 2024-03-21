@@ -33,6 +33,7 @@ export const gluestackUIConfig = createConfig({
       pixPrimary:'#5f31dd',
       pixPrimaryDark50: '#391D85',
       pixSecondary:'#dedcff',
+      pixSecondaryLight50: '#EBEAFF',
       pixBackground:'#fbfbfe',
       pixText:'#050315',
 
@@ -506,11 +507,11 @@ export const gluestackUIConfig = createConfig({
     },
     mediaQueries: {
       base: '@media screen and (min-width: 0)',
-      xs: '@media screen and (min-width: 400px)',
-      sm: '@media screen and (min-width: 480px)',
-      md: '@media screen and (min-width: 768px)',
-      lg: '@media screen and (min-width: 992px)',
-      xl: '@media screen and (min-width: 1280px)',
+      xs: '@media screen and (min-width: 320px)',
+      sm: '@media screen and (min-width: 375px)',
+      md: '@media screen and (min-width: 425px)',
+      lg: '@media screen and (min-width: 768px)',
+      xl: '@media screen and (min-width: 1024px)',
     },
     letterSpacings: {
       'xs': -0.4,
