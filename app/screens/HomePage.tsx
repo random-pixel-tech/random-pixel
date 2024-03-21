@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Box, Text } from '@gluestack-ui/themed';
 
 const Home: React.FC = () => {
   return (
-    <View>
+    <Box h="100%">
       <Text>Home Screen</Text>
-    </View>
+    </Box>
   );
 };
 
