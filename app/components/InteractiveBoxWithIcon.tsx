@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, Box, Center, Text } from '@gluestack-ui/themed';
-import { Entypo } from '@expo/vector-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+
 
 interface InteractiveBoxWithIconProps {
   onPress?: () => void;
@@ -20,7 +21,7 @@ const InteractiveBoxWithIcon: React.FC<InteractiveBoxWithIconProps> = ({ onPress
         $md-w='$40'
       >
         <Center height="100%" justifyContent="space-evenly">
-          <Entypo name="attachment" size={56} />
+          <FontAwesomeIcon icon="paperclip" size={40}/>
           <Text>{title}</Text>
         </Center>
       </Box>

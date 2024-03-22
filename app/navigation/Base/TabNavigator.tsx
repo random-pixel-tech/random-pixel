@@ -1,12 +1,13 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import Conversation from '../../screens/Conversation';
 import Dashboard from '../../screens/Dashboard';
 import ControlRoom from '../../screens/ControlRoom/ControlRoom';
 import HomePage from '../../screens/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
 import Profile from '../../screens/Profile';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+
 
 const Tab = createBottomTabNavigator();
 
@@ -21,8 +22,8 @@ const TabNavigator: React.FC = () => {
                     component={HomePage}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <Entypo name="home" size={focused ? 24 : 20} color={color} />
-                        ),
+                            <FontAwesomeIcon icon="house" size={focused ? 24 : 20} color={color}/>
+                            ),
                     }}
                 />
                 <Tab.Screen
@@ -30,7 +31,8 @@ const TabNavigator: React.FC = () => {
                     component={Conversation}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <Entypo name="chat" size={focused ? 24 : 20} color={color} />
+                            <FontAwesomeIcon icon="comment" size={focused ? 24 : 20} color={color}/>
+
                         ),
                     }}
                 />
@@ -39,7 +41,7 @@ const TabNavigator: React.FC = () => {
                     component={ControlRoom}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <Ionicons name="book" size={focused ? 24 : 20} color={color} />
+                            <FontAwesomeIcon icon="book-open" size={focused ? 24 : 20} color={color}/>
                         ),
                     }}
                 />
@@ -48,7 +50,7 @@ const TabNavigator: React.FC = () => {
                     component={Dashboard}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <MaterialIcons name="dashboard" size={focused ? 24 : 20} color={color} />
+                            <FontAwesomeIcon icon="chart-simple" size={focused ? 24 : 20} color={color}/>
                         ),
                     }}
                 />
