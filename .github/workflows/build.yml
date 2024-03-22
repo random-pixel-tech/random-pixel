@@ -2,6 +2,10 @@ name: Android App APK Build
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch name'
+        required: true
 
 jobs:
   build:
