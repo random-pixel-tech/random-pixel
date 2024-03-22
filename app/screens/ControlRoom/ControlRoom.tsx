@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator } from '@gluestack-ui/themed';
-import { useRef } from 'react';
+import React, { useState, useRef } from 'react';
+import { Box } from '@gluestack-ui/themed';
 import InteractiveBoxWithIcon from '../../components/InteractiveBoxWithIcon';
+import ActionSheetComponent from '../../components/ActionSheetComponent';
 
 const ControlRoom: React.FC = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
@@ -26,26 +26,7 @@ const ControlRoom: React.FC = () => {
         <InteractiveBoxWithIcon title="Attendance" />
       </Box>
 
-      <Actionsheet isOpen={showActionSheet} onClose={handleCloseActionSheet} initialFocusRef={initialFocusRef}>
-        <ActionsheetBackdrop />
-        <ActionsheetContent >
-          <ActionsheetDragIndicatorWrapper>
-            <ActionsheetDragIndicator />
-          </ActionsheetDragIndicatorWrapper>
-          <ActionsheetItem onPress={handleCloseActionSheet}>
-            <ActionsheetItemText>Capture Attendance</ActionsheetItemText>
-          </ActionsheetItem>
-          <ActionsheetItem onPress={handleCloseActionSheet}>
-            <ActionsheetItemText>View Attendance for Class</ActionsheetItemText>
-          </ActionsheetItem>
-          <ActionsheetItem onPress={handleCloseActionSheet}>
-            <ActionsheetItemText>View Attendance for Student</ActionsheetItemText>
-          </ActionsheetItem>
-          <ActionsheetItem onPress={handleCloseActionSheet}>
-            <ActionsheetItemText>Generate Report</ActionsheetItemText>
-          </ActionsheetItem>
-        </ActionsheetContent>
-      </Actionsheet>
+      <ActionSheetComponent isOpen={showActionSheet} onClose={handleCloseActionSheet} initialFocusRef={initialFocusRef} />
     </Box>
   );
 };
