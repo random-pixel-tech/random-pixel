@@ -21,7 +21,7 @@ const TabNavigator: React.FC = () => {
                     component={HomePage}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <Entypo name="home" size={focused ? 23 : 20} color={color} />
+                            <Entypo name="home" size={focused ? 24 : 20} color={color} />
                         ),
                     }}
                 />
@@ -30,7 +30,7 @@ const TabNavigator: React.FC = () => {
                     component={Conversation}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <Entypo name="chat" size={focused ? 23 : 20} color={color} />
+                            <Entypo name="chat" size={focused ? 24 : 20} color={color} />
                         ),
                     }}
                 />
@@ -39,7 +39,7 @@ const TabNavigator: React.FC = () => {
                     component={ControlRoom}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <Ionicons name="book" size={focused ? 23 : 20} color={color} />
+                            <Ionicons name="book" size={focused ? 24 : 20} color={color} />
                         ),
                     }}
                 />
@@ -48,7 +48,7 @@ const TabNavigator: React.FC = () => {
                     component={Dashboard}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <MaterialIcons name="dashboard" size={focused ? 23 : 20} color={color} />
+                            <MaterialIcons name="dashboard" size={focused ? 24 : 20} color={color} />
                         ),
                     }}
                 />
