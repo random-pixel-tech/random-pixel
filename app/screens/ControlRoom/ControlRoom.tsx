@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator } from '@gluestack-ui/themed';
 import { useRef } from 'react';
-import ConrolRoomBox from '../../components/ConrolRoomBox';
+import InteractiveBoxWithIcon from '../../components/InteractiveBoxWithIcon';
 
 const ControlRoom: React.FC = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
@@ -18,12 +18,12 @@ const ControlRoom: React.FC = () => {
   return (
     <Box flexDirection="column" alignItems="center">
       <Box flexDirection="row">
-        <ConrolRoomBox onPress={handleFirstBoxPress} title="Attendance" />
-        <ConrolRoomBox title="Attendance" />
+        <InteractiveBoxWithIcon onPress={handleFirstBoxPress} title="Attendance" />
+        <InteractiveBoxWithIcon title="Attendance" />
       </Box>
       <Box flexDirection="row">
-        <ConrolRoomBox title="Attendance" />
-        <ConrolRoomBox title="Attendance" />
+        <InteractiveBoxWithIcon title="Attendance" />
+        <InteractiveBoxWithIcon title="Attendance" />
       </Box>
 
       <Actionsheet isOpen={showActionSheet} onClose={handleCloseActionSheet} initialFocusRef={initialFocusRef}>

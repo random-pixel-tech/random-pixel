@@ -2,12 +2,12 @@ import React from 'react';
 import { Pressable, Box, Center, Text } from '@gluestack-ui/themed';
 import { Entypo } from '@expo/vector-icons';
 
-interface ConrolRoomBoxProps {
+interface InteractiveBoxWithIconProps {
   onPress?: () => void;
   title: string;
 }
 
-const ConrolRoomBox: React.FC<ConrolRoomBoxProps> = ({ onPress, title }) => {
+const InteractiveBoxWithIcon: React.FC<InteractiveBoxWithIconProps> = ({ onPress, title }) => {
   return (
     <Pressable onPress={onPress}>
       <Box
@@ -28,4 +28,4 @@ const ConrolRoomBox: React.FC<ConrolRoomBoxProps> = ({ onPress, title }) => {
   );
 };
 
-export default ConrolRoomBox;
+export default InteractiveBoxWithIcon;
