@@ -1,36 +1,38 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons';
-import Conversation from '../screens/Conversation';
-import Dashboard from '../screens/Dashboard';
-import ControlRoom from '../screens/ControlRoom';
-import StackNavigator from './StackNavigator';
-import HomePage from '../screens/HomePage';
+import Conversation from '../../screens/Conversation';
+import Dashboard from '../../screens/Dashboard';
+import ControlRoom from '../../screens/ControlRoom/ControlRoom';
+import HomePage from '../../screens/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
-import Profile from '../screens/Profile';
+import Profile from '../../screens/Profile';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+
 
 const Tab = createBottomTabNavigator();
 
-const AppNavigation: React.FC = () => {
+const TabNavigator: React.FC = () => {
     return (
-        <NavigationContainer>
-            <Tab.Navigator>
+            <Tab.Navigator screenOptions={{
+                tabBarActiveTintColor: '#5f31dd'
+            }}
+           >
                 <Tab.Screen
                     name="Home"
                     component={HomePage}
                     options={{
-                        tabBarIcon: ({ color }) => (
-                            <Entypo name="home" size={20} color={color} />
-                        ),
+                        tabBarIcon: ({ color, focused }) => (
+                            <FontAwesomeIcon icon="house" size={focused ? 24 : 20} color={color}/>
+                            ),
                     }}
                 />
                 <Tab.Screen
                     name="Conversation"
                     component={Conversation}
                     options={{
-                        tabBarIcon: ({ color }) => (
-                            <Entypo name="chat" size={20} color={color} />
+                        tabBarIcon: ({ color, focused }) => (
+                            <FontAwesomeIcon icon="comment" size={focused ? 24 : 20} color={color}/>
+
                         ),
                     }}
                 />
@@ -38,8 +40,8 @@ const AppNavigation: React.FC = () => {
                     name="Control Room"
                     component={ControlRoom}
                     options={{
-                        tabBarIcon: ({ color }) => (
-                            <Ionicons name="book" size={20} color={color} />
+                        tabBarIcon: ({ color, focused }) => (
+                            <FontAwesomeIcon icon="book-open" size={focused ? 24 : 20} color={color}/>
                         ),
                     }}
                 />
@@ -47,8 +49,8 @@ const AppNavigation: React.FC = () => {
                     name="Dashboard"
                     component={Dashboard}
                     options={{
-                        tabBarIcon: ({ color }) => (
-                            <MaterialIcons name="dashboard" size={20} color={color} />
+                        tabBarIcon: ({ color, focused }) => (
+                            <FontAwesomeIcon icon="chart-simple" size={focused ? 24 : 20} color={color}/>
                         ),
                     }}
                 />
@@ -57,15 +59,14 @@ const AppNavigation: React.FC = () => {
                     component={Profile}
                     options={{
                         tabBarIcon: () => (
-                            <Avatar bgColor="$primary500" size="xs" borderRadius="$full">
+                            <Avatar size="xs" rounded="$full">
                                 <AvatarFallbackText>Anukrati Mehta</AvatarFallbackText>
                             </Avatar>
                         ),
                     }}
                 />
             </Tab.Navigator>
-        </NavigationContainer>
     );
 };
 
-export default AppNavigation;
+export default TabNavigator;
