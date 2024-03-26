@@ -7,6 +7,7 @@ import HomePage from '../../screens/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
 import Profile from '../../screens/Profile';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import ActionSheetNav from '../ControlRoom/ActionSheetNav';
 
 
 const Tab = createBottomTabNavigator();
@@ -38,11 +39,12 @@ const TabNavigator: React.FC = () => {
                 />
                 <Tab.Screen
                     name="Control Room"
-                    component={ControlRoom}
+                    component={ActionSheetNav}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
                             <FontAwesomeIcon icon="book-open" size={focused ? 24 : 20} color={color}/>
                         ),
+                        headerShown: false
                     }}
                 />
                 <Tab.Screen
