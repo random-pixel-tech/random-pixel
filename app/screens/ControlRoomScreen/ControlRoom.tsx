@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Box } from '@gluestack-ui/themed';
 import InteractiveBoxWithIcon from '../../components/InteractiveBoxWithIcon';
-import ActionSheetComponent from '../../components/ActionSheetComponent';
+import AttendanceActionSheetComponent from '../../components/AttendanceActionSheetComponent';
 
 const ControlRoom: React.FC = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);
@@ -26,7 +26,7 @@ const ControlRoom: React.FC = () => {
         <InteractiveBoxWithIcon title="Attendance" />
       </Box>
 
-      <ActionSheetComponent isOpen={showActionSheet} onClose={handleCloseActionSheet} initialFocusRef={initialFocusRef} />
+      <AttendanceActionSheetComponent isOpen={showActionSheet} onClose={handleCloseActionSheet} initialFocusRef={initialFocusRef} />
     </Box>
   );
 };

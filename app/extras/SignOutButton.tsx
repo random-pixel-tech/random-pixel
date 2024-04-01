@@ -2,7 +2,7 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { Box, Text } from '@gluestack-ui/themed';
-import { supabase } from '../utils/supabase';
+import { supabase } from '../services/utils/supabase';
 
 const SignOutButton = () => {
   const handleSignOut = async () => {

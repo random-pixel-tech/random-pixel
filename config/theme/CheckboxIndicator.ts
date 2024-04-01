@@ -19,8 +19,8 @@ export const CheckboxIndicator = createStyle({
   },
 
   ':checked': {
-    borderColor: '$primary600',
-    bg: '$primary600',
+    borderColor: '',
+    bg: '',
   },
 
   ':hover': {

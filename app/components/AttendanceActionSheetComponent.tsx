@@ -7,8 +7,6 @@ type RootStackParamList = {
   CaptureAttendance: undefined;
   ClassAttendance: undefined;
   StudentAttendance: undefined;
-
-
 };
 
 type ControlRoomNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ControlRoom'>;
@@ -19,7 +17,7 @@ interface ActionSheetProps {
   initialFocusRef: React.RefObject<any>;
 }
 
-const ActionSheetComponent: React.FC<ActionSheetProps> = ({ isOpen, onClose, initialFocusRef }) => {
+const AttendanceActionSheetComponent: React.FC<ActionSheetProps> = ({ isOpen, onClose, initialFocusRef }) => {
   const navigation = useNavigation<ControlRoomNavigationProp>();
 
   const handleCaptureAttendancePress = () => {
@@ -61,4 +59,4 @@ const ActionSheetComponent: React.FC<ActionSheetProps> = ({ isOpen, onClose, ini
   );
 };
 
-export default ActionSheetComponent;
+export default AttendanceActionSheetComponent;

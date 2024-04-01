@@ -2,12 +2,12 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Conversation from '../../screens/Conversation';
 import Dashboard from '../../screens/Dashboard';
-import ControlRoom from '../../screens/ControlRoom/ControlRoom';
+import ControlRoom from '../../screens/ControlRoomScreen/ControlRoom';
 import HomePage from '../../screens/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
 import Profile from '../../screens/Profile';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import ActionSheetNav from '../ControlRoom/ActionSheetNav';
+import AttendanceActionSheetNav from '../ControlRoom/AttendanceActionSheetNav';
 
 
 const Tab = createBottomTabNavigator();
@@ -39,7 +39,7 @@ const TabNavigator: React.FC = () => {
                 />
                 <Tab.Screen
                     name="Control Room"
-                    component={ActionSheetNav}
+                    component={AttendanceActionSheetNav}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
                             <FontAwesomeIcon icon="book-open" size={focused ? 24 : 20} color={color}/>
