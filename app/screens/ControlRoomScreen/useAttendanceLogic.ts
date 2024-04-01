@@ -3,6 +3,7 @@ import useStudentAttendance from '../../services/utils/api/useStudentAttendance'
 
 const useAttendanceLogic = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
+  const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
   const {
     studentAttendanceData,
@@ -48,11 +49,13 @@ const useAttendanceLogic = () => {
   };
 
   const handleSaveAttendance = async () => {
-    const hasUnmarkedStudents = studentAttendanceData.some(
+    const unmarkedStudents = studentAttendanceData.filter(
       ({ student }) => selectedCheckbox[student.id] === null
     );
-
-    if (hasUnmarkedStudents) {
+    const unmarkedCount = unmarkedStudents.length;
+    setUnmarkedStudentCount(unmarkedCount);
+  
+    if (unmarkedCount > 0) {
       setShowConfirmationDialog(true);
     } else {
       await saveAttendance();
@@ -108,7 +111,8 @@ const useAttendanceLogic = () => {
     setShowConfirmationDialog,
     handleSaveAttendance,
     saveAttendance,
-    handleLeaveClick
+    handleLeaveClick,
+    unmarkedStudentCount
   };
 };
 

@@ -7,7 +7,7 @@ import HomePage from '../../screens/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
 import Profile from '../../screens/Profile';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import AttendanceActionSheetNav from '../ControlRoom/AttendanceActionSheetNav';
+import AttendanceActionSheetNav from '../ControlRoomNav/AttendanceActionSheetNav';
 
 
 const Tab = createBottomTabNavigator();

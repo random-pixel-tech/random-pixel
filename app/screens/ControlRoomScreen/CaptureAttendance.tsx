@@ -1,4 +1,3 @@
-// CaptureAttendance.tsx
 import React from 'react';
 import { Box } from '@gluestack-ui/themed';
 import ConfirmationDialog from '../../components/ConfirmationDialog';
@@ -23,6 +22,7 @@ const CaptureAttendance = () => {
     handleSaveAttendance,
     saveAttendance,
     handleLeaveClick,
+    unmarkedStudentCount,
   } = useAttendanceLogic();
 
   return (
@@ -48,7 +48,7 @@ const CaptureAttendance = () => {
           await saveAttendance();
         }}
         heading="Are you sure you want to continue?"
-        text="You haven’t marked attendance for 3 students, are you sure you want to mark attendance as complete?"
+        text={`You haven't marked attendance for ${unmarkedStudentCount} student(s), are you sure you want to mark attendance as complete?`}
         confirmButtonText="Yes"
         cancelButtonText="Go Back"
       />

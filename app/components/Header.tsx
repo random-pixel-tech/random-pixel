@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({ title, onSavePress }) => {
     >
       <Box display="flex" flexDirection="row">
         <Pressable onPress={() => navigation.goBack()}>
-          <FontAwesomeIcon icon="arrow-left" size={20} color="$pixHeader" />
+          <FontAwesomeIcon icon="arrow-left" size={20} color="#1c1c1e" />
         </Pressable>
         <Text color="$pixHeader" fontSize="$lg" px="$8" fontWeight="$medium">
           {title}
@@ -32,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ title, onSavePress }) => {
       </Box>
       {onSavePress && (
         <Pressable onPress={onSavePress}>
-          <FontAwesomeIcon icon="check" size={20} color="$pixHeader" />
+          <FontAwesomeIcon icon="check" size={20} color="#1c1c1e" />
         </Pressable>
       )}
     </Box>

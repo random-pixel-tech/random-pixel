@@ -1,10 +1,11 @@
 import React from 'react';
 import {
-  Popover,
-  PopoverBackdrop,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
+  Modal,
+  ModalBackdrop,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
   Heading,
   VStack,
   HStack,
@@ -12,6 +13,7 @@ import {
   Pressable,
 } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { CloseIcon } from '@gluestack-ui/themed';
 
 interface AttendanceOptionsProps {
   isOpen: boolean;
@@ -30,65 +32,47 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
   onClose,
   onOpen,
   student,
-  onLeaveClick
+  onLeaveClick,
 }) => {
   return (
-    <Popover
-      isOpen={isOpen}
-      onClose={onClose}
-      onOpen={onOpen}
-      placement="bottom"
-      size="md"
-      trigger={(triggerProps) => {
-        return (
-          <Pressable
-            justifyContent="center"
-            w="$1/6"
-            onPress={onOpen}
-            {...triggerProps}
-            aria-label="Open Options"
-          >
-            <FontAwesomeIcon icon="ellipsis-vertical" size={20} />
-          </Pressable>
-        );
-      }}
-    >
-      <PopoverBackdrop />
-      <PopoverContent bg="$pixSecondaryLight50" p="$2">
-        <PopoverHeader display="flex" justifyContent="space-between">
-          <Heading color="$pixPrimary">{student.name}</Heading>
-          <Heading color="$pixPrimary">{student.roll_number}</Heading>
-        </PopoverHeader>
-        <PopoverBody>
-          <VStack>
-          <Pressable p="$2" onPress={() => onLeaveClick(student.id)}>
-  <HStack>
-    <FontAwesomeIcon icon="plane-departure" color="#5f31dd" size={20} />
-    <Text color="$pixPrimaryDark50" px="$4">
-      On leave
-    </Text>
-  </HStack>
-</Pressable>
-            <HStack p="$2">
-              <FontAwesomeIcon icon="address-card" color="#5f31dd" size={20} />
-              <Text color="$pixPrimaryDark50" px="$4">
-                View student profile
-              </Text>
-            </HStack>
-            <HStack p="$2">
-              <FontAwesomeIcon
-                icon="calendar-check"
-                color="#5f31dd"
-                size={20}
-              />
-              <Text color="$pixPrimaryDark50" px="$4">
-                Mark attendance for upcoming days
-              </Text>
-            </HStack>
-          </VStack>
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
+    <>
+      <Pressable justifyContent="center" w="$1/6" onPress={onOpen} aria-label="Open Options">
+        <FontAwesomeIcon icon="ellipsis-vertical" size={20} />
+      </Pressable>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalBackdrop />
+        <ModalContent bg="$pixSecondaryLight50" p="$2">
+          <ModalHeader display="flex" justifyContent="space-between">
+            <Heading color="$pixPrimary">{student.name}</Heading>
+            <Heading color="$pixPrimary">{student.roll_number}</Heading>
+          </ModalHeader>
+          <ModalBody>
+            <VStack>
+            <Pressable p="$2" onPress={() => { onLeaveClick(student.id); onClose(); }}>
+                <HStack>
+                  <FontAwesomeIcon icon="plane-departure" color="#5f31dd" size={20} />
+                  <Text color="$pixPrimaryDark50" px="$4">
+                    On leave
+                  </Text>
+                </HStack>
+              </Pressable>
+              <HStack p="$2">
+                <FontAwesomeIcon icon="address-card" color="#5f31dd" size={20} />
+                <Text color="$pixPrimaryDark50" px="$4">
+                  View student profile
+                </Text>
+              </HStack>
+              <HStack p="$2">
+                <FontAwesomeIcon icon="calendar-check" color="#5f31dd" size={20} />
+                <Text color="$pixPrimaryDark50" px="$4">
+                  Mark attendance for upcoming days
+                </Text>
+              </HStack>
+            </VStack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
