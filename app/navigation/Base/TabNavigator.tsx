@@ -15,8 +15,15 @@ const Tab = createBottomTabNavigator();
 const TabNavigator: React.FC = () => {
     return (
             <Tab.Navigator screenOptions={{
-                tabBarActiveTintColor: '#5f31dd'
+                tabBarActiveTintColor: '#5f31dd',
+                tabBarStyle: { 
+                    height: 60,
+                    paddingBottom: 5,
+                    paddingHorizontal: 0,
+                } 
+                
             }}
+            
            >
                 <Tab.Screen
                     name="Home"
@@ -32,9 +39,11 @@ const TabNavigator: React.FC = () => {
                     component={Conversation}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <FontAwesomeIcon icon="comment" size={focused ? 24 : 20} color={color}/>
+                            <FontAwesomeIcon icon="comment" size={focused ? 24 : 20} color={color} style={ {marginRight: 10}}/>
 
                         ),
+                        tabBarLabelStyle: { marginRight: 10 }
+
                     }}
                 />
                 <Tab.Screen
@@ -52,8 +61,10 @@ const TabNavigator: React.FC = () => {
                     component={Dashboard}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
-                            <FontAwesomeIcon icon="chart-simple" size={focused ? 24 : 20} color={color}/>
+                            <FontAwesomeIcon icon="chart-simple" size={focused ? 24 : 20} color={color} style={ {marginLeft: 10}}/>
                         ),
+                        tabBarLabelStyle: { marginLeft: 10 }
+
                     }}
                 />
                 <Tab.Screen
