@@ -38,10 +38,10 @@ export const gluestackUIConfig = createConfig({
       pixBackground:'#fbfbfe',
       pixBackgroundLight700: '#525252',
       pixText:'#050315',
+      pixText100: '#1c1c1e',
       pixTextDark100: '010104',
       pixWhite: '#FCFCFC',
       pixOrange: '#FF814B',
-      pixHeader: '#1c1c1e',
 
       // Default colors
       rose50: '#fff1f2',

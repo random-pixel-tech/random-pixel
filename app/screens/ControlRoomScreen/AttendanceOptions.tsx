@@ -14,6 +14,7 @@ import {
 } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { CloseIcon } from '@gluestack-ui/themed';
+import { Colors } from '../../services/utils/colors';
 
 interface AttendanceOptionsProps {
   isOpen: boolean;
@@ -50,20 +51,20 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
             <VStack>
             <Pressable p="$2" onPress={() => { onLeaveClick(student.id); onClose(); }}>
                 <HStack>
-                  <FontAwesomeIcon icon="plane-departure" color="#5f31dd" size={20} />
+                  <FontAwesomeIcon icon="plane-departure" color={Colors.Primary} size={20} />
                   <Text color="$pixPrimaryDark50" px="$4">
                     On leave
                   </Text>
                 </HStack>
               </Pressable>
               <HStack p="$2">
-                <FontAwesomeIcon icon="address-card" color="#5f31dd" size={20} />
+                <FontAwesomeIcon icon="address-card" color={Colors.Primary} size={20} />
                 <Text color="$pixPrimaryDark50" px="$4">
                   View student profile
                 </Text>
               </HStack>
               <HStack p="$2">
-                <FontAwesomeIcon icon="calendar-check" color="#5f31dd" size={20} />
+                <FontAwesomeIcon icon="calendar-check" color={Colors.Primary} size={20} />
                 <Text color="$pixPrimaryDark50" px="$4">
                   Mark attendance for upcoming days
                 </Text>

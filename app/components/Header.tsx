@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Text, Pressable } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useNavigation } from '@react-navigation/native';
+import { Colors } from '../services/utils/colors';
 
 interface HeaderProps {
   title: string;
@@ -24,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ title, onSavePress }) => {
     >
       <Box display="flex" flexDirection="row">
         <Pressable onPress={() => navigation.goBack()}>
-          <FontAwesomeIcon icon="arrow-left" size={20} color="#1c1c1e" />
+          <FontAwesomeIcon icon="arrow-left" size={20} color={Colors.Text100} />
         </Pressable>
         <Text color="$pixHeader" fontSize="$lg" px="$8" fontWeight="$medium">
           {title}
@@ -32,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ title, onSavePress }) => {
       </Box>
       {onSavePress && (
         <Pressable onPress={onSavePress}>
-          <FontAwesomeIcon icon="check" size={20} color="#1c1c1e" />
+          <FontAwesomeIcon icon="check" size={20} color={Colors.Text100} />
         </Pressable>
       )}
     </Box>
