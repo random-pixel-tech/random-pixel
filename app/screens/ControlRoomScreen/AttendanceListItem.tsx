@@ -33,7 +33,12 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
         <Text>{student.rollNumber || '-'}</Text>
       </Box>
       <Box w="$2/5" px="$4">
-        <Text>{student.name}</Text>
+        <Text
+        numberOfLines={1}
+        style={{
+          overflow: 'hidden',
+        }}
+        >{student.name}</Text>
       </Box>
       <Box w="$1/6" px="$4" justifyContent="center">
         <Checkbox
