@@ -2,14 +2,21 @@ import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+enum RouteNames {
+  ControlRoom = 'ControlRoom',
+  CaptureAttendance = 'CaptureAttendance',
+  ClassAttendance = 'ClassAttendance',
+  StudentAttendance = 'StudentAttendance',
+}
+
 type RootStackParamList = {
-  ControlRoom: undefined;
-  CaptureAttendance: undefined;
-  ClassAttendance: undefined;
-  StudentAttendance: undefined;
+  [RouteNames.ControlRoom]: undefined;
+  [RouteNames.CaptureAttendance]: undefined;
+  [RouteNames.ClassAttendance]: undefined;
+  [RouteNames.StudentAttendance]: undefined;
 };
 
-type ControlRoomNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ControlRoom'>;
+type ControlRoomNavigationProp = NativeStackNavigationProp<RootStackParamList, RouteNames.ControlRoom>;
 
 interface ActionSheetProps {
   isOpen: boolean;
@@ -21,19 +28,19 @@ const AttendanceActionSheetComponent: React.FC<ActionSheetProps> = ({ isOpen, on
   const navigation = useNavigation<ControlRoomNavigationProp>();
 
   const handleCaptureAttendancePress = () => {
-    navigation.navigate('CaptureAttendance');
+    navigation.navigate(RouteNames.CaptureAttendance);
     onClose();
   };
-
+  
   const handleClassAttendancePress = () => {
-    navigation.navigate('ClassAttendance')
+    navigation.navigate(RouteNames.ClassAttendance);
     onClose();
-  }
-
+  };
+  
   const handleStudentAttendancePress = () => {
-    navigation.navigate('StudentAttendance')
+    navigation.navigate(RouteNames.StudentAttendance);
     onClose();
-  }
+  };
 
   return (
     <Actionsheet isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef}>

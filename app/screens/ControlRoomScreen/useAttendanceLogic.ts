@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import useStudentAttendance from '../../services/utils/api/useStudentAttendance';
+import useStudentAttendance, { AttendanceStatus, AttendanceSession } from '../../services/utils/api/useStudentAttendance';
 
 const useAttendanceLogic = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
@@ -14,16 +14,12 @@ const useAttendanceLogic = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>(
     {}
   );
-  const [selectedCheckbox, setSelectedCheckbox] = useState<
-    Record<string, 'present' | 'absent' | 'leave' | null>
-  >({});
+  const [selectedCheckbox, setSelectedCheckbox] = useState<Record<string, AttendanceStatus | null>>({});
+
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
   useEffect(() => {
-    const initialSelectedCheckbox: Record<
-      string,
-      'present' | 'absent' | 'leave' | null
-    > = {};
+    const initialSelectedCheckbox: Record<string, AttendanceStatus | null> = {};
     studentAttendanceData.forEach(({ student, attendanceRecord }) => {
       initialSelectedCheckbox[student.id] = attendanceRecord?.morning_status || null;
     });
@@ -40,7 +36,7 @@ const useAttendanceLogic = () => {
 
   const handleCheckboxChange = (
     studentId: string,
-    status: 'present' | 'absent' | 'leave'
+    status: AttendanceStatus
   ) => {
     setSelectedCheckbox((prevState) => ({
       ...prevState,
@@ -77,7 +73,7 @@ const useAttendanceLogic = () => {
       updatedRecords.map(async ({ student }) => {
         const selectedStatus = selectedCheckbox[student.id];
         if (selectedStatus !== null) {
-          await updateAttendanceRecord(student.id, 'morning', selectedStatus);
+          await updateAttendanceRecord(student.id, AttendanceSession.Morning, selectedStatus);
         }
       })
     );
@@ -93,7 +89,7 @@ const useAttendanceLogic = () => {
   const handleLeaveClick = (studentId: string) => {
     setSelectedCheckbox((prevState) => ({
       ...prevState,
-      [studentId]: 'leave',
+      [studentId]: AttendanceStatus.Leave,
     }));
   };
 
