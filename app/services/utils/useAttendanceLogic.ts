@@ -75,7 +75,7 @@ const saveAttendance = async () => {
   const handleLeaveClick = (studentId: string) => {
     setSelectedCheckbox((prevState) => ({
       ...prevState,
-      [studentId]: AttendanceStatus.Leave,
+      [studentId]: AttendanceStatus.OnLeave,
     }));
   };
 

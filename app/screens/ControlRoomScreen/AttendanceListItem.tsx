@@ -54,17 +54,17 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
           <Box minWidth={24}>
             <Checkbox
               value={`morning-absent-${student.id}`}
-              isChecked={selectedCheckbox === AttendanceStatus.Absent || selectedCheckbox === AttendanceStatus.Leave}
+              isChecked={selectedCheckbox === AttendanceStatus.Absent || selectedCheckbox === AttendanceStatus.OnLeave}
               onChange={() => onCheckboxChange(AttendanceStatus.Absent)}
               aria-label={`Mark absent for ${student.name}`}
               rounded="$md"
             >
-              <CheckboxIndicator borderColor="$pixOrange" bg={selectedCheckbox === AttendanceStatus.Absent || selectedCheckbox === AttendanceStatus.Leave ? '$pixOrange' : 'transparent'}>
+              <CheckboxIndicator borderColor="$pixOrange" bg={selectedCheckbox === AttendanceStatus.Absent || selectedCheckbox === AttendanceStatus.OnLeave ? '$pixOrange' : 'transparent'}>
                 <CheckboxIcon as={CheckIcon} />
               </CheckboxIndicator>
             </Checkbox>
           </Box>
-          {selectedCheckbox === AttendanceStatus.Leave && (
+          {selectedCheckbox === AttendanceStatus.OnLeave && (
             <FontAwesomeIcon icon="house-user" size={20} color={Colors.Accent} />
           )}
         </Box>
