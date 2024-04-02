@@ -10,21 +10,21 @@ interface AttendanceListProps {
     attendanceRecord: AttendanceRecord | null;
   }>;
   isPopoverOpen: Record<string, boolean>;
-  handleOpenPopover: (studentId: string) => void;
-  handleClosePopover: (studentId: string) => void;
+  onPopoverOpen: (studentId: string) => void;
+  onPopoverClose: (studentId: string) => void;
   selectedCheckbox: Record<string, AttendanceStatus | null>;
-  handleCheckboxChange: (studentId: string, status: AttendanceStatus) => void;
-  handleLeaveClick: (studentId: string) => void;
+  onCheckboxChange: (studentId: string, status: AttendanceStatus) => void;
+  onLeaveClick: (studentId: string) => void;
 }
 
 const AttendanceList: React.FC<AttendanceListProps> = ({
   studentAttendanceData,
   isPopoverOpen,
-  handleOpenPopover,
-  handleClosePopover,
+  onPopoverOpen,
+  onPopoverClose,
   selectedCheckbox,
-  handleCheckboxChange,
-  handleLeaveClick,
+  onCheckboxChange,
+  onLeaveClick,
 }) => {
   return (
     <ScrollView>
@@ -36,11 +36,11 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
             student={student}
             attendanceRecord={attendanceRecord}
             isPopoverOpen={isPopoverOpen[student.id] || false}
-            handleOpenPopover={() => handleOpenPopover(student.id)}
-            handleClosePopover={() => handleClosePopover(student.id)}
+            onPopoverOpen={() => onPopoverOpen(student.id)}
+            onPopoverClose={() => onPopoverClose(student.id)}
             selectedCheckbox={selectedCheckbox[student.id]}
-            handleCheckboxChange={(status) => handleCheckboxChange(student.id, status)}
-            handleLeaveClick={() => handleLeaveClick(student.id)}
+            onCheckboxChange={(status) => onCheckboxChange(student.id, status)}
+            onLeaveClick={() => onLeaveClick(student.id)}
           />
         ))}
       </Box>

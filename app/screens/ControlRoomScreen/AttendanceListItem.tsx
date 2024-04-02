@@ -8,22 +8,22 @@ interface AttendanceListItemProps {
   student: Student;
   attendanceRecord: AttendanceRecord | null;
   isPopoverOpen: boolean;
-  handleOpenPopover: () => void;
-  handleClosePopover: () => void;
+  onPopoverOpen: () => void;
+  onPopoverClose: () => void;
   selectedCheckbox: AttendanceStatus | null;
-  handleCheckboxChange: (status: AttendanceStatus) => void;
-  handleLeaveClick: () => void;
+  onCheckboxChange: (status: AttendanceStatus) => void;
+  onLeaveClick: () => void;
 }
 
 const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
   student,
   attendanceRecord,
   isPopoverOpen,
-  handleOpenPopover,
-  handleClosePopover,
+  onPopoverOpen,
+  onPopoverClose,
   selectedCheckbox,
-  handleCheckboxChange,
-  handleLeaveClick,
+  onCheckboxChange,
+  onLeaveClick,
 }) => {
   return (
     <Box display="flex" py="$2" flexDirection="row" minHeight={40}>
@@ -37,7 +37,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
         <Checkbox
           value={`morning-present-${student.id}`}
           isChecked={selectedCheckbox === AttendanceStatus.Present}
-          onChange={() => handleCheckboxChange(AttendanceStatus.Present)}
+          onChange={() => onCheckboxChange(AttendanceStatus.Present)}
           rounded="$md"
           aria-label={`Mark present for ${student.name}`}
         >
@@ -53,7 +53,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
             <Checkbox
               value={`morning-absent-${student.id}`}
               isChecked={selectedCheckbox === AttendanceStatus.Absent || selectedCheckbox === AttendanceStatus.Leave}
-              onChange={() => handleCheckboxChange(AttendanceStatus.Absent)}
+              onChange={() => onCheckboxChange(AttendanceStatus.Absent)}
               aria-label={`Mark absent for ${student.name}`}
               rounded="$md"
             >
@@ -69,10 +69,10 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
       </Box>
       <AttendanceOptions
         isOpen={isPopoverOpen}
-        onClose={handleClosePopover}
-        onOpen={handleOpenPopover}
+        onClose={onPopoverClose}
+        onOpen={onPopoverOpen}
         student={student}
-        onLeaveClick={handleLeaveClick}
+        onLeaveClick={onLeaveClick}
       />
     </Box>
   );
