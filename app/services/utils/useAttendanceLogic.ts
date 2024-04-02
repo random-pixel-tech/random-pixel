@@ -16,11 +16,11 @@ const useAttendanceLogic = () => {
     setSelectedCheckbox(initialSelectedCheckbox);
   }, [studentAttendanceData]);
 
-  const handleOpenPopover = (studentId: string) => {
+  const handlePopoverOpen = (studentId: string) => {
     setIsPopoverOpen((prevState) => ({ ...prevState, [studentId]: true }));
   };
 
-  const handleClosePopover = (studentId: string) => {
+  const handlePopoverClose = (studentId: string) => {
     setIsPopoverOpen((prevState) => ({ ...prevState, [studentId]: false }));
   };
 
@@ -85,8 +85,8 @@ const saveAttendance = async () => {
     alertMessage,
     studentAttendanceData,
     isPopoverOpen,
-    handleOpenPopover,
-    handleClosePopover,
+    handlePopoverOpen,
+    handlePopoverClose,
     selectedCheckbox,
     handleCheckboxChange,
     showConfirmationDialog,

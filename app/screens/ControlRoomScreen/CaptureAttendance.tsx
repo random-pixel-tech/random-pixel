@@ -13,8 +13,8 @@ const CaptureAttendance = () => {
     alertMessage,
     studentAttendanceData,
     isPopoverOpen,
-    handleOpenPopover,
-    handleClosePopover,
+    handlePopoverOpen,
+    handlePopoverClose,
     selectedCheckbox,
     handleCheckboxChange,
     showConfirmationDialog,
@@ -33,11 +33,11 @@ const CaptureAttendance = () => {
       <AttendanceList
         studentAttendanceData={studentAttendanceData}
         isPopoverOpen={isPopoverOpen}
-        handleOpenPopover={handleOpenPopover}
-        handleClosePopover={handleClosePopover}
+        onPopoverOpen={handlePopoverOpen}
+        onPopoverClose={handlePopoverClose}
         selectedCheckbox={selectedCheckbox}
-        handleCheckboxChange={handleCheckboxChange}
-        handleLeaveClick={handleLeaveClick} 
+        onCheckboxChange={handleCheckboxChange}
+        onLeaveClick={handleLeaveClick}
       />
 
       <ConfirmationDialog
