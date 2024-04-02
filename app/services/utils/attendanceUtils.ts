@@ -5,7 +5,7 @@ interface StudentAttendanceData {
     id: string;
   };
   attendanceRecord: {
-    morning_status: AttendanceStatus;
+   morningStatus : AttendanceStatus;
   } | null;
 }
 
@@ -15,7 +15,7 @@ export const getInitialSelectedCheckbox = (
   ): Record<string, AttendanceStatus | null> => {
     const initialSelectedCheckbox: Record<string, AttendanceStatus | null> = {};
     studentAttendanceData.forEach(({ student, attendanceRecord }) => {
-      initialSelectedCheckbox[student.id] = attendanceRecord?.morning_status || null;
+      initialSelectedCheckbox[student.id] = attendanceRecord?.morningStatus || null;
     });
     return initialSelectedCheckbox;
   };
@@ -28,7 +28,7 @@ export const getInitialSelectedCheckbox = (
     return studentAttendanceData.filter(({ student, attendanceRecord }) => {
       const selectedStatus = selectedCheckbox[student.id];
       return (
-        (attendanceRecord && attendanceRecord.morning_status !== selectedStatus) ||
+        (attendanceRecord && attendanceRecord.morningStatus !== selectedStatus) ||
         (!attendanceRecord && selectedStatus !== null)
       );
     });

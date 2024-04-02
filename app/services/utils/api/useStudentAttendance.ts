@@ -1,37 +1,35 @@
-// useStudentAttendance.ts
-
 import { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
 
 export interface Student {
   id: string;
   name: string;
-  student_id: string;
-  class_id: string;
-  roll_number: number | null;
-  created_at: string;
-  updated_at: string;
+  studentId: string;
+  classId: string;
+  rollNumber: number | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface AttendanceRecord {
   id: number;
-  student_id: string;
-  class_id: string;
+  studentId: string;
+  classId: string;
   date: string;
-  morning_status: AttendanceStatus;
-  afternoon_status: AttendanceStatus;
-  morning_comment: string | null;
-  afternoon_comment: string | null;
-  morning_attendance_taken_at: string | null;
-  afternoon_attendance_taken_at: string | null;
-  created_at: string;
-  updated_at: string;
+  morningStatus: AttendanceStatus;
+  afternoonStatus: AttendanceStatus;
+  morningComment: string | null;
+  afternoonComment: string | null;
+  morningAttendanceTakenAt: string | null;
+  afternoonAttendanceTakenAt: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export enum AttendanceStatus {
   Present = 'present',
   Absent = 'absent',
-  Leave = 'leave',
+  OnLeave = 'on-leave',
 }
 
 export enum AttendanceSession {
@@ -74,7 +72,7 @@ const useStudentAttendance = () => {
 
             const studentAttendanceData: StudentAttendanceData[] = studentsData.map((student) => {
               const existingRecord = attendanceRecordsData.find(
-                (record) => record.student_id === student.id
+                (record) => record.studentId === student.id
               );
 
               return { student, attendanceRecord: existingRecord || null };
@@ -121,8 +119,8 @@ const updateAttendanceRecord = async (
       const { error } = await supabase
         .from('attendance_records')
         .insert({
-          student_id: studentId,
-          class_id: '7e95d5d0-b050-4a59-8dcb-21f2ff291554',
+          studentId: studentId,
+          classId: '7e95d5d0-b050-4a59-8dcb-21f2ff291554',
           date: today,
           [session + '_status']: status,
           [session + '_attendance_taken_at']: new Date().toISOString(),
@@ -157,7 +155,7 @@ const fetchUpdatedAttendanceData = async () => {
     // Merge the updated attendance records with the student data
     const updatedStudentAttendanceData: StudentAttendanceData[] = studentAttendanceData.map((item) => {
       const updatedRecord = attendanceRecordsData.find(
-        (record) => record.student_id === item.student.id
+        (record) => record.studentId === item.student.id
       );
 
       return { student: item.student, attendanceRecord: updatedRecord || null };

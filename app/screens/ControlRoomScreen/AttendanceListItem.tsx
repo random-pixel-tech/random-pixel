@@ -30,7 +30,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
   return (
     <Box display="flex" py="$2" flexDirection="row" minHeight={40}>
       <Box w="$1/6" px="$4">
-        <Text>{student.roll_number || '-'}</Text>
+        <Text>{student.rollNumber || '-'}</Text>
       </Box>
       <Box w="$2/5" px="$4">
         <Text>{student.name}</Text>

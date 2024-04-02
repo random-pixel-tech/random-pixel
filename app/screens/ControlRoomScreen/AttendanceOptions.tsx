@@ -23,7 +23,7 @@ interface AttendanceOptionsProps {
   student: {
     id: string;
     name: string;
-    roll_number: number | null;
+    rollNumber: number | null;
   };
   onLeaveClick: (studentId: string) => void;
 }
@@ -45,7 +45,7 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
         <ModalContent bg="$pixSecondaryLight50" p="$2">
           <ModalHeader display="flex" justifyContent="space-between">
             <Heading color="$pixPrimary">{student.name}</Heading>
-            <Heading color="$pixPrimary">{student.roll_number}</Heading>
+            <Heading color="$pixPrimary">{student.rollNumber}</Heading>
           </ModalHeader>
           <ModalBody>
             <VStack>

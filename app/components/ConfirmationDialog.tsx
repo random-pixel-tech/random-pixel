@@ -46,11 +46,11 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
         <AlertDialogBody pb="$4">
           <Text size="md">{text}</Text>
         </AlertDialogBody>
-        <AlertDialogFooter justifyContent='space-evenly' w='$2/3' alignSelf='flex-end'>
-          <Button onPress={onConfirm} variant="outline">
+        <AlertDialogFooter alignSelf='flex-end'>
+          <Button onPress={onConfirm} variant="outline" mr="$4">
             <ButtonText>{confirmButtonText}</ButtonText>
           </Button>
-          <Button onPress={onClose} mr="$2" bg='$error500'>
+          <Button onPress={onClose}  bg='$error500'>
             <ButtonText>{cancelButtonText}</ButtonText>
           </Button>
         </AlertDialogFooter>

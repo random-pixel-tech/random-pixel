@@ -46,8 +46,8 @@ const SuccessAlert: React.FC<SuccessAlertProps> = ({
         <AlertDialogBody pb="$4">
           <Text size="md">{message}</Text>
         </AlertDialogBody>
-        <AlertDialogFooter justifyContent='space-evenly' w='$2/3' alignSelf='flex-end'>
-          <Button onPress={onClose} mr="$2" variant="outline" borderColor='$pixSecondary300'>
+        <AlertDialogFooter alignSelf='flex-end'>
+          <Button onPress={onClose} mr="$4" variant="outline" borderColor='$pixSecondary300'>
             <ButtonText color='$pixBackgroundLight700'>{cancelButtonText}</ButtonText>
           </Button>
           <Button>
