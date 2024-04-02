@@ -12,7 +12,7 @@ interface AttendanceListItemProps {
   isPopoverOpen: boolean;
   onPopoverOpen: () => void;
   onPopoverClose: () => void;
-  selectedCheckbox: AttendanceStatus | null;
+  attendanceStatus: AttendanceStatus | null;
   onCheckboxChange: (status: AttendanceStatus) => void;
   onLeaveClick: () => void;
 }
@@ -23,7 +23,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
   isPopoverOpen,
   onPopoverOpen,
   onPopoverClose,
-  selectedCheckbox,
+  attendanceStatus,
   onCheckboxChange,
   onLeaveClick,
 }) => {
@@ -38,12 +38,12 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
       <Box w="$1/6" px="$4" justifyContent="center">
         <Checkbox
           value={`morning-present-${student.id}`}
-          isChecked={selectedCheckbox === AttendanceStatus.Present}
+          isChecked={attendanceStatus === AttendanceStatus.Present}
           onChange={() => onCheckboxChange(AttendanceStatus.Present)}
           rounded="$md"
           aria-label={`Mark present for ${student.name}`}
         >
-          <CheckboxIndicator borderColor="$pixPrimary" bg={selectedCheckbox === AttendanceStatus.Present ? '$pixPrimary' : 'transparent'}
+          <CheckboxIndicator borderColor="$pixPrimary" bg={attendanceStatus === AttendanceStatus.Present ? '$pixPrimary' : 'transparent'}
           >
             <CheckboxIcon as={CheckIcon} />
           </CheckboxIndicator>
@@ -54,17 +54,17 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
           <Box minWidth={24}>
             <Checkbox
               value={`morning-absent-${student.id}`}
-              isChecked={selectedCheckbox === AttendanceStatus.Absent || selectedCheckbox === AttendanceStatus.OnLeave}
+              isChecked={attendanceStatus === AttendanceStatus.Absent || attendanceStatus === AttendanceStatus.OnLeave}
               onChange={() => onCheckboxChange(AttendanceStatus.Absent)}
               aria-label={`Mark absent for ${student.name}`}
               rounded="$md"
             >
-              <CheckboxIndicator borderColor="$pixOrange" bg={selectedCheckbox === AttendanceStatus.Absent || selectedCheckbox === AttendanceStatus.OnLeave ? '$pixOrange' : 'transparent'}>
+              <CheckboxIndicator borderColor="$pixOrange" bg={attendanceStatus === AttendanceStatus.Absent || attendanceStatus === AttendanceStatus.OnLeave ? '$pixOrange' : 'transparent'}>
                 <CheckboxIcon as={CheckIcon} />
               </CheckboxIndicator>
             </Checkbox>
           </Box>
-          {selectedCheckbox === AttendanceStatus.OnLeave && (
+          {attendanceStatus === AttendanceStatus.OnLeave && (
             <FontAwesomeIcon icon="house-user" size={20} color={Colors.Accent} />
           )}
         </Box>

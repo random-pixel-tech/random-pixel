@@ -44,7 +44,7 @@ interface StudentAttendanceData {
 
 const useStudentAttendance = () => {
   const [studentAttendanceData, setStudentAttendanceData] = useState<StudentAttendanceData[]>([]);
-  const [selectedCheckbox, setSelectedCheckbox] = useState<Record<string, AttendanceStatus | null>>({});
+  const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
 
   useEffect(() => {
     const fetchStudentAttendance = async () => {
@@ -105,8 +105,8 @@ const updateAttendanceRecord = async (
       const { error } = await supabase
         .from('attendance_records')
         .update({
-          [session + '_status']: status,
-          [session + '_attendance_taken_at']: new Date().toISOString(),
+          [session + 'Status']: status,
+          [session + 'AttendanceTakenAt']: new Date().toISOString(),
         })
         .eq('id', existingRecord.id);
 
@@ -120,10 +120,10 @@ const updateAttendanceRecord = async (
         .from('attendance_records')
         .insert({
           studentId: studentId,
-          classId: '7e95d5d0-b050-4a59-8dcb-21f2ff291554',
+          classId: 'dd4092c2-2030-4e90-8526-a6c9d864c0fb',
           date: today,
-          [session + '_status']: status,
-          [session + '_attendance_taken_at']: new Date().toISOString(),
+          [session + 'Status']: status,
+          [session + 'AttendanceTakenAt']: new Date().toISOString(),
         });
 
       if (error) {

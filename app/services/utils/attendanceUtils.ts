@@ -10,23 +10,23 @@ interface StudentAttendanceData {
 }
 
 // Get the initial state of the selected checkboxes based on the student attendance data
-export const getInitialSelectedCheckbox = (
+export const getInitialAttendanceState = (
     studentAttendanceData: StudentAttendanceData[]
   ): Record<string, AttendanceStatus | null> => {
-    const initialSelectedCheckbox: Record<string, AttendanceStatus | null> = {};
+    const initialAttendanceState: Record<string, AttendanceStatus | null> = {};
     studentAttendanceData.forEach(({ student, attendanceRecord }) => {
-      initialSelectedCheckbox[student.id] = attendanceRecord?.morningStatus || null;
+      initialAttendanceState[student.id] = attendanceRecord?.morningStatus || null;
     });
-    return initialSelectedCheckbox;
+    return initialAttendanceState;
   };
   
   // Get the updated attendance records based on the selected checkboxes
   export const getUpdatedRecords = (
     studentAttendanceData: StudentAttendanceData[],
-    selectedCheckbox: Record<string, AttendanceStatus | null>
+    attendanceStatus: Record<string, AttendanceStatus | null>
   ) => {
     return studentAttendanceData.filter(({ student, attendanceRecord }) => {
-      const selectedStatus = selectedCheckbox[student.id];
+      const selectedStatus = attendanceStatus[student.id];
       return (
         (attendanceRecord && attendanceRecord.morningStatus !== selectedStatus) ||
         (!attendanceRecord && selectedStatus !== null)

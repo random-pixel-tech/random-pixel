@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ title, onSavePress }) => {
         <Pressable onPress={() => navigation.goBack()}>
           <FontAwesomeIcon icon="arrow-left" size={20} color={Colors.Text100} />
         </Pressable>
-        <Text color="$pixHeader" fontSize="$lg" px="$8" fontWeight="$medium">
+        <Text color={Colors.Text100} fontSize="$lg" px="$8" fontWeight="$medium">
           {title}
         </Text>
       </Box>

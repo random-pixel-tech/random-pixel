@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import useStudentAttendance, { AttendanceStatus, AttendanceSession } from '../../services/utils/api/useStudentAttendance';
-import { getInitialSelectedCheckbox, getUpdatedRecords } from './attendanceUtils';
+import { getInitialAttendanceState, getUpdatedRecords } from './attendanceUtils';
 
 const useAttendanceLogic = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
@@ -8,12 +8,12 @@ const useAttendanceLogic = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData } = useStudentAttendance();
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
-  const [selectedCheckbox, setSelectedCheckbox] = useState<Record<string, AttendanceStatus | null>>({});
+  const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
   useEffect(() => {
-    const initialSelectedCheckbox = getInitialSelectedCheckbox(studentAttendanceData);
-    setSelectedCheckbox(initialSelectedCheckbox);
+    const initialAttendanceState = getInitialAttendanceState(studentAttendanceData);
+    setAttendanceStatus(initialAttendanceState);
   }, [studentAttendanceData]);
 
   const handlePopoverOpen = (studentId: string) => {
@@ -26,7 +26,7 @@ const useAttendanceLogic = () => {
 
   // Update the selected checkbox state when a checkbox is changed
 const handleCheckboxChange = (studentId: string, status: AttendanceStatus) => {
-  setSelectedCheckbox((prevState) => ({
+  setAttendanceStatus((prevState) => ({
     ...prevState,
     [studentId]: prevState[studentId] === status ? null : status,
   }));
@@ -35,7 +35,7 @@ const handleCheckboxChange = (studentId: string, status: AttendanceStatus) => {
 // Handle saving attendance when the save button is pressed
 const handleSaveAttendance = async () => {
   // Get the count of unmarked students
-  const unmarkedStudents = studentAttendanceData.filter(({ student }) => selectedCheckbox[student.id] === null);
+  const unmarkedStudents = studentAttendanceData.filter(({ student }) => attendanceStatus[student.id] === null);
   const unmarkedCount = unmarkedStudents.length;
   setUnmarkedStudentCount(unmarkedCount);
 
@@ -50,12 +50,12 @@ const handleSaveAttendance = async () => {
 // Save the attendance records
 const saveAttendance = async () => {
   // Get the updated records based on the selected checkboxes
-  const updatedRecords = getUpdatedRecords(studentAttendanceData, selectedCheckbox);
+  const updatedRecords = getUpdatedRecords(studentAttendanceData, attendanceStatus);
 
   // Update the attendance records for each updated record
   await Promise.all(
     updatedRecords.map(async ({ student }) => {
-      const selectedStatus = selectedCheckbox[student.id];
+      const selectedStatus = attendanceStatus[student.id];
       if (selectedStatus !== null) {
         await updateAttendanceRecord(student.id, AttendanceSession.Morning, selectedStatus);
       }
@@ -73,7 +73,7 @@ const saveAttendance = async () => {
 };
 
   const handleLeaveClick = (studentId: string) => {
-    setSelectedCheckbox((prevState) => ({
+    setAttendanceStatus((prevState) => ({
       ...prevState,
       [studentId]: AttendanceStatus.OnLeave,
     }));
@@ -87,7 +87,7 @@ const saveAttendance = async () => {
     isPopoverOpen,
     handlePopoverOpen,
     handlePopoverClose,
-    selectedCheckbox,
+    attendanceStatus,
     handleCheckboxChange,
     showConfirmationDialog,
     setShowConfirmationDialog,
