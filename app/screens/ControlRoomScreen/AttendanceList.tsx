@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Checkbox, CheckboxIcon, CheckboxIndicator, Text, CheckIcon, ScrollView } from '@gluestack-ui/themed';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import AttendanceOptions from './AttendanceOptions';
+import { Box, ScrollView } from '@gluestack-ui/themed';
+import AttendanceListHeader from './AttendanceListHeader';
+import AttendanceListItem from './AttendanceListItem';
 import { Student, AttendanceRecord, AttendanceStatus } from '../../services/utils/api/useStudentAttendance';
 
 interface AttendanceListProps {
@@ -29,84 +29,19 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
   return (
     <ScrollView>
       <Box display="flex" flexDirection="column">
-        {/* Attendance list header */}
-        <Box display="flex" py="$2" flexDirection="row" bg="$pixSecondaryLight50">
-          <Box w="$1/6" px="$4" justifyContent="center">
-            <Text bold={true} color="$pixTextDark100">
-              Roll No.
-            </Text>
-          </Box>
-          <Box w="$2/5" px="$4" justifyContent="center">
-            <Text bold={true} color="$pixTextDark100">
-              Name
-            </Text>
-          </Box>
-          <Box w="$1/6" px="$4" justifyContent="center">
-            <Text bold={true} color="$pixTextDark100">
-              P
-            </Text>
-          </Box>
-          <Box w="$1/6" px="$4" justifyContent="center">
-            <Text bold={true} color="$pixTextDark100">
-              A
-            </Text>
-          </Box>
-          <Box justifyContent="center" w="$1/6">
-            <FontAwesomeIcon icon="ellipsis-vertical" size={20} />
-          </Box>
-        </Box>
-
-        {/* Attendance list items */}
+        <AttendanceListHeader />
         {studentAttendanceData.map(({ student, attendanceRecord }) => (
-          <Box key={student.id} display="flex" py="$2" flexDirection="row" minHeight={40}>
-            <Box w="$1/6" px="$4">
-              <Text>{student.roll_number || '-'}</Text>
-            </Box>
-            <Box w="$2/5" px="$4">
-              <Text>{student.name}</Text>
-            </Box>
-            <Box w="$1/6" px="$4" justifyContent="center">
-              <Checkbox
-                value={`morning-present-${student.id}`}
-                isChecked={selectedCheckbox[student.id] === AttendanceStatus.Present}
-                onChange={() => handleCheckboxChange(student.id, AttendanceStatus.Present)}
-                rounded="$md"
-                aria-label={`Mark present for ${student.name}`}
-              >
-                <CheckboxIndicator borderColor="$pixPrimary" bg={selectedCheckbox[student.id] === AttendanceStatus.Present ? '$pixPrimary' : 'transparent'}
-                >
-                  <CheckboxIcon as={CheckIcon} />
-                </CheckboxIndicator>
-              </Checkbox>
-            </Box>
-            <Box w="$1/6" px="$4" justifyContent="center">
-              <Box flexDirection="row" alignItems="center">
-                <Box minWidth={24}>
-                  <Checkbox
-                    value={`morning-absent-${student.id}`}
-                    isChecked={selectedCheckbox[student.id] === AttendanceStatus.Absent || selectedCheckbox[student.id] === AttendanceStatus.Leave}
-                    onChange={() => handleCheckboxChange(student.id, AttendanceStatus.Absent)}
-                    aria-label={`Mark absent for ${student.name}`}
-                    rounded="$md"
-                  >
-                    <CheckboxIndicator borderColor="$pixOrange" bg={selectedCheckbox[student.id] === AttendanceStatus.Absent || selectedCheckbox[student.id] === AttendanceStatus.Leave ? '$pixOrange' : 'transparent'}>
-                      <CheckboxIcon as={CheckIcon} />
-                    </CheckboxIndicator>
-                  </Checkbox>
-                </Box>
-                {selectedCheckbox[student.id] === AttendanceStatus.Leave && (
-                  <FontAwesomeIcon icon="house-user" size={20} color="#f4ca4d" />
-                )}
-              </Box>
-            </Box>
-            <AttendanceOptions
-              isOpen={isPopoverOpen[student.id] || false}
-              onClose={() => handleClosePopover(student.id)}
-              onOpen={() => handleOpenPopover(student.id)}
-              student={student}
-              onLeaveClick={handleLeaveClick}
-            />
-          </Box>
+          <AttendanceListItem
+            key={student.id}
+            student={student}
+            attendanceRecord={attendanceRecord}
+            isPopoverOpen={isPopoverOpen[student.id] || false}
+            handleOpenPopover={() => handleOpenPopover(student.id)}
+            handleClosePopover={() => handleClosePopover(student.id)}
+            selectedCheckbox={selectedCheckbox[student.id]}
+            handleCheckboxChange={(status) => handleCheckboxChange(student.id, status)}
+            handleLeaveClick={() => handleLeaveClick(student.id)}
+          />
         ))}
       </Box>
     </ScrollView>

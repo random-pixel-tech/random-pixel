@@ -1,28 +1,18 @@
 import { useState, useEffect } from 'react';
 import useStudentAttendance, { AttendanceStatus, AttendanceSession } from '../../services/utils/api/useStudentAttendance';
+import { getInitialSelectedCheckbox, getUpdatedRecords } from './attendanceUtils';
 
 const useAttendanceLogic = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
-  const {
-    studentAttendanceData,
-    updateAttendanceRecord,
-    setStudentAttendanceData,
-    fetchUpdatedAttendanceData,
-  } = useStudentAttendance();
-  const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>(
-    {}
-  );
+  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData } = useStudentAttendance();
+  const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [selectedCheckbox, setSelectedCheckbox] = useState<Record<string, AttendanceStatus | null>>({});
-
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
   useEffect(() => {
-    const initialSelectedCheckbox: Record<string, AttendanceStatus | null> = {};
-    studentAttendanceData.forEach(({ student, attendanceRecord }) => {
-      initialSelectedCheckbox[student.id] = attendanceRecord?.morning_status || null;
-    });
+    const initialSelectedCheckbox = getInitialSelectedCheckbox(studentAttendanceData);
     setSelectedCheckbox(initialSelectedCheckbox);
   }, [studentAttendanceData]);
 
@@ -34,10 +24,7 @@ const useAttendanceLogic = () => {
     setIsPopoverOpen((prevState) => ({ ...prevState, [studentId]: false }));
   };
 
-  const handleCheckboxChange = (
-    studentId: string,
-    status: AttendanceStatus
-  ) => {
+  const handleCheckboxChange = (studentId: string, status: AttendanceStatus) => {
     setSelectedCheckbox((prevState) => ({
       ...prevState,
       [studentId]: prevState[studentId] === status ? null : status,
@@ -45,12 +32,10 @@ const useAttendanceLogic = () => {
   };
 
   const handleSaveAttendance = async () => {
-    const unmarkedStudents = studentAttendanceData.filter(
-      ({ student }) => selectedCheckbox[student.id] === null
-    );
+    const unmarkedStudents = studentAttendanceData.filter(({ student }) => selectedCheckbox[student.id] === null);
     const unmarkedCount = unmarkedStudents.length;
     setUnmarkedStudentCount(unmarkedCount);
-  
+
     if (unmarkedCount > 0) {
       setShowConfirmationDialog(true);
     } else {
@@ -59,15 +44,7 @@ const useAttendanceLogic = () => {
   };
 
   const saveAttendance = async () => {
-    const updatedRecords = studentAttendanceData.filter(
-      ({ student, attendanceRecord }) => {
-        const selectedStatus = selectedCheckbox[student.id];
-        return (
-          (attendanceRecord && attendanceRecord.morning_status !== selectedStatus) ||
-          (!attendanceRecord && selectedStatus !== null)
-        );
-      }
-    );
+    const updatedRecords = getUpdatedRecords(studentAttendanceData, selectedCheckbox);
 
     await Promise.all(
       updatedRecords.map(async ({ student }) => {
@@ -108,7 +85,7 @@ const useAttendanceLogic = () => {
     handleSaveAttendance,
     saveAttendance,
     handleLeaveClick,
-    unmarkedStudentCount
+    unmarkedStudentCount,
   };
 };
 
