@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Checkbox, CheckboxIcon, CheckboxIndicator, Text, CheckIcon } from '@gluestack-ui/themed';
+import { Box, Checkbox, CheckboxIcon, CheckboxIndicator, Text, CheckIcon, ScrollView } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import AttendanceOptions from './AttendanceOptions';
 import { Student, AttendanceRecord } from '../../services/utils/api/useStudentAttendance';
@@ -28,6 +28,7 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
     handleLeaveClick,
 }) => {
     return (
+      <ScrollView>
         <Box display="flex" flexDirection="column">
             {/* Attendance list header */}
             <Box display="flex" py="$2" flexDirection="row" bg="$pixSecondaryLight50">
@@ -109,6 +110,7 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
                 </Box>
             ))}
         </Box>
+        </ScrollView>
     );
 };
 
