@@ -20,8 +20,7 @@ const TabNavigator: React.FC = () => {
                     height: 60,
                     paddingBottom: 5,
                     paddingHorizontal: 0,
-                } 
-                
+                }, 
             }}
             
            >
@@ -64,7 +63,6 @@ const TabNavigator: React.FC = () => {
                             <FontAwesomeIcon icon="chart-simple" size={focused ? 24 : 20} color={color} style={ {marginLeft: 10}}/>
                         ),
                         tabBarLabelStyle: { marginLeft: 10 }
-
                     }}
                 />
                 <Tab.Screen

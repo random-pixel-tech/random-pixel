@@ -30,7 +30,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
   return (
     <Box display="flex" py="$2" flexDirection="row" minHeight={40}>
       <Box w="$1/6" px="$4">
-        <Text>{student.rollNumber || '-'}</Text>
+        <Text size='lg'>{student.rollNumber || '-'}</Text>
       </Box>
       <Box w="$2/5" px="$4">
         <Text
@@ -38,6 +38,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
         style={{
           overflow: 'hidden',
         }}
+        size='lg'
         >{student.name}</Text>
       </Box>
       <Box w="$1/6" px="$4" justifyContent="center">
@@ -47,6 +48,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
           onChange={() => onAttendanceStatusChange(AttendanceStatus.Present)}
           rounded="$md"
           aria-label={`Mark present for ${student.name}`}
+          size='lg'
         >
           <CheckboxIndicator borderColor="$pixPrimary" bg={attendanceStatus === AttendanceStatus.Present ? '$pixPrimary' : 'transparent'}
           >
@@ -63,6 +65,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
               onChange={() => onAttendanceStatusChange(AttendanceStatus.Absent)}
               aria-label={`Mark absent for ${student.name}`}
               rounded="$md"
+              size='lg'
             >
               <CheckboxIndicator borderColor="$pixOrange" bg={attendanceStatus === AttendanceStatus.Absent || attendanceStatus === AttendanceStatus.OnLeave ? '$pixOrange' : 'transparent'}>
                 <CheckboxIcon as={CheckIcon} />
@@ -70,7 +73,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
             </Checkbox>
           </Box>
           {attendanceStatus === AttendanceStatus.OnLeave && (
-            <FontAwesomeIcon icon="house-user" size={20} color={Colors.Accent} />
+            <FontAwesomeIcon icon="house-user" size={24} color={Colors.Accent} />
           )}
         </Box>
       </Box>
