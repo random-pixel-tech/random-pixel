@@ -45,7 +45,7 @@ interface StudentAttendanceData {
 
 export type TeacherId = string;
 
-const useStudentAttendance = (teacherId: TeacherId) => {
+const useStudentAttendance = () => {
   const [studentAttendanceData, setStudentAttendanceData] = useState<StudentAttendanceData[]>([]);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const useStudentAttendance = (teacherId: TeacherId) => {
     };
 
     fetchStudentAttendance();
-  }, [teacherId]);
+  }, []);
 
   // Function for updating attendance record
   const updateAttendanceRecord = async (

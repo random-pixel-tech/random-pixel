@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import useStudentAttendance, { AttendanceStatus, AttendanceSession, TeacherId } from '../../services/utils/api/useStudentAttendance';
 import { getInitialAttendanceState, getUpdatedRecords } from './attendanceUtils';
 
-const useAttendanceLogic = (teacherId: TeacherId) => {
+const useAttendanceLogic = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData } = useStudentAttendance(teacherId);
+  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData } = useStudentAttendance();
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -27,7 +27,7 @@ const useAttendanceLogic = (teacherId: TeacherId) => {
   };
 
   // Function for updating attendance status
-  const handleCheckboxChange = (studentId: string, status: AttendanceStatus) => {
+  const handleAttendanceStatusChange = (studentId: string, status: AttendanceStatus) => {
     setAttendanceStatus((prevState) => ({ ...prevState, [studentId]: prevState[studentId] === status ? null : status, }));
   };
 
@@ -77,7 +77,7 @@ const useAttendanceLogic = (teacherId: TeacherId) => {
     handlePopoverOpen,
     handlePopoverClose,
     attendanceStatus,
-    handleCheckboxChange,
+    handleAttendanceStatusChange,
     showConfirmationDialog,
     setShowConfirmationDialog,
     handleSaveAttendance,

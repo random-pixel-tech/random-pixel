@@ -16,7 +16,7 @@ const CaptureAttendance = () => {
     handlePopoverOpen,
     handlePopoverClose,
     attendanceStatus,
-    handleCheckboxChange,
+    handleAttendanceStatusChange,
     showConfirmationDialog,
     setShowConfirmationDialog,
     handleSaveAttendance,
@@ -36,7 +36,7 @@ const CaptureAttendance = () => {
         onPopoverOpen={handlePopoverOpen}
         onPopoverClose={handlePopoverClose}
         attendanceStatus={attendanceStatus}
-        onCheckboxChange={handleCheckboxChange}
+        onAttendanceStatusChange={handleAttendanceStatusChange}
         onLeaveClick={handleLeaveClick}
       />
 

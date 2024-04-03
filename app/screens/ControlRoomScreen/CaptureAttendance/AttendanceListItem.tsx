@@ -13,7 +13,7 @@ interface AttendanceListItemProps {
   onPopoverOpen: () => void;
   onPopoverClose: () => void;
   attendanceStatus: AttendanceStatus | null;
-  onCheckboxChange: (status: AttendanceStatus) => void;
+  onAttendanceStatusChange: (status: AttendanceStatus) => void;
   onLeaveClick: () => void;
 }
 
@@ -24,7 +24,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
   onPopoverOpen,
   onPopoverClose,
   attendanceStatus,
-  onCheckboxChange,
+  onAttendanceStatusChange,
   onLeaveClick,
 }) => {
   return (
@@ -44,7 +44,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
         <Checkbox
           value={`morning-present-${student.id}`}
           isChecked={attendanceStatus === AttendanceStatus.Present}
-          onChange={() => onCheckboxChange(AttendanceStatus.Present)}
+          onChange={() => onAttendanceStatusChange(AttendanceStatus.Present)}
           rounded="$md"
           aria-label={`Mark present for ${student.name}`}
         >
@@ -60,7 +60,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
             <Checkbox
               value={`morning-absent-${student.id}`}
               isChecked={attendanceStatus === AttendanceStatus.Absent || attendanceStatus === AttendanceStatus.OnLeave}
-              onChange={() => onCheckboxChange(AttendanceStatus.Absent)}
+              onChange={() => onAttendanceStatusChange(AttendanceStatus.Absent)}
               aria-label={`Mark absent for ${student.name}`}
               rounded="$md"
             >

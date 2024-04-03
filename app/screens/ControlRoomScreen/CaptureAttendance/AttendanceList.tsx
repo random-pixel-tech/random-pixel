@@ -13,7 +13,7 @@ interface AttendanceListProps {
   onPopoverOpen: (studentId: string) => void;
   onPopoverClose: (studentId: string) => void;
   attendanceStatus: Record<string, AttendanceStatus | null>;
-  onCheckboxChange: (studentId: string, status: AttendanceStatus) => void;
+  onAttendanceStatusChange: (studentId: string, status: AttendanceStatus) => void;
   onLeaveClick: (studentId: string) => void;
 }
 
@@ -23,7 +23,7 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
   onPopoverOpen,
   onPopoverClose,
   attendanceStatus,
-  onCheckboxChange,
+  onAttendanceStatusChange,
   onLeaveClick,
 }) => {
   return (
@@ -39,7 +39,7 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
             onPopoverOpen={() => onPopoverOpen(student.id)}
             onPopoverClose={() => onPopoverClose(student.id)}
             attendanceStatus={attendanceStatus[student.id]}
-            onCheckboxChange={(status) => onCheckboxChange(student.id, status)}
+            onAttendanceStatusChange={(status) => onAttendanceStatusChange(student.id, status)}
             onLeaveClick={() => onLeaveClick(student.id)}
           />
         ))}
