@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
-import useStudentAttendance, { AttendanceStatus, AttendanceSession } from '../../services/utils/api/useStudentAttendance';
+import useStudentAttendance, { AttendanceStatus, AttendanceSession, TeacherId } from '../../services/utils/api/useStudentAttendance';
 import { getInitialAttendanceState, getUpdatedRecords } from './attendanceUtils';
 
-const useAttendanceLogic = () => {
+const useAttendanceLogic = (teacherId: TeacherId) => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
-  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData } = useStudentAttendance();
+
+  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData } = useStudentAttendance(teacherId);
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
 
+  // Set initial attendance status when studentAttendanceData changes
   useEffect(() => {
     const initialAttendanceState = getInitialAttendanceState(studentAttendanceData);
     setAttendanceStatus(initialAttendanceState);
@@ -24,59 +26,46 @@ const useAttendanceLogic = () => {
     setIsPopoverOpen((prevState) => ({ ...prevState, [studentId]: false }));
   };
 
-  // Update the selected checkbox state when a checkbox is changed
-const handleCheckboxChange = (studentId: string, status: AttendanceStatus) => {
-  setAttendanceStatus((prevState) => ({
-    ...prevState,
-    [studentId]: prevState[studentId] === status ? null : status,
-  }));
-};
+  // Function for updating attendance status
+  const handleCheckboxChange = (studentId: string, status: AttendanceStatus) => {
+    setAttendanceStatus((prevState) => ({ ...prevState, [studentId]: prevState[studentId] === status ? null : status, }));
+  };
 
-// Handle saving attendance when the save button is pressed
-const handleSaveAttendance = async () => {
-  // Get the count of unmarked students
-  const unmarkedStudents = studentAttendanceData.filter(({ student }) => attendanceStatus[student.id] === null);
-  const unmarkedCount = unmarkedStudents.length;
-  setUnmarkedStudentCount(unmarkedCount);
+  // Function for saving attendance
+  const handleSaveAttendance = async () => {
+    const unmarkedStudents = studentAttendanceData.filter(({ student }) => attendanceStatus[student.id] === null);
+    const unmarkedCount = unmarkedStudents.length;
+    setUnmarkedStudentCount(unmarkedCount);
 
-  // Show confirmation dialog if there are unmarked students, otherwise save attendance
-  if (unmarkedCount > 0) {
-    setShowConfirmationDialog(true);
-  } else {
-    await saveAttendance();
-  }
-};
+    if (unmarkedCount > 0) {
+      setShowConfirmationDialog(true);
+    } else {
+      await saveAttendance();
+    }
+  };
 
-// Save the attendance records
-const saveAttendance = async () => {
-  // Get the updated records based on the selected checkboxes
-  const updatedRecords = getUpdatedRecords(studentAttendanceData, attendanceStatus);
+  // Function for saving attendance records
+  const saveAttendance = async () => {
+    const updatedRecords = getUpdatedRecords(studentAttendanceData, attendanceStatus);
+    await Promise.all(
+      updatedRecords.map(async ({ student }) => {
+        const selectedStatus = attendanceStatus[student.id];
+        if (selectedStatus !== null) {
+          await updateAttendanceRecord(student.id, AttendanceSession.Morning, selectedStatus);
+        }
+      })
+    );
 
-  // Update the attendance records for each updated record
-  await Promise.all(
-    updatedRecords.map(async ({ student }) => {
-      const selectedStatus = attendanceStatus[student.id];
-      if (selectedStatus !== null) {
-        await updateAttendanceRecord(student.id, AttendanceSession.Morning, selectedStatus);
-      }
-    })
-  );
+    const updatedAttendanceData = await fetchUpdatedAttendanceData();
+    setStudentAttendanceData(updatedAttendanceData);
 
-  // Fetch the updated attendance data and set it in the state
-  const updatedAttendanceData = await fetchUpdatedAttendanceData();
-  setStudentAttendanceData(updatedAttendanceData);
-
-  // Show success alert with the current date
-  const currentDate = new Date().toLocaleDateString();
-  setAlertMessage(`Marking attendance complete for ${currentDate}. You will be able to access the attendance from stats panel.`);
-  setShowAlertDialog(true);
-};
+    const currentDate = new Date().toLocaleDateString();
+    setAlertMessage(`Marking attendance complete for ${currentDate}. You will be able to access the attendance from stats panel.`);
+    setShowAlertDialog(true);
+  };
 
   const handleLeaveClick = (studentId: string) => {
-    setAttendanceStatus((prevState) => ({
-      ...prevState,
-      [studentId]: AttendanceStatus.OnLeave,
-    }));
+    setAttendanceStatus((prevState) => ({ ...prevState, [studentId]: AttendanceStatus.OnLeave, }));
   };
 
   return {

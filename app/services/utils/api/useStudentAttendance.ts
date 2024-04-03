@@ -37,136 +37,156 @@ export enum AttendanceSession {
   Afternoon = 'afternoon',
 }
 
+// Interface for combining student data and attendance record
 interface StudentAttendanceData {
   student: Student;
   attendanceRecord: AttendanceRecord | null;
 }
 
-const useStudentAttendance = () => {
+export type TeacherId = string;
+
+const useStudentAttendance = (teacherId: TeacherId) => {
   const [studentAttendanceData, setStudentAttendanceData] = useState<StudentAttendanceData[]>([]);
-  const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
 
   useEffect(() => {
     const fetchStudentAttendance = async () => {
       try {
+        // Hardcoded teacherId for now
+        const teacherId = "9235bfc0-09e8-4cde-9fd0-4c5863947fc5";
+
+        // Fetch class data for the given teacher
+        const { data: classData, error: classError } = await supabase
+          .from('classes')
+          .select('id')
+          .eq('teacherId', teacherId)
+          .single();
+
+        if (classError) {
+          console.error('Error fetching class:', classError);
+          return;
+        }
+
+        // Fetch students data for the class
         const { data: studentsData, error: studentsError } = await supabase
           .from('students')
-          .select('*');
+          .select('*')
+          .eq('classId', classData.id);
 
         if (studentsError) {
           console.error('Error fetching students:', studentsError);
-        } else {
-          console.log('Students Data:', studentsData);
-
-          const today = new Date().toISOString().split('T')[0];
-
-          const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
-            .from('attendance_records')
-            .select('*')
-            .eq('date', today);
-
-          if (attendanceRecordsError) {
-            console.error('Error fetching attendance records:', attendanceRecordsError);
-          } else {
-            console.log('Attendance Records Data:', attendanceRecordsData);
-
-            const studentAttendanceData: StudentAttendanceData[] = studentsData.map((student) => {
-              const existingRecord = attendanceRecordsData.find(
-                (record) => record.studentId === student.id
-              );
-
-              return { student, attendanceRecord: existingRecord || null };
-            });
-            setStudentAttendanceData(studentAttendanceData);
-          }
+          return;
         }
+
+        // Get the current date
+        const today = new Date().toISOString().split('T')[0];
+
+        // Fetch attendance records for the class and current date
+        const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
+          .from('attendance_records')
+          .select('*')
+          .eq('classId', classData.id)
+          .eq('date', today);
+
+        if (attendanceRecordsError) {
+          console.error('Error fetching attendance records:', attendanceRecordsError);
+          return;
+        }
+
+        // Combine student data and attendance records
+        const studentAttendanceData: StudentAttendanceData[] = studentsData.map((student) => {
+          const existingRecord = attendanceRecordsData.find(
+            (record) => record.studentId === student.id
+          );
+
+          return { student, attendanceRecord: existingRecord || null };
+        });
+        setStudentAttendanceData(studentAttendanceData);
       } catch (error) {
         console.error('Error fetching student attendance data:', error);
       }
     };
 
     fetchStudentAttendance();
-  }, []);
+  }, [teacherId]);
 
-  // Update the attendance record for a student
-const updateAttendanceRecord = async (
-  studentId: string,
-  session: AttendanceSession,
-  status: AttendanceStatus
-) => {
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    const existingRecord = studentAttendanceData.find(
-      (item) => item.student.id === studentId
-    )?.attendanceRecord;
+  // Function for updating attendance record
+  const updateAttendanceRecord = async (
+    studentId: string,
+    session: AttendanceSession,
+    status: AttendanceStatus
+  ) => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const existingRecord = studentAttendanceData.find(
+        (item) => item.student.id === studentId
+      )?.attendanceRecord;
 
-    if (existingRecord) {
-      // Update the existing attendance record
-      const { error } = await supabase
-        .from('attendance_records')
-        .update({
-          [session + 'Status']: status,
-          [session + 'AttendanceTakenAt']: new Date().toISOString(),
-        })
-        .eq('id', existingRecord.id);
+      if (existingRecord) {
+        // Update existing attendance record
+        const { error } = await supabase
+          .from('attendance_records')
+          .update({
+            [session + 'Status']: status,
+            [session + 'AttendanceTakenAt']: new Date().toISOString(),
+          })
+          .eq('id', existingRecord.id);
 
-      if (error) {
-        console.error('Error updating attendance record:', error);
-        throw error;
+        if (error) {
+          console.error('Error updating attendance record:', error);
+          throw error;
+        }
+      } else {
+        // Create a new attendance record
+        const { error } = await supabase
+          .from('attendance_records')
+          .insert({
+            studentId: studentId,
+            classId: studentAttendanceData.find((item) => item.student.id === studentId)?.student.classId,
+            date: today,
+            [session + 'Status']: status,
+            [session + 'AttendanceTakenAt']: new Date().toISOString(),
+          });
+
+        if (error) {
+          console.error('Error creating attendance record:', error);
+          throw error;
+        }
       }
-    } else {
-      // Create a new attendance record
-      const { error } = await supabase
-        .from('attendance_records')
-        .insert({
-          studentId: studentId,
-          classId: 'dd4092c2-2030-4e90-8526-a6c9d864c0fb',
-          date: today,
-          [session + 'Status']: status,
-          [session + 'AttendanceTakenAt']: new Date().toISOString(),
-        });
-
-      if (error) {
-        console.error('Error creating attendance record:', error);
-        throw error;
-      }
+    } catch (error) {
+      console.error('Error updating attendance record:', error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Error updating attendance record:', error);
-    throw error;
-  }
-};
+  };
 
-// Fetch the updated attendance data
-const fetchUpdatedAttendanceData = async () => {
-  try {
-    const today = new Date().toISOString().split('T')[0];
+  // Function for fetching updated attendance data
+  const fetchUpdatedAttendanceData = async () => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
 
-    const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
-      .from('attendance_records')
-      .select('*')
-      .eq('date', today);
+      const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
+        .from('attendance_records')
+        .select('*')
+        .eq('date', today);
 
-    if (attendanceRecordsError) {
-      console.error('Error fetching updated attendance records:', attendanceRecordsError);
+      if (attendanceRecordsError) {
+        console.error('Error fetching updated attendance records:', attendanceRecordsError);
+        return studentAttendanceData;
+      }
+
+      const updatedStudentAttendanceData: StudentAttendanceData[] = studentAttendanceData.map((item) => {
+        const updatedRecord = attendanceRecordsData.find(
+          (record) => record.studentId === item.student.id
+        );
+
+        return { student: item.student, attendanceRecord: updatedRecord || null };
+      });
+
+      return updatedStudentAttendanceData;
+    } catch (error) {
+      console.error('Error fetching updated attendance data:', error);
       return studentAttendanceData;
     }
-
-    // Merge the updated attendance records with the student data
-    const updatedStudentAttendanceData: StudentAttendanceData[] = studentAttendanceData.map((item) => {
-      const updatedRecord = attendanceRecordsData.find(
-        (record) => record.studentId === item.student.id
-      );
-
-      return { student: item.student, attendanceRecord: updatedRecord || null };
-    });
-
-    return updatedStudentAttendanceData;
-  } catch (error) {
-    console.error('Error fetching updated attendance data:', error);
-    return studentAttendanceData;
-  }
-};
+  };
 
   return { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData };
 };
