@@ -2,7 +2,7 @@ import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, 
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-enum RouteNames {
+export enum RouteNames {
   ControlRoom = 'ControlRoom',
   CaptureAttendance = 'CaptureAttendance',
   ClassAttendance = 'ClassAttendance',
