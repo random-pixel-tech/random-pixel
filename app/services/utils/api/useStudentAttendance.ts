@@ -47,6 +47,8 @@ export type TeacherId = string;
 
 const useStudentAttendance = () => {
   const [studentAttendanceData, setStudentAttendanceData] = useState<StudentAttendanceData[]>([]);
+  const [className, setClassName] = useState<string>('');
+  const today = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
     const fetchStudentAttendance = async () => {
@@ -57,13 +59,18 @@ const useStudentAttendance = () => {
         // Fetch class data for the given teacher
         const { data: classData, error: classError } = await supabase
           .from('classes')
-          .select('id')
+          .select('id, name')
           .eq('teacherId', teacherId)
           .single();
 
         if (classError) {
           console.error('Error fetching class:', classError);
           return;
+        }
+
+        // Fetch class name
+        if (classData) {
+          setClassName(classData.name);
         }
 
         // Fetch students data for the class
@@ -77,8 +84,8 @@ const useStudentAttendance = () => {
           return;
         }
 
-        // Get the current date
-        const today = new Date().toISOString().split('T')[0];
+        // // Get the current date
+        // const today = new Date().toISOString().split('T')[0];
 
         // Fetch attendance records for the class and current date
         const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
@@ -188,7 +195,7 @@ const useStudentAttendance = () => {
     }
   };
 
-  return { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData };
+  return { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today };
 };
 
 export default useStudentAttendance;

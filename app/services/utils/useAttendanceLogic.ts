@@ -7,10 +7,16 @@ const useAttendanceLogic = () => {
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData } = useStudentAttendance();
+  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today } = useStudentAttendance();
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+
+  // Calculate marked students and total students
+  const totalStudents = studentAttendanceData.length;
+
+  // Calculate marked students based on selected checkboxes
+  const markedStudents = Object.values(attendanceStatus).filter((status) => status !== null).length;
 
   // Set initial attendance status when studentAttendanceData changes
   useEffect(() => {
@@ -84,6 +90,10 @@ const useAttendanceLogic = () => {
     saveAttendance,
     handleLeaveClick,
     unmarkedStudentCount,
+    className,
+    today,
+    totalStudents,
+    markedStudents,
   };
 };
 

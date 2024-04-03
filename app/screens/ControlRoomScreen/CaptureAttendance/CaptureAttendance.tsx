@@ -5,6 +5,7 @@ import SuccessAlert from '../../../components/SuccessAlert';
 import useAttendanceLogic from '../../../services/utils/useAttendanceLogic';
 import Header from '../../../components/Header';
 import AttendanceList from './AttendanceList';
+import AttendanceHeader from './AttendanceHeader';
 
 const CaptureAttendance = () => {
   const {
@@ -23,12 +24,16 @@ const CaptureAttendance = () => {
     saveAttendance,
     handleLeaveClick,
     unmarkedStudentCount,
+    className,
+    today,
+    totalStudents,
+    markedStudents,
   } = useAttendanceLogic();
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
       <Header title="Attendance" onSavePress={handleSaveAttendance} />
-      <Box bg="$pixSecondary" w="$full" h="$8" />
+      <AttendanceHeader className={className} today={today} totalStudents={totalStudents} markedStudents={markedStudents} />
 
       <AttendanceList
         studentAttendanceData={studentAttendanceData}
