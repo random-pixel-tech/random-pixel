@@ -44,8 +44,8 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
         <ModalBackdrop />
         <ModalContent bg="$pixSecondaryLight50" p="$2">
           <ModalHeader display="flex" justifyContent="space-between">
+          <Heading color="$pixPrimary">{student.rollNumber}</Heading>
             <Heading color="$pixPrimary">{student.name}</Heading>
-            <Heading color="$pixPrimary">{student.rollNumber}</Heading>
           </ModalHeader>
           <ModalBody>
             <VStack>
