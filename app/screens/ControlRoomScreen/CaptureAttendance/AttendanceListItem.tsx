@@ -2,8 +2,8 @@ import React from 'react';
 import { Box, Checkbox, CheckboxIcon, CheckboxIndicator, Text, CheckIcon } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import AttendanceOptions from './AttendanceOptions';
-import { Student, AttendanceRecord, AttendanceStatus } from '../../services/utils/api/useStudentAttendance';
-import { Colors } from '../../services/utils/colors';
+import { Student, AttendanceRecord, AttendanceStatus } from '../../../services/utils/api/useStudentAttendance';
+import { Colors } from '../../../services/utils/colors';
 
 
 interface AttendanceListItemProps {

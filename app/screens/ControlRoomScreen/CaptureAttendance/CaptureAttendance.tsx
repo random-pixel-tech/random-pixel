@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box } from '@gluestack-ui/themed';
-import ConfirmationDialog from '../../components/ConfirmationDialog';
-import SuccessAlert from '../../components/SuccessAlert';
-import useAttendanceLogic from '../../services/utils/useAttendanceLogic';
-import Header from '../../components/Header';
+import ConfirmationDialog from '../../../components/ConfirmationDialog';
+import SuccessAlert from '../../../components/SuccessAlert';
+import useAttendanceLogic from '../../../services/utils/useAttendanceLogic';
+import Header from '../../../components/Header';
 import AttendanceList from './AttendanceList';
 
 const CaptureAttendance = () => {

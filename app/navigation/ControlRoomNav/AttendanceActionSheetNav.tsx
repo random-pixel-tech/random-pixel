@@ -1,6 +1,6 @@
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ControlRoom from '../../screens/ControlRoomScreen/ControlRoom';
-import CaptureAttendance from '../../screens/ControlRoomScreen/CaptureAttendance';
+import CaptureAttendance from '../../screens/ControlRoomScreen/CaptureAttendance/CaptureAttendance';
 import ClassAttendance from '../../screens/ControlRoomScreen/ClassAttendance';
 import StudentAttendance from '../../screens/ControlRoomScreen/StudentAttendance';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'

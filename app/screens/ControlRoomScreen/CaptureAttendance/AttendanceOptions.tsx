@@ -14,7 +14,7 @@ import {
 } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { CloseIcon } from '@gluestack-ui/themed';
-import { Colors } from '../../services/utils/colors';
+import { Colors } from '../../../services/utils/colors';
 
 interface AttendanceOptionsProps {
   isOpen: boolean;
