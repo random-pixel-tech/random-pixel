@@ -5,16 +5,16 @@ import {
   ModalContent,
   ModalHeader,
   ModalBody,
-  ModalCloseButton,
   Heading,
   VStack,
   HStack,
   Text,
   Pressable,
+  Box,
 } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { CloseIcon } from '@gluestack-ui/themed';
 import { Colors } from '../../../services/utils/colors';
+import { Divider } from '@gluestack-ui/themed';
 
 interface AttendanceOptionsProps {
   isOpen: boolean;
@@ -43,28 +43,45 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalBackdrop />
         <ModalContent bg="$pixSecondaryLight50" p="$2">
-          <ModalHeader display="flex" justifyContent="space-between">
-          <Heading color="$pixPrimary">{student.rollNumber}</Heading>
-            <Heading color="$pixPrimary">{student.name}</Heading>
+          <ModalHeader display="flex" justifyContent="flex-start" alignItems="center">
+            <Box
+              borderRadius="$full"
+              borderWidth={2}
+              borderColor="$pixPrimaryDark50"
+              width={40}
+              height={40}
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Heading color="$pixPrimaryDark50">{student.rollNumber}</Heading>
+            </Box>
+            <Heading color="$pixPrimaryDark50" px='$4'>{student.name}</Heading>
           </ModalHeader>
+          <Divider my="$2" bg="$pixSecondary2" />
           <ModalBody>
             <VStack>
-            <Pressable p="$2" onPress={() => { onLeaveClick(student.id); onClose(); }}>
-                <HStack>
-                  <FontAwesomeIcon icon="plane-departure" color={Colors.Primary} size={20} />
+              <Pressable
+                p="$2"
+                onPress={() => {
+                  onLeaveClick(student.id);
+                  onClose();
+                }}
+              >
+                <HStack py='$2'>
+                  <FontAwesomeIcon icon="plane-departure" color={Colors.PrimaryDark50} size={20} />
                   <Text color="$pixPrimaryDark50" px="$4">
                     On leave
                   </Text>
                 </HStack>
               </Pressable>
-              <HStack p="$2">
-                <FontAwesomeIcon icon="address-card" color={Colors.Primary} size={20} />
+              <HStack py='$4' p="$2">
+                <FontAwesomeIcon icon="address-card" color={Colors.PrimaryDark50} size={20} />
                 <Text color="$pixPrimaryDark50" px="$4">
                   View student profile
                 </Text>
               </HStack>
-              <HStack p="$2">
-                <FontAwesomeIcon icon="calendar-check" color={Colors.Primary} size={20} />
+              <HStack py='$4' p="$2">
+                <FontAwesomeIcon icon="calendar-check" color={Colors.PrimaryDark50} size={20} />
                 <Text color="$pixPrimaryDark50" px="$4">
                   Mark attendance for upcoming days
                 </Text>
