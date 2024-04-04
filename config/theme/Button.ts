@@ -2,7 +2,7 @@ import { createStyle } from '@gluestack-style/react';
 
 export const Button = createStyle({
   'borderRadius': '$sm',
-  'backgroundColor': '$primary500',
+  'backgroundColor': '$pixPrimary',
   'flexDirection': 'row',
   'justifyContent': 'center',
   'alignItems': 'center',
@@ -36,11 +36,11 @@ export const Button = createStyle({
   'variants': {
     action: {
       primary: {
-        'bg': '$primary500',
-        'borderColor': '$primary300',
+        'bg': '$pixPrimary',
+        'borderColor': '$pixPrimary',
 
         ':hover': {
-          bg: '$primary600',
+          bg: '$pixPrimary',
           borderColor: '$primary400',
         },
 
@@ -50,9 +50,9 @@ export const Button = createStyle({
         },
 
         '_text': {
-          'color': '$primary600',
+          'color': '$pixPrimary',
           ':hover': {
-            color: '$primary600',
+            color: '$pixPrimary',
           },
           ':active': {
             color: '$primary700',
@@ -60,9 +60,9 @@ export const Button = createStyle({
         },
 
         '_icon': {
-          'color': '$primary600',
+          'color': '$pixPrimary',
           ':hover': {
-            color: '$primary600',
+            color: '$pixPrimary',
           },
           ':active': {
             color: '$primary700',
@@ -71,11 +71,11 @@ export const Button = createStyle({
 
         '_spinner': {
           'props': {
-            color: '$primary600',
+            color: '$pixPrimary',
           },
           ':hover': {
             props: {
-              color: '$primary600',
+              color: '$pixPrimary',
             },
           },
           ':active': {
@@ -89,35 +89,35 @@ export const Button = createStyle({
           'bg': '$primary400',
           'borderColor': '$primary700',
           ':hover': {
-            bg: '$primary500',
+            bg: '$pixPrimary',
             borderColor: '$primary400',
           },
           ':active': {
-            bg: '$primary600',
-            borderColor: '$primary300',
+            bg: '$pixPrimary',
+            borderColor: '$pixPrimary',
           },
           '_text': {
-            'color': '$primary300',
+            'color': '$pixPrimary',
             ':hover': {
-              color: '$primary300',
+              color: '$pixPrimary',
             },
             ':active': {
               color: '$primary200',
             },
           },
           '_icon': {
-            'color': '$primary300',
+            'color': '$pixPrimary',
             ':hover': {
-              color: '$primary300',
+              color: '$pixPrimary',
             },
             ':active': {
               color: '$primary200',
             },
           },
           '_spinner': {
-            'props': { color: '$primary300' },
+            'props': { color: '$pixPrimary' },
             ':hover': {
-              props: { color: '$primary300' },
+              props: { color: '$pixPrimary' },
             },
             ':active': {
               props: { color: '$primary200' },
@@ -1027,7 +1027,7 @@ export const Button = createStyle({
       outlineColor: '$primary700',
       outlineStyle: 'solid',
       _dark: {
-        outlineColor: '$primary300',
+        outlineColor: '$pixPrimary',
       },
     },
   },

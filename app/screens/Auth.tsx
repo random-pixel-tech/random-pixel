@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, StyleSheet, View, AppState } from 'react-native'
-import { supabase } from '../utils/supabase'
+import { supabase } from '../services/utils/supabase'
 // import { Button } from 'react-native-elements'
 import { FormControl, VStack, Center, Image, Text, InputField, Input, InputSlot, InputIcon, Button, ButtonGroup, ButtonText } from '@gluestack-ui/themed'
 
