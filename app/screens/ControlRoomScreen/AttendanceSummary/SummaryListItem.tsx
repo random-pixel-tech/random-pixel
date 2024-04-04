@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text } from '@gluestack-ui/themed';
+import { Box, ScrollView, Text } from '@gluestack-ui/themed';
 import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
 
 interface SummaryListItemProps {

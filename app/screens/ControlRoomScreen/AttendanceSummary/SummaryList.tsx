@@ -13,17 +13,20 @@ interface SummaryListProps {
 
 const SummaryList: React.FC<SummaryListProps> = ({ filteredStudents }) => {
   return (
-    <ScrollView>
-      <Box display="flex" flexDirection="column">
-      <AttendanceListHeader
-        FirstColumnText="Roll No."
-        SecondColumnText="Name"
-        />
-        {filteredStudents.map(({ student, attendanceRecord }) => (
-          <SummaryListItem key={student.id} student={student} attendanceRecord={attendanceRecord} />
-        ))}
+    <Box display="flex" flexDirection="column" flex={1}>
+      <AttendanceListHeader FirstColumnText="Roll No." SecondColumnText="Name" />
+      <Box flex={1}>
+        <ScrollView>
+          {filteredStudents.map(({ student, attendanceRecord }) => (
+            <SummaryListItem
+              key={student.id}
+              student={student}
+              attendanceRecord={attendanceRecord}
+            />
+          ))}
+        </ScrollView>
       </Box>
-    </ScrollView>
+    </Box>
   );
 };
 

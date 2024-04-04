@@ -27,30 +27,32 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
   onLeaveClick,
 }) => {
   return (
-    <ScrollView>
-      <Box display="flex" flexDirection="column">
-        <AttendanceListHeader
+    <Box display="flex" flexDirection="column" flex={1}>
+      <AttendanceListHeader
         FirstColumnText="Roll No."
         SecondColumnText="Name"
         ThirdColumnText="P"
         FourthColumnText="A"
-        icon='ellipsis-vertical'
-        />
-        {studentAttendanceData.map(({ student, attendanceRecord }) => (
-          <AttendanceListItem
-            key={student.id}
-            student={student}
-            attendanceRecord={attendanceRecord}
-            isPopoverOpen={isPopoverOpen[student.id] || false}
-            onPopoverOpen={() => onPopoverOpen(student.id)}
-            onPopoverClose={() => onPopoverClose(student.id)}
-            attendanceStatus={attendanceStatus[student.id]}
-            onAttendanceStatusChange={(status) => onAttendanceStatusChange(student.id, status)}
-            onLeaveClick={() => onLeaveClick(student.id)}
-          />
-        ))}
+        icon="ellipsis-vertical"
+      />
+      <Box flex={1}>
+        <ScrollView>
+          {studentAttendanceData.map(({ student, attendanceRecord }) => (
+            <AttendanceListItem
+              key={student.id}
+              student={student}
+              attendanceRecord={attendanceRecord}
+              isPopoverOpen={isPopoverOpen[student.id] || false}
+              onPopoverOpen={() => onPopoverOpen(student.id)}
+              onPopoverClose={() => onPopoverClose(student.id)}
+              attendanceStatus={attendanceStatus[student.id]}
+              onAttendanceStatusChange={(status) => onAttendanceStatusChange(student.id, status)}
+              onLeaveClick={() => onLeaveClick(student.id)}
+            />
+          ))}
+        </ScrollView>
       </Box>
-    </ScrollView>
+    </Box>
   );
 };
 
