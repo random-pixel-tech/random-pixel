@@ -35,9 +35,6 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
       <Box w="$2/5" px="$4">
         <Text
         numberOfLines={1}
-        style={{
-          overflow: 'hidden',
-        }}
         size='lg'
         >{student.name}</Text>
       </Box>

@@ -29,7 +29,13 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
   return (
     <ScrollView>
       <Box display="flex" flexDirection="column">
-        <AttendanceListHeader />
+        <AttendanceListHeader
+        FirstColumnText="Roll No."
+        SecondColumnText="Name"
+        ThirdColumnText="P"
+        FourthColumnText="A"
+        icon='ellipsis-vertical'
+        />
         {studentAttendanceData.map(({ student, attendanceRecord }) => (
           <AttendanceListItem
             key={student.id}

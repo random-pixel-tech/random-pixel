@@ -1,20 +1,7 @@
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-export enum RouteNames {
-  ControlRoom = 'ControlRoom',
-  CaptureAttendance = 'CaptureAttendance',
-  ClassAttendance = 'ClassAttendance',
-  StudentAttendance = 'StudentAttendance',
-}
-
-type RootStackParamList = {
-  [RouteNames.ControlRoom]: undefined;
-  [RouteNames.CaptureAttendance]: undefined;
-  [RouteNames.ClassAttendance]: undefined;
-  [RouteNames.StudentAttendance]: undefined;
-};
+import { RouteNames, RootStackParamList } from '../services/utils/RouteNames';
 
 type ControlRoomNavigationProp = NativeStackNavigationProp<RootStackParamList, RouteNames.ControlRoom>;
 

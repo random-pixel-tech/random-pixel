@@ -11,6 +11,34 @@ const useAttendanceLogic = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<AttendanceStatus | null>(null);
+
+  const handleStatusClick = (status: AttendanceStatus | null) => {
+    setSelectedStatus(status);
+  };
+
+  // filter the students based on the selected status
+  const getFilteredStudents = () => {
+    if (selectedStatus === null) {
+      return studentAttendanceData;
+    }
+  
+    return studentAttendanceData.filter(({ attendanceRecord }) => {
+      return attendanceRecord?.morningStatus === selectedStatus;
+    });
+  };
+
+  // Calculate students based on their status
+
+  const presentCount = studentAttendanceData.filter(
+    (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.Present
+  ).length;
+  const absentCount = studentAttendanceData.filter(
+    (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.Absent
+  ).length;
+  const onLeaveCount = studentAttendanceData.filter(
+    (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.OnLeave
+  ).length;
 
   // Calculate marked students and total students
   const totalStudents = studentAttendanceData.length;
@@ -94,6 +122,12 @@ const useAttendanceLogic = () => {
     today,
     totalStudents,
     markedStudents,
+    selectedStatus,
+    handleStatusClick,
+    getFilteredStudents,
+    presentCount,
+    absentCount,
+    onLeaveCount,
   };
 };
 

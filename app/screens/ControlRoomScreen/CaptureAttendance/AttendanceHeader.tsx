@@ -1,14 +1,19 @@
 import React from 'react';
 import { Box, Heading, Text } from '@gluestack-ui/themed';
 
+interface SummaryValues {
+  [key: string]: number;
+}
+
 interface AttendanceHeaderProps {
   className: string;
   today: string;
-  totalStudents: number;
-  markedStudents: number;
+  summaryValues: SummaryValues;
 }
 
-const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({ className, today, totalStudents, markedStudents }) => {
+const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({ className, today, summaryValues }) => {
+  const summaryKeys = Object.keys(summaryValues);
+
   return (
     <Box bg="$pixSecondary" w="$full" h="$16" alignContent="center" p="$1" justifyContent="space-between" flexDirection="row">
       <Box>
@@ -17,7 +22,12 @@ const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({ className, today, t
       </Box>
       <Box>
         <Heading fontSize="$lg" alignSelf="flex-end">
-          {markedStudents}/{totalStudents}
+          {summaryKeys.map((key, index) => (
+            <React.Fragment key={key}>
+              {summaryValues[key]}
+              {index < summaryKeys.length - 1 && '/'}
+            </React.Fragment>
+          ))}
         </Heading>
         <Text fontSize="$md">Summary</Text>
       </Box>
