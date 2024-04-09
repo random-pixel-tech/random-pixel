@@ -1,39 +1,50 @@
 import { supabase } from '../supabase';
+import { useState, useEffect } from 'react';
+import { AttendanceRecord } from './useStudentAttendance';
 
-export const fetchAttendanceRecordsByClassName = async (className: string) => {
-  try {
-    // Fetch the class ID based on the class name
-    const { data: classData, error: classError } = await supabase
-      .from('classes')
-      .select('id')
-      .eq('name', className)
-      .single();
+export const useAttendanceRecords = () => {
+  const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([]);
 
-    if (classError) {
-      throw classError;
+  const fetchAttendanceRecordsByClassName = async (className: string) => {
+    try {
+      // Fetch the class ID based on the class name
+      const { data: classData, error: classError } = await supabase
+        .from('classes')
+        .select('id')
+        .eq('name', className)
+        .single();
+
+      if (classError) {
+        throw classError;
+      }
+
+      if (!classData) {
+        throw new Error(`Class "${className}" not found`);
+      }
+
+      const classId = classData.id;
+
+      // Fetch attendance records for the class ID
+      const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
+        .from('attendance_records')
+        .select('*')
+        .eq('classId', classId);
+
+      if (attendanceRecordsError) {
+        throw attendanceRecordsError;
+      }
+
+      setAttendanceRecords(attendanceRecordsData);
+    } catch (error) {
+      console.error('Error fetching attendance records:', error);
     }
+  };
 
-    if (!classData) {
-      throw new Error(`Class "${className}" not found`);
-    }
+  useEffect(() => {
+    console.log('Fetched attendance records:', attendanceRecords);
+  }, [attendanceRecords]);
 
-    const classId = classData.id;
-
-    // Fetch attendance records for the class ID
-    const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
-      .from('attendance_records')
-      .select('*')
-      .eq('classId', classId);
-
-    if (attendanceRecordsError) {
-      throw attendanceRecordsError;
-    }
-
-    return attendanceRecordsData;
-  } catch (error) {
-    console.error('Error fetching attendance records:', error);
-    throw error;
-  }
+  return { attendanceRecords, fetchAttendanceRecordsByClassName };
 };
 
 export const fetchAttendanceRecordsByStudentName = async (studentName: string) => {
