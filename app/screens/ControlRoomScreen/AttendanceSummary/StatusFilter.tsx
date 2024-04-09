@@ -22,30 +22,42 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
     return (
         <Box flexDirection="row" justifyContent="space-between" p="$4">
             <Pressable onPress={() => onStatusClick(null)}>
-                <Box bg='$pixSecondary' py='$2' px='$3' mr='$4' rounded='$full' borderWidth={selectedStatus === null ? 1 : 0} borderColor='$pixPrimary'>
+                <Box bg='$pixSecondary' py='$2' px='$6' mr='$4' rounded='$full' borderWidth={selectedStatus === null ? 1 : 0} borderColor='$pixPrimary'>
                     <Text color={selectedStatus === null ? '$pixPrimary' : '$pixText'}>
-                        All  {allCount}
+                        All&nbsp;
+                        <Text fontWeight="$medium" color={selectedStatus === null ? '$pixPrimary' : '$pixText'}>
+                            {allCount}
+                        </Text>
                     </Text>
                 </Box>
             </Pressable>
             <Pressable onPress={() => onStatusClick(AttendanceStatus.Present)}>
-                <Box bg='$pixSecondary' py='$2' px='$3' mr='$4' rounded='$full' borderWidth={selectedStatus === AttendanceStatus.Present ? 1 : 0} borderColor='$pixPrimary'>
+                <Box bg='$pixSecondary' py='$2' px='$6' mr='$4' rounded='$full' borderWidth={selectedStatus === AttendanceStatus.Present ? 1 : 0} borderColor='$pixPrimary'>
                     <Text color={selectedStatus === AttendanceStatus.Present ? '$pixPrimary' : '$pixText'}>
-                        Present  {presentCount}
+                        Present&nbsp;
+                        <Text fontWeight="$medium" color={selectedStatus === AttendanceStatus.Present ? '$pixPrimary' : '$pixText'}>
+                            {presentCount}
+                        </Text>
                     </Text>
                 </Box>
             </Pressable>
             <Pressable onPress={() => onStatusClick(AttendanceStatus.Absent)}>
-                <Box bg='$pixSecondary' py='$2' px='$3' mr='$4' rounded='$full' borderWidth={selectedStatus === AttendanceStatus.Absent ? 1 : 0} borderColor='$pixPrimary'>
+                <Box bg='$pixSecondary' py='$2' px='$6' mr='$4' rounded='$full' borderWidth={selectedStatus === AttendanceStatus.Absent ? 1 : 0} borderColor='$pixPrimary'>
                     <Text color={selectedStatus === AttendanceStatus.Absent ? '$pixPrimary' : '$pixText'}>
-                        Absent  {absentCount}
+                        Absent&nbsp;
+                        <Text fontWeight="$medium" color={selectedStatus === AttendanceStatus.Absent ? '$pixPrimary' : '$pixText'}>
+                            {absentCount}
+                        </Text>
                     </Text>
                 </Box>
             </Pressable>
             <Pressable onPress={() => onStatusClick(AttendanceStatus.OnLeave)}>
-                <Box bg='$pixSecondary' py='$2' px='$3' mr='$4' rounded='$full' borderWidth={selectedStatus === AttendanceStatus.OnLeave ? 1 : 0} borderColor='$pixPrimary'>
+                <Box bg='$pixSecondary' py='$2' px='$6' mr='$4' rounded='$full' borderWidth={selectedStatus === AttendanceStatus.OnLeave ? 1 : 0} borderColor='$pixPrimary'>
                     <Text color={selectedStatus === AttendanceStatus.OnLeave ? '$pixPrimary' : '$pixText'}>
-                        On Leave  {onLeaveCount}
+                        On Leave&nbsp;
+                        <Text fontWeight="$medium" color={selectedStatus === AttendanceStatus.OnLeave ? '$pixPrimary' : '$pixText'}>
+                            {onLeaveCount}
+                        </Text>
                     </Text>
                 </Box>
             </Pressable>
