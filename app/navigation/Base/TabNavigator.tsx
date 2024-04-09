@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Conversation from '../../screens/Conversation';
-import Dashboard from '../../screens/Dashboard';
+import Dashboard from '../../screens/DashboardScreen/Dashboard';
 import ControlRoom from '../../screens/ControlRoomScreen/ControlRoom';
 import HomePage from '../../screens/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';

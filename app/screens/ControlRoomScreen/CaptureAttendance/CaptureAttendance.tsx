@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import SuccessAlert from '../../../components/SuccessAlert';
-import useAttendanceLogic from '../../../services/utils/useAttendanceLogic';
+import useAttendanceLogic from '../../../services/utils/api/useAttendanceLogic';
 import Header from '../../../components/Header';
 import AttendanceList from './AttendanceList';
 import AttendanceHeader from './AttendanceHeader';
@@ -39,7 +39,7 @@ const CaptureAttendance = () => {
     <Box bg="$pixWhite" w="$full" h="$full">
       <Header title="Attendance" icon="check" onIconPress={handleSaveAttendance} />
       <AttendanceHeader className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
- />
+      />
       <AttendanceList
         studentAttendanceData={studentAttendanceData}
         isPopoverOpen={isPopoverOpen}

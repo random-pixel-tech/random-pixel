@@ -1,11 +1,10 @@
 import React from 'react';
 import { Box, ScrollView } from '@gluestack-ui/themed';
-import useAttendanceLogic from '../../../services/utils/useAttendanceLogic';
+import useAttendanceLogic from '../../../services/utils/api/useAttendanceLogic';
 import Header from '../../../components/Header';
 import AttendanceHeader from '../CaptureAttendance/AttendanceHeader';
 import SummaryList from './SummaryList';
 import StatusFilter from './StatusFilter';
-import AttendanceListHeader from '../CaptureAttendance/AttendanceListHeader';
 
 const AttendanceSummary = () => {
   const {
@@ -26,19 +25,18 @@ const AttendanceSummary = () => {
       <Header title="Attendance Summary" />
       <AttendanceHeader className={className} today={today} summaryValues={{ markedStudents, totalStudents }} />
       <Box>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <StatusFilter
-      selectedStatus={selectedStatus}
-      onStatusClick={handleStatusClick}
-      allCount={totalStudents}
-      presentCount={presentCount}
-      absentCount={absentCount}
-      onLeaveCount={onLeaveCount}
-    />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <StatusFilter
+            selectedStatus={selectedStatus}
+            onStatusClick={handleStatusClick}
+            allCount={totalStudents}
+            presentCount={presentCount}
+            absentCount={absentCount}
+            onLeaveCount={onLeaveCount}
+          />
         </ScrollView>
-        </Box>
-        
-    <SummaryList filteredStudents={getFilteredStudents()} />
+      </Box>
+      <SummaryList filteredStudents={getFilteredStudents()} />
     </Box>
   );
 };

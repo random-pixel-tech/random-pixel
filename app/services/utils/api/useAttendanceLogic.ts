@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import useStudentAttendance, { AttendanceStatus, AttendanceSession, TeacherId } from '../../services/utils/api/useStudentAttendance';
-import { getInitialAttendanceState, getUpdatedRecords } from './attendanceUtils';
+import useStudentAttendance, { AttendanceStatus, AttendanceSession, TeacherId } from './useStudentAttendance';
+import { getInitialAttendanceState, getUpdatedRecords } from '../attendanceUtils';
 
 const useAttendanceLogic = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
