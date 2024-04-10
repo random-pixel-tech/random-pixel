@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../supabase';
+import { AttendanceStatus, AttendanceSession } from '../enums';
 
 export interface Student {
   id: string;
@@ -24,17 +25,6 @@ export interface AttendanceRecord {
   afternoonAttendanceTakenAt: string | null;
   createdAt: string;
   updatedAt: string;
-}
-
-export enum AttendanceStatus {
-  Present = 'present',
-  Absent = 'absent',
-  OnLeave = 'on-leave',
-}
-
-export enum AttendanceSession {
-  Morning = 'morning',
-  Afternoon = 'afternoon',
 }
 
 // Interface for combining student data and attendance record

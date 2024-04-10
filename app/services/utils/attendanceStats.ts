@@ -1,4 +1,4 @@
-import { AttendanceStatus } from '../../services/utils/api/useStudentAttendance';
+import { AttendanceStatus } from "./enums";
 
 interface StudentAttendanceData {
   student: { id: string };

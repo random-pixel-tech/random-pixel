@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import useStudentAttendance, { AttendanceStatus, AttendanceSession, TeacherId } from './useStudentAttendance';
+import useStudentAttendance, { TeacherId } from './useStudentAttendance';
 import { getInitialAttendanceState, getUpdatedRecords } from '../attendanceUtils';
-
+import { AttendanceStatus, AttendanceSession } from '../enums';
 const useAttendanceLogic = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);

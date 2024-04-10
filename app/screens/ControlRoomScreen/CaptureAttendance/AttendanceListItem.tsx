@@ -12,10 +12,10 @@ import AttendanceOptions from './AttendanceOptions';
 import {
   Student,
   AttendanceRecord,
-  AttendanceStatus,
 } from '../../../services/utils/api/useStudentAttendance';
 import { Colors } from '../../../services/utils/colors';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { AttendanceStatus } from '../../../services/utils/enums';
 
 interface AttendanceListItemProps {
   student: Student;

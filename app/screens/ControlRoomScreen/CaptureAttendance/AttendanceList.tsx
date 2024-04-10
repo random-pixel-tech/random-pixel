@@ -2,7 +2,8 @@ import React from 'react';
 import { Box, ScrollView } from '@gluestack-ui/themed';
 import AttendanceListHeader from './AttendanceListHeader';
 import AttendanceListItem from './AttendanceListItem';
-import { Student, AttendanceRecord, AttendanceStatus } from '../../../services/utils/api/useStudentAttendance';
+import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
+import { AttendanceStatus } from '../../../services/utils/enums';
 
 interface AttendanceListProps {
   studentAttendanceData: Array<{
