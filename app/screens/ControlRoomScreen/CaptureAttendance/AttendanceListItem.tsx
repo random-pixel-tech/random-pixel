@@ -1,10 +1,21 @@
 import React from 'react';
-import { Box, Checkbox, CheckboxIcon, CheckboxIndicator, Text, CheckIcon } from '@gluestack-ui/themed';
+import {
+  Box,
+  Checkbox,
+  CheckboxIcon,
+  CheckboxIndicator,
+  Text,
+  CheckIcon,
+} from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import AttendanceOptions from './AttendanceOptions';
-import { Student, AttendanceRecord, AttendanceStatus } from '../../../services/utils/api/useStudentAttendance';
+import {
+  Student,
+  AttendanceRecord,
+  AttendanceStatus,
+} from '../../../services/utils/api/useStudentAttendance';
 import { Colors } from '../../../services/utils/colors';
-
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 interface AttendanceListItemProps {
   student: Student;
@@ -27,16 +38,38 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
   onAttendanceStatusChange,
   onLeaveClick,
 }) => {
+  const options = [
+    {
+      label: 'On leave',
+      icon: 'plane-departure' as IconProp,
+      onPress: () => {
+        onLeaveClick();
+        onPopoverClose();
+      },
+    },
+    {
+      label: 'View student profile',
+      icon: 'address-card' as IconProp,
+      onPress: () => {
+        // Handle view student profile action
+      },
+    },
+    {
+      label: 'Mark attendance for upcoming days',
+      icon: 'calendar-check' as IconProp,
+      onPress: () => {
+        // Handle mark attendance for upcoming days action
+      },
+    },
+  ];
+
   return (
     <Box display="flex" py="$6" flexDirection="row" minHeight={40}>
       <Box w="$1/6" px="$4">
         <Text size='lg'>{student.rollNumber || '-'}</Text>
       </Box>
       <Box w="$2/5" px="$4">
-        <Text
-        numberOfLines={1}
-        size='lg'
-        >{student.name}</Text>
+        <Text numberOfLines={1} size='lg' >{student.name}</Text>
       </Box>
       <Box w="$1/6" px="$4" justifyContent="center">
         <Checkbox
@@ -47,7 +80,9 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
           aria-label={`Mark present for ${student.name}`}
           size='lg'
         >
-          <CheckboxIndicator borderColor="$pixPrimary" bg={attendanceStatus === AttendanceStatus.Present ? '$pixPrimary' : 'transparent'}
+          <CheckboxIndicator
+            borderColor="$pixPrimary"
+            bg={attendanceStatus === AttendanceStatus.Present ? '$pixPrimary' : 'transparent'}
           >
             <CheckboxIcon as={CheckIcon} />
           </CheckboxIndicator>
@@ -64,7 +99,10 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
               rounded="$md"
               size='lg'
             >
-              <CheckboxIndicator borderColor="$pixOrange" bg={attendanceStatus === AttendanceStatus.Absent || attendanceStatus === AttendanceStatus.OnLeave ? '$pixOrange' : 'transparent'}>
+              <CheckboxIndicator
+                borderColor="$pixOrange"
+                bg={attendanceStatus === AttendanceStatus.Absent || attendanceStatus === AttendanceStatus.OnLeave ? '$pixOrange' : 'transparent'}
+              >
                 <CheckboxIcon as={CheckIcon} />
               </CheckboxIndicator>
             </Checkbox>
@@ -79,7 +117,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
         onClose={onPopoverClose}
         onOpen={onPopoverOpen}
         student={student}
-        onLeaveClick={onLeaveClick}
+        options={options}
       />
     </Box>
   );

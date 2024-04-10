@@ -14,7 +14,8 @@ interface SummaryListProps {
 const SummaryList: React.FC<SummaryListProps> = ({ filteredStudents }) => {
   return (
     <Box display="flex" flexDirection="column" flex={1}>
-      <AttendanceListHeader FirstColumnText="Roll No." SecondColumnText="Name" />
+      <AttendanceListHeader FirstColumnText="Roll No." SecondColumnText="Name" icon="ellipsis-vertical"
+/>
       <Box flex={1}>
         <ScrollView>
           {filteredStudents.map(({ student, attendanceRecord }) => (
