@@ -1,17 +1,17 @@
 import React from 'react';
 import { Box, ScrollView } from '@gluestack-ui/themed';
 import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
-import SummaryListItem from './SummaryListItem';
+import AttendanceSummaryListItem from './AttendanceSummaryListItem';
 import AttendanceListHeader from '../CaptureAttendance/AttendanceListHeader';
 
-interface SummaryListProps {
+interface AttendanceSummaryListProps {
   filteredStudents: Array<{
     student: Student;
     attendanceRecord: AttendanceRecord | null;
   }>;
 }
 
-const SummaryList: React.FC<SummaryListProps> = ({ filteredStudents }) => {
+const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({ filteredStudents }) => {
   return (
     <Box display="flex" flexDirection="column" flex={1}>
       <AttendanceListHeader FirstColumnText="Roll No." SecondColumnText="Name" icon="ellipsis-vertical"
@@ -19,7 +19,7 @@ const SummaryList: React.FC<SummaryListProps> = ({ filteredStudents }) => {
       <Box flex={1}>
         <ScrollView>
           {filteredStudents.map(({ student, attendanceRecord }) => (
-            <SummaryListItem
+            <AttendanceSummaryListItem
               key={student.id}
               student={student}
               attendanceRecord={attendanceRecord}
@@ -31,4 +31,4 @@ const SummaryList: React.FC<SummaryListProps> = ({ filteredStudents }) => {
   );
 };
 
-export default SummaryList;
+export default AttendanceSummaryList;

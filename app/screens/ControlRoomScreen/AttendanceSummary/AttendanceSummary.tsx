@@ -3,7 +3,7 @@ import { Box, ScrollView } from '@gluestack-ui/themed';
 import useAttendanceLogic from '../../../services/utils/api/useAttendanceLogic';
 import Header from '../../../components/Header';
 import AttendanceHeader from '../CaptureAttendance/AttendanceHeader';
-import SummaryList from './SummaryList';
+import SummaryList from './AttendanceSummaryList';
 import StatusFilter from './StatusFilter';
 
 const AttendanceSummary = () => {

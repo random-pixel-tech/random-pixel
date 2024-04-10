@@ -2,12 +2,12 @@ import React from 'react';
 import { Box, ScrollView, Text } from '@gluestack-ui/themed';
 import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
 
-interface SummaryListItemProps {
+interface AttendanceSummaryListItemProps {
   student: Student;
   attendanceRecord: AttendanceRecord | null;
 }
 
-const SummaryListItem: React.FC<SummaryListItemProps> = ({
+const AttendanceSummaryListItem: React.FC<AttendanceSummaryListItemProps> = ({
   student,
 }) => {
   return (
@@ -25,4 +25,4 @@ const SummaryListItem: React.FC<SummaryListItemProps> = ({
   );
 };
 
-export default SummaryListItem;
+export default AttendanceSummaryListItem;
