@@ -15,7 +15,7 @@ const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({ className, today, s
   const summaryKeys = Object.keys(summaryValues);
 
   return (
-    <Box bg="$pixSecondary" w="$full" h="$16" alignContent="center" p="$1" justifyContent="space-between" flexDirection="row">
+    <Box bg="$pixSecondary" w="$full" h="$16" alignContent="center" p="$1" px='$4' justifyContent="space-between" flexDirection="row">
       <Box>
         <Heading fontSize="$lg">{className}</Heading>
         <Text fontSize="$md">{today}</Text>
