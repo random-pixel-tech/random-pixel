@@ -22,7 +22,7 @@ const AttendanceSummary = () => {
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
-      <Header title="Attendance Summary" />
+      <Header title="Attendance Summary"  icon="ellipsis-vertical"/>
       <AttendanceHeader className={className} today={today} summaryValues={{ markedStudents, totalStudents }} />
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
