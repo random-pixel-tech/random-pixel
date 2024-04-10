@@ -33,6 +33,7 @@ export const gluestackUIConfig = createConfig({
       pixAccentLight50: '#f8df94',
       pixPrimary:'#5f31dd',
       pixPrimaryDark50: '#391D85',
+      pixPrimaryLight50: '#9F83EB',
       pixSecondary:'#dedcff',
       pixSecondary2: '#8C85FF',
       pixSecondary300: '#B0B0B0', 

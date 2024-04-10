@@ -36,7 +36,7 @@ const SuccessAlert: React.FC<SuccessAlertProps> = ({
   return (
     <AlertDialog isOpen={isOpen} onClose={onClose}>
       <AlertDialogBackdrop />
-      <AlertDialogContent>
+      <AlertDialogContent bg='$pixSecondaryLight50'>
         <AlertDialogHeader>
           <Heading size="md">{heading}</Heading>
           <AlertDialogCloseButton>
