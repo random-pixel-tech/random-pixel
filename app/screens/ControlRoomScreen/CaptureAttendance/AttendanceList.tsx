@@ -33,7 +33,6 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
         SecondColumnText="Name"
         ThirdColumnText="P"
         FourthColumnText="A"
-        icon="ellipsis-vertical"
       />
       <Box flex={1}>
         <ScrollView>
