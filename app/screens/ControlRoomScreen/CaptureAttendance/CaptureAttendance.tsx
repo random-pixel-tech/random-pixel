@@ -31,6 +31,7 @@ const CaptureAttendance = () => {
     today,
     totalStudents,
     markedStudents,
+    section
   } = useAttendanceLogic();
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -38,7 +39,7 @@ const CaptureAttendance = () => {
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
       <Header title="Attendance" icon="check" onIconPress={handleSaveAttendance} />
-      <AttendanceHeader className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
+      <AttendanceHeader section={section} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
       />
       <AttendanceList
         studentAttendanceData={studentAttendanceData}

@@ -9,6 +9,7 @@ import StatusFilter from './StatusFilter';
 const AttendanceSummary = () => {
   const {
     className,
+    section,
     today,
     totalStudents,
     markedStudents,
@@ -22,8 +23,13 @@ const AttendanceSummary = () => {
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
-      <Header title="Attendance Summary"  icon="ellipsis-vertical"/>
-      <AttendanceHeader className={className} today={today} summaryValues={{ markedStudents, totalStudents }} />
+      <Header title="Attendance Summary" icon="ellipsis-vertical" />
+      <AttendanceHeader
+        className={className}
+        section={section}
+        today={today}
+        summaryValues={{ markedStudents, totalStudents }}
+      />
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <StatusFilter

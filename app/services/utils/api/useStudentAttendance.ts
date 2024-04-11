@@ -38,6 +38,7 @@ export type TeacherId = string;
 const useStudentAttendance = () => {
   const [studentAttendanceData, setStudentAttendanceData] = useState<StudentAttendanceData[]>([]);
   const [className, setClassName] = useState<string>('');
+  const [section, setSection] = useState<string>(''); // Add section state
   const today = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
@@ -49,7 +50,7 @@ const useStudentAttendance = () => {
         // Fetch class data for the given teacher
         const { data: classData, error: classError } = await supabase
           .from('classes')
-          .select('id, name')
+          .select('id, name, section') // Include section column
           .eq('teacherId', teacherId)
           .single();
 
@@ -58,24 +59,24 @@ const useStudentAttendance = () => {
           return;
         }
 
-        // Fetch class name
+        // Fetch class name and section
         if (classData) {
           setClassName(classData.name);
+          setSection(classData.section); // Set section state
         }
 
-        // Fetch students data for the class
+        // Fetch students data for the class in ascending order of rollNumber
         const { data: studentsData, error: studentsError } = await supabase
           .from('students')
           .select('*')
-          .eq('classId', classData.id);
+          .eq('classId', classData.id)
+          .order('rollNumber', { ascending: true }); // Order by rollNumber in ascending order
 
         if (studentsError) {
           console.error('Error fetching students:', studentsError);
           return;
         }
 
-        // // Get the current date
-        // const today = new Date().toISOString().split('T')[0];
 
         // Fetch attendance records for the class and current date
         const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
@@ -185,7 +186,7 @@ const useStudentAttendance = () => {
     }
   };
 
-  return { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today };
+  return { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, section, today };
 };
 
 export default useStudentAttendance;

@@ -7,17 +7,34 @@ interface SummaryValues {
 
 interface AttendanceHeaderProps {
   className: string;
+  section: string;
   today: string;
   summaryValues: SummaryValues;
 }
 
-const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({ className, today, summaryValues }) => {
+const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({
+  className,
+  section,
+  today,
+  summaryValues,
+}) => {
   const summaryKeys = Object.keys(summaryValues);
 
   return (
-    <Box bg="$pixSecondary" w="$full" h="$16" alignContent="center" p="$1" px='$4' justifyContent="space-between" flexDirection="row">
+    <Box
+      bg="$pixSecondary"
+      w="$full"
+      h="$16"
+      alignContent="center"
+      p="$1"
+      px="$4"
+      justifyContent="space-between"
+      flexDirection="row"
+    >
       <Box>
-        <Heading fontSize="$lg">{className}</Heading>
+        <Heading fontSize="$lg">
+          {className} {section}
+        </Heading>
         <Text fontSize="$md">{today}</Text>
       </Box>
       <Box>

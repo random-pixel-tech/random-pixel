@@ -7,7 +7,7 @@ const useAttendanceLogic = () => {
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today } = useStudentAttendance();
+  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today, section } = useStudentAttendance();
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -60,17 +60,17 @@ const useAttendanceLogic = () => {
     setIsPopoverOpen((prevState) => ({ ...prevState, [studentId]: false }));
   };
 
-  // Function for updating attendance status
-  const handleAttendanceStatusChange = (studentId: string, status: AttendanceStatus | null) => {
-    setAttendanceStatus((prevState) => {
-      const currentStatus = prevState[studentId];
-      if (status === AttendanceStatus.Absent && currentStatus === AttendanceStatus.OnLeave) {
-        return { ...prevState, [studentId]: null };
-      } else {
-        return { ...prevState, [studentId]: currentStatus === status ? null : status };
-      }
-    });
-  };
+ // Function for updating attendance status
+const handleAttendanceStatusChange = (studentId: string, status: AttendanceStatus | null) => {
+  setAttendanceStatus((prevState) => {
+    const currentStatus = prevState[studentId];
+    if (status === AttendanceStatus.Absent && currentStatus === AttendanceStatus.OnLeave) {
+      return { ...prevState, [studentId]: null };
+    } else {
+      return { ...prevState, [studentId]: currentStatus === status ? null : status };
+    }
+  });
+};
 
   // Function for saving attendance
   const handleSaveAttendance = async () => {
@@ -135,6 +135,7 @@ const useAttendanceLogic = () => {
     presentCount,
     absentCount,
     onLeaveCount,
+    section
   };
 };
 
