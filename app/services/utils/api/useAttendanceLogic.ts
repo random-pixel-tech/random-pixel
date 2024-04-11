@@ -61,13 +61,15 @@ const useAttendanceLogic = () => {
   };
 
  // Function for updating attendance status
-const handleAttendanceStatusChange = (studentId: string, status: AttendanceStatus | null) => {
+ const handleAttendanceStatusChange = (studentId: string, status: AttendanceStatus | null) => {
   setAttendanceStatus((prevState) => {
     const currentStatus = prevState[studentId];
-    if (status === AttendanceStatus.Absent && currentStatus === AttendanceStatus.OnLeave) {
+    if (currentStatus === AttendanceStatus.OnLeave && status === AttendanceStatus.Absent) {
+      return { ...prevState, [studentId]: null };
+    } else if (currentStatus === status) {
       return { ...prevState, [studentId]: null };
     } else {
-      return { ...prevState, [studentId]: currentStatus === status ? null : status };
+      return { ...prevState, [studentId]: status };
     }
   });
 };
