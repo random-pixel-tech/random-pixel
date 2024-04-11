@@ -19,6 +19,9 @@ const AttendanceSummary = () => {
     presentCount,
     absentCount,
     onLeaveCount,
+    isPopoverOpen,
+    handlePopoverOpen,
+    handlePopoverClose,
   } = useAttendanceLogic();
 
   return (
@@ -42,7 +45,11 @@ const AttendanceSummary = () => {
           />
         </ScrollView>
       </Box>
-      <SummaryList filteredStudents={getFilteredStudents()} />
+      <SummaryList
+        filteredStudents={getFilteredStudents()}
+        isPopoverOpen={isPopoverOpen}
+        handlePopoverOpen={handlePopoverOpen}
+        handlePopoverClose={handlePopoverClose} />
     </Box>
   );
 };
