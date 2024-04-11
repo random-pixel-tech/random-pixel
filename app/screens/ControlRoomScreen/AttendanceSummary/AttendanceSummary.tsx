@@ -4,8 +4,9 @@ import useAttendanceLogic from '../../../services/utils/api/useAttendanceLogic';
 import Header from '../../../components/Header';
 import AttendanceHeader from '../CaptureAttendance/AttendanceHeader';
 import SummaryList from './AttendanceSummaryList';
-import StatusFilter from './StatusFilter';
-
+import FilterBar, { FilterOption } from '../../../components/FilterBar';
+import { AttendanceStatus } from '../../../services/utils/enums';
+import { AttendanceStatusOrNull, filterOptions } from '../../../services/utils/constants';
 const AttendanceSummary = () => {
   const {
     className,
@@ -35,13 +36,15 @@ const AttendanceSummary = () => {
       />
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <StatusFilter
-            selectedStatus={selectedStatus}
-            onStatusClick={handleStatusClick}
-            allCount={totalStudents}
-            presentCount={presentCount}
-            absentCount={absentCount}
-            onLeaveCount={onLeaveCount}
+        <FilterBar<AttendanceStatusOrNull>
+            selectedValue={selectedStatus}
+            onFilterSelection={handleStatusClick}
+            filterOptions={filterOptions(
+              totalStudents,
+              presentCount,
+              absentCount,
+              onLeaveCount
+            )}
           />
         </ScrollView>
       </Box>
@@ -49,7 +52,8 @@ const AttendanceSummary = () => {
         filteredStudents={getFilteredStudents()}
         isPopoverOpen={isPopoverOpen}
         handlePopoverOpen={handlePopoverOpen}
-        handlePopoverClose={handlePopoverClose} />
+        handlePopoverClose={handlePopoverClose}
+      />
     </Box>
   );
 };
