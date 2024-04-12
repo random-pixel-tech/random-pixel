@@ -38,6 +38,7 @@ export const gluestackUIConfig = createConfig({
       pixSecondary2: '#8C85FF',
       pixSecondary300: '#B0B0B0', 
       pixSecondaryLight50: '#EBEAFF',
+      pixSecondaryLight100: '#DFD6F8',
       pixBackground:'#fbfbfe',
       pixBackgroundLight700: '#525252',
       pixSecondaryDisabled: '#e6e6ed',
