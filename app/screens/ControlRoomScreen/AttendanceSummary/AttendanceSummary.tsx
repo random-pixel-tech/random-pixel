@@ -4,9 +4,9 @@ import useAttendanceLogic from '../../../services/utils/api/useAttendanceLogic';
 import Header from '../../../components/Header';
 import AttendanceHeader from '../CaptureAttendance/AttendanceHeader';
 import SummaryList from './AttendanceSummaryList';
-import FilterBar, { FilterOption } from '../../../components/FilterBar';
-import { AttendanceStatus } from '../../../services/utils/enums';
+import FilterBar from '../../../components/FilterBar';
 import { AttendanceStatusOrNull, filterOptions } from '../../../services/utils/constants';
+
 const AttendanceSummary = () => {
   const {
     className,
@@ -23,11 +23,27 @@ const AttendanceSummary = () => {
     isPopoverOpen,
     handlePopoverOpen,
     handlePopoverClose,
+    isOptionsMenuOpen,
+    handleOptionsMenuOpen,
+    handleOptionsMenuClose,
+    handleIconPress,
   } = useAttendanceLogic();
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
-      <Header title="Attendance Summary" icon="ellipsis-vertical" />
+      <Header
+        title="Attendance Summary"
+        icon="ellipsis-vertical"
+        options={[
+          { label: 'Share report', icon: 'share', onPress: () => console.log('Option 1 pressed') },
+          { label: 'Export report', icon: 'file-export', onPress: () => console.log('Option 1 pressed') },
+
+        ]}
+        isPopoverOpen={isOptionsMenuOpen}
+        onPopoverOpen={handleOptionsMenuOpen}
+        onPopoverClose={handleOptionsMenuClose}
+        onIconPress={handleIconPress}
+      />
       <AttendanceHeader
         className={className}
         section={section}
@@ -36,15 +52,10 @@ const AttendanceSummary = () => {
       />
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <FilterBar<AttendanceStatusOrNull>
+          <FilterBar<AttendanceStatusOrNull>
             selectedValue={selectedStatus}
             onFilterSelection={handleStatusClick}
-            filterOptions={filterOptions(
-              totalStudents,
-              presentCount,
-              absentCount,
-              onLeaveCount
-            )}
+            filterOptions={filterOptions(totalStudents, presentCount, absentCount, onLeaveCount)}
           />
         </ScrollView>
       </Box>

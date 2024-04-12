@@ -12,6 +12,23 @@ const useAttendanceLogic = () => {
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<AttendanceStatus | null>(null);
+  const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
+
+  const handleOptionsMenuOpen = () => {
+    setIsOptionsMenuOpen(true);
+  };
+
+  const handleOptionsMenuClose = () => {
+    setIsOptionsMenuOpen(false);
+  };
+
+  const handleIconPress = async () => {
+    if (isOptionsMenuOpen) {
+      handleOptionsMenuClose();
+    } else {
+      handleOptionsMenuOpen();
+    }
+  };
 
   const handleStatusClick = (status: AttendanceStatus | null) => {
     setSelectedStatus(status);
@@ -137,7 +154,11 @@ const useAttendanceLogic = () => {
     presentCount,
     absentCount,
     onLeaveCount,
-    section
+    section,
+    isOptionsMenuOpen,
+    handleOptionsMenuOpen,
+    handleOptionsMenuClose,
+    handleIconPress
   };
 };
 
