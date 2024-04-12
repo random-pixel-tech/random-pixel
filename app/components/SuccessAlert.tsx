@@ -18,7 +18,7 @@ interface SuccessAlertProps {
   isOpen: boolean;
   onClose: () => void;
   message: string;
-  // onConfirm: () => void;
+  onConfirm: () => void;
   heading: string;
   confirmButtonText: string;
   cancelButtonText: string;
@@ -29,14 +29,14 @@ const SuccessAlert: React.FC<SuccessAlertProps> = ({
   onClose,
   message,
   heading,
-  // onConfirm,
+  onConfirm,
   confirmButtonText,
   cancelButtonText,
 }) => {
   return (
     <AlertDialog isOpen={isOpen} onClose={onClose}>
       <AlertDialogBackdrop />
-      <AlertDialogContent>
+      <AlertDialogContent bg='$pixSecondaryLight50'>
         <AlertDialogHeader>
           <Heading size="md">{heading}</Heading>
           <AlertDialogCloseButton>
@@ -50,7 +50,7 @@ const SuccessAlert: React.FC<SuccessAlertProps> = ({
           <Button onPress={onClose} mr="$4" variant="outline" borderColor='$pixSecondary300'>
             <ButtonText color='$pixBackgroundLight700'>{cancelButtonText}</ButtonText>
           </Button>
-          <Button>
+          <Button onPress={onConfirm}>
             <ButtonText>{confirmButtonText}</ButtonText>
           </Button>
         </AlertDialogFooter>

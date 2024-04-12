@@ -30,19 +30,24 @@ export const gluestackUIConfig = createConfig({
     colors: {
       // Newly added colors
       pixAccent:'#f4ca4d',
+      pixAccentLight50: '#f8df94',
       pixPrimary:'#5f31dd',
       pixPrimaryDark50: '#391D85',
+      pixPrimaryLight50: '#9F83EB',
       pixSecondary:'#dedcff',
       pixSecondary2: '#8C85FF',
       pixSecondary300: '#B0B0B0', 
       pixSecondaryLight50: '#EBEAFF',
       pixBackground:'#fbfbfe',
       pixBackgroundLight700: '#525252',
+      pixSecondaryDisabled: '#e6e6ed',
       pixText:'#050315',
       pixText100: '#1c1c1e',
       pixTextDark100: '010104',
+      pixTextLight100: '#CDCDD0',
       pixWhite: '#FCFCFC',
       pixOrange: '#FF814B',
+      pixStatusRedLight: '#FFC3C2',
 
       // Default colors
       rose50: '#fff1f2',

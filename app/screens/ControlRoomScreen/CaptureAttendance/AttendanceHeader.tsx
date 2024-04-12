@@ -1,23 +1,50 @@
 import React from 'react';
 import { Box, Heading, Text } from '@gluestack-ui/themed';
 
-interface AttendanceHeaderProps {
-  className: string;
-  today: string;
-  totalStudents: number;
-  markedStudents: number;
+interface SummaryValues {
+  [key: string]: number;
 }
 
-const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({ className, today, totalStudents, markedStudents }) => {
+interface AttendanceHeaderProps {
+  className: string;
+  section: string;
+  today: string;
+  summaryValues: SummaryValues;
+}
+
+const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({
+  className,
+  section,
+  today,
+  summaryValues,
+}) => {
+  const summaryKeys = Object.keys(summaryValues);
+
   return (
-    <Box bg="$pixSecondary" w="$full" h="$16" alignContent="center" p="$1" justifyContent="space-between" flexDirection="row">
+    <Box
+      bg="$pixSecondary"
+      w="$full"
+      h="$16"
+      alignContent="center"
+      p="$1"
+      px="$4"
+      justifyContent="space-between"
+      flexDirection="row"
+    >
       <Box>
-        <Heading fontSize="$lg">{className}</Heading>
+        <Heading fontSize="$lg">
+          {className} {section}
+        </Heading>
         <Text fontSize="$md">{today}</Text>
       </Box>
       <Box>
         <Heading fontSize="$lg" alignSelf="flex-end">
-          {markedStudents}/{totalStudents}
+          {summaryKeys.map((key, index) => (
+            <React.Fragment key={key}>
+              {summaryValues[key]}
+              {index < summaryKeys.length - 1 && '/'}
+            </React.Fragment>
+          ))}
         </Heading>
         <Text fontSize="$md">Summary</Text>
       </Box>

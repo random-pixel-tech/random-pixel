@@ -1,16 +1,62 @@
 import { useState, useEffect } from 'react';
-import useStudentAttendance, { AttendanceStatus, AttendanceSession, TeacherId } from '../../services/utils/api/useStudentAttendance';
-import { getInitialAttendanceState, getUpdatedRecords } from './attendanceUtils';
+import useStudentAttendance, { TeacherId } from './useStudentAttendance';
+import { getInitialAttendanceState, getUpdatedRecords } from '../attendanceUtils';
+import { AttendanceStatus, AttendanceSession } from '../enums';
 
 const useAttendanceLogic = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
 
-  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today } = useStudentAttendance();
+  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today, section } = useStudentAttendance();
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<AttendanceStatus | null>(null);
+  const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
+
+  const handleOptionsMenuOpen = () => {
+    setIsOptionsMenuOpen(true);
+  };
+
+  const handleOptionsMenuClose = () => {
+    setIsOptionsMenuOpen(false);
+  };
+
+  const handleIconPress = async () => {
+    if (isOptionsMenuOpen) {
+      handleOptionsMenuClose();
+    } else {
+      handleOptionsMenuOpen();
+    }
+  };
+
+  const handleStatusClick = (status: AttendanceStatus | null) => {
+    setSelectedStatus(status);
+  };
+
+  // filter the students based on the selected status
+  const getFilteredStudents = () => {
+    if (selectedStatus === null) {
+      return studentAttendanceData;
+    }
+  
+    return studentAttendanceData.filter(({ attendanceRecord }) => {
+      return attendanceRecord?.morningStatus === selectedStatus;
+    });
+  };
+
+  // Calculate students based on their status
+
+  const presentCount = studentAttendanceData.filter(
+    (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.Present
+  ).length;
+  const absentCount = studentAttendanceData.filter(
+    (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.Absent
+  ).length;
+  const onLeaveCount = studentAttendanceData.filter(
+    (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.OnLeave
+  ).length;
 
   // Calculate marked students and total students
   const totalStudents = studentAttendanceData.length;
@@ -32,10 +78,19 @@ const useAttendanceLogic = () => {
     setIsPopoverOpen((prevState) => ({ ...prevState, [studentId]: false }));
   };
 
-  // Function for updating attendance status
-  const handleAttendanceStatusChange = (studentId: string, status: AttendanceStatus) => {
-    setAttendanceStatus((prevState) => ({ ...prevState, [studentId]: prevState[studentId] === status ? null : status, }));
-  };
+ // Function for updating attendance status
+ const handleAttendanceStatusChange = (studentId: string, status: AttendanceStatus | null) => {
+  setAttendanceStatus((prevState) => {
+    const currentStatus = prevState[studentId];
+    if (currentStatus === AttendanceStatus.OnLeave && status === AttendanceStatus.Absent) {
+      return { ...prevState, [studentId]: null };
+    } else if (currentStatus === status) {
+      return { ...prevState, [studentId]: null };
+    } else {
+      return { ...prevState, [studentId]: status };
+    }
+  });
+};
 
   // Function for saving attendance
   const handleSaveAttendance = async () => {
@@ -74,6 +129,8 @@ const useAttendanceLogic = () => {
     setAttendanceStatus((prevState) => ({ ...prevState, [studentId]: AttendanceStatus.OnLeave, }));
   };
 
+  
+
   return {
     showAlertDialog,
     setShowAlertDialog,
@@ -94,6 +151,17 @@ const useAttendanceLogic = () => {
     today,
     totalStudents,
     markedStudents,
+    selectedStatus,
+    handleStatusClick,
+    getFilteredStudents,
+    presentCount,
+    absentCount,
+    onLeaveCount,
+    section,
+    isOptionsMenuOpen,
+    handleOptionsMenuOpen,
+    handleOptionsMenuClose,
+    handleIconPress
   };
 };
 

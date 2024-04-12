@@ -1,4 +1,4 @@
-import { AttendanceStatus } from './enums';
+import { AttendanceStatus } from "./enums";
 
 interface StudentAttendanceData {
   student: { id: string };
@@ -29,3 +29,4 @@ export const getUpdatedRecords = (
     );
   });
 };
+

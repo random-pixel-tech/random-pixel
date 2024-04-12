@@ -1,36 +1,21 @@
 import { Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator } from '@gluestack-ui/themed';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-export enum RouteNames {
-  ControlRoom = 'ControlRoom',
-  CaptureAttendance = 'CaptureAttendance',
-  ClassAttendance = 'ClassAttendance',
-  StudentAttendance = 'StudentAttendance',
-}
-
-type RootStackParamList = {
-  [RouteNames.ControlRoom]: undefined;
-  [RouteNames.CaptureAttendance]: undefined;
-  [RouteNames.ClassAttendance]: undefined;
-  [RouteNames.StudentAttendance]: undefined;
-};
-
-type ControlRoomNavigationProp = NativeStackNavigationProp<RootStackParamList, RouteNames.ControlRoom>;
+import { RouteNames } from '../services/utils/RouteNames';
+import { useHandleNavigateToScreen } from '../services/utils/navigationUtils';
 
 interface ActionSheetProps {
   isOpen: boolean;
   onClose: () => void;
   initialFocusRef: React.RefObject<any>;
+  studentAttendanceData: any[]; // Add the studentAttendanceData prop
 }
 
-const AttendanceActionSheetComponent: React.FC<ActionSheetProps> = ({ isOpen, onClose, initialFocusRef }) => {
-  const navigation = useNavigation<ControlRoomNavigationProp>();
-
-  const handleNavigateToScreen = (screenName: keyof RootStackParamList) => {
-    navigation.navigate(screenName);
-    onClose();
-  };
+const AttendanceActionSheetComponent: React.FC<ActionSheetProps> = ({
+  isOpen,
+  onClose,
+  initialFocusRef,
+  studentAttendanceData,
+}) => {
+  const handleNavigateToScreen = useHandleNavigateToScreen(studentAttendanceData, onClose);
 
   return (
     <Actionsheet isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef}>

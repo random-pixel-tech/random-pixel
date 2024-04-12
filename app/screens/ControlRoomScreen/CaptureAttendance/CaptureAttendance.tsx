@@ -1,11 +1,14 @@
 import React from 'react';
 import { Box } from '@gluestack-ui/themed';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ConfirmationDialog from '../../../components/ConfirmationDialog';
 import SuccessAlert from '../../../components/SuccessAlert';
-import useAttendanceLogic from '../../../services/utils/useAttendanceLogic';
+import useAttendanceLogic from '../../../services/utils/api/useAttendanceLogic';
 import Header from '../../../components/Header';
 import AttendanceList from './AttendanceList';
 import AttendanceHeader from './AttendanceHeader';
+import { RouteNames, RootStackParamList } from '../../../services/utils/RouteNames';
 
 const CaptureAttendance = () => {
   const {
@@ -28,13 +31,16 @@ const CaptureAttendance = () => {
     today,
     totalStudents,
     markedStudents,
+    section
   } = useAttendanceLogic();
+
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
-      <Header title="Attendance" onSavePress={handleSaveAttendance} />
-      <AttendanceHeader className={className} today={today} totalStudents={totalStudents} markedStudents={markedStudents} />
-
+      <Header title="Attendance" icon="check" onIconPress={handleSaveAttendance} />
+      <AttendanceHeader section={section} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
+      />
       <AttendanceList
         studentAttendanceData={studentAttendanceData}
         isPopoverOpen={isPopoverOpen}
@@ -44,7 +50,6 @@ const CaptureAttendance = () => {
         onAttendanceStatusChange={handleAttendanceStatusChange}
         onLeaveClick={handleLeaveClick}
       />
-
       <ConfirmationDialog
         isOpen={showConfirmationDialog}
         onClose={() => setShowConfirmationDialog(false)}
@@ -57,12 +62,15 @@ const CaptureAttendance = () => {
         confirmButtonText="Yes"
         cancelButtonText="Go Back"
       />
-
       <SuccessAlert
         isOpen={showAlertDialog}
         onClose={() => setShowAlertDialog(false)}
+        onConfirm={() => {
+          setShowAlertDialog(false);
+          navigation.navigate(RouteNames.AttendanceSummary);
+        }}
         message={alertMessage}
-        heading='Attendance Complete!'
+        heading="Attendance Complete!"
         confirmButtonText="Ok"
         cancelButtonText="Cancel"
       />

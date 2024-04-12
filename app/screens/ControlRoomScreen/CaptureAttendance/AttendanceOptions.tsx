@@ -15,6 +15,13 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Colors } from '../../../services/utils/colors';
 import { Divider } from '@gluestack-ui/themed';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+
+interface AttendanceOption {
+  label: string;
+  icon: IconProp;
+  onPress: () => void;
+}
 
 interface AttendanceOptionsProps {
   isOpen: boolean;
@@ -25,7 +32,7 @@ interface AttendanceOptionsProps {
     name: string;
     rollNumber: number | null;
   };
-  onLeaveClick: (studentId: string) => void;
+  options: AttendanceOption[];
 }
 
 const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
@@ -33,7 +40,7 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
   onClose,
   onOpen,
   student,
-  onLeaveClick,
+  options,
 }) => {
   return (
     <>
@@ -55,37 +62,23 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
             >
               <Heading color="$pixPrimaryDark50">{student.rollNumber}</Heading>
             </Box>
-            <Heading color="$pixPrimaryDark50" px='$4'>{student.name}</Heading>
+            <Heading color="$pixPrimaryDark50" px="$4">
+              {student.name}
+            </Heading>
           </ModalHeader>
           <Divider my="$2" bg="$pixSecondary2" />
           <ModalBody>
             <VStack>
-              <Pressable
-                p="$2"
-                onPress={() => {
-                  onLeaveClick(student.id);
-                  onClose();
-                }}
-              >
-                <HStack py='$2'>
-                  <FontAwesomeIcon icon="plane-departure" color={Colors.PrimaryDark50} size={20} />
-                  <Text color="$pixPrimaryDark50" px="$4">
-                    On leave
-                  </Text>
-                </HStack>
-              </Pressable>
-              <HStack py='$4' p="$2">
-                <FontAwesomeIcon icon="address-card" color={Colors.PrimaryDark50} size={20} />
-                <Text color="$pixPrimaryDark50" px="$4">
-                  View student profile
-                </Text>
-              </HStack>
-              <HStack py='$4' p="$2">
-                <FontAwesomeIcon icon="calendar-check" color={Colors.PrimaryDark50} size={20} />
-                <Text color="$pixPrimaryDark50" px="$4">
-                  Mark attendance for upcoming days
-                </Text>
-              </HStack>
+              {options.map((option, index) => (
+                <Pressable key={index} p="$2" onPress={option.onPress}>
+                  <HStack py="$2">
+                    <FontAwesomeIcon icon={option.icon} color={Colors.PrimaryDark50} size={20} />
+                    <Text color="$pixPrimaryDark50" px="$4">
+                      {option.label}
+                    </Text>
+                  </HStack>
+                </Pressable>
+              ))}
             </VStack>
           </ModalBody>
         </ModalContent>

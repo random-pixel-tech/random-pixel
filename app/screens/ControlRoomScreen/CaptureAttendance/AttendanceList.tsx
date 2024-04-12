@@ -2,7 +2,8 @@ import React from 'react';
 import { Box, ScrollView } from '@gluestack-ui/themed';
 import AttendanceListHeader from './AttendanceListHeader';
 import AttendanceListItem from './AttendanceListItem';
-import { Student, AttendanceRecord, AttendanceStatus } from '../../../services/utils/api/useStudentAttendance';
+import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
+import { AttendanceStatus } from '../../../services/utils/enums';
 
 interface AttendanceListProps {
   studentAttendanceData: Array<{
@@ -27,24 +28,31 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
   onLeaveClick,
 }) => {
   return (
-    <ScrollView>
-      <Box display="flex" flexDirection="column">
-        <AttendanceListHeader />
-        {studentAttendanceData.map(({ student, attendanceRecord }) => (
-          <AttendanceListItem
-            key={student.id}
-            student={student}
-            attendanceRecord={attendanceRecord}
-            isPopoverOpen={isPopoverOpen[student.id] || false}
-            onPopoverOpen={() => onPopoverOpen(student.id)}
-            onPopoverClose={() => onPopoverClose(student.id)}
-            attendanceStatus={attendanceStatus[student.id]}
-            onAttendanceStatusChange={(status) => onAttendanceStatusChange(student.id, status)}
-            onLeaveClick={() => onLeaveClick(student.id)}
-          />
-        ))}
+    <Box display="flex" flexDirection="column" flex={1}>
+      <AttendanceListHeader
+        FirstColumnText="Roll No."
+        SecondColumnText="Name"
+        ThirdColumnText="P"
+        FourthColumnText="A"
+      />
+      <Box flex={1}>
+        <ScrollView>
+          {studentAttendanceData.map(({ student, attendanceRecord }) => (
+            <AttendanceListItem
+              key={student.id}
+              student={student}
+              attendanceRecord={attendanceRecord}
+              isPopoverOpen={isPopoverOpen[student.id] || false}
+              onPopoverOpen={() => onPopoverOpen(student.id)}
+              onPopoverClose={() => onPopoverClose(student.id)}
+              attendanceStatus={attendanceStatus[student.id]}
+              onAttendanceStatusChange={(status) => onAttendanceStatusChange(student.id, status)}
+              onLeaveClick={() => onLeaveClick(student.id)}
+            />
+          ))}
+        </ScrollView>
       </Box>
-    </ScrollView>
+    </Box>
   );
 };
 
