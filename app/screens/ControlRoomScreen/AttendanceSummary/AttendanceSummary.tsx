@@ -6,8 +6,13 @@ import AttendanceHeader from '../CaptureAttendance/AttendanceHeader';
 import SummaryList from './AttendanceSummaryList';
 import FilterBar from '../../../components/FilterBar';
 import { AttendanceStatusOrNull, filterOptions } from '../../../services/utils/constants';
+import { useNavigation } from '@react-navigation/native';
+import { RouteNames, RootStackParamList } from '../../../services/utils/RouteNames';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const AttendanceSummary = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const {
     className,
     section,
@@ -37,6 +42,10 @@ const AttendanceSummary = () => {
         options={[
           { label: 'Share report', icon: 'share', onPress: () => console.log('Option 1 pressed') },
           { label: 'Export report', icon: 'file-export', onPress: () => console.log('Option 1 pressed') },
+          { label: 'Edit attendance', icon: 'pen-to-square', onPress: () => {
+            navigation.navigate(RouteNames.CaptureAttendance);
+            handleOptionsMenuClose();
+          } },
 
         ]}
         isPopoverOpen={isOptionsMenuOpen}

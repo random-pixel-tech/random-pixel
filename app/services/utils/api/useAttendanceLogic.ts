@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import useStudentAttendance, { TeacherId } from './useStudentAttendance';
 import { getInitialAttendanceState, getUpdatedRecords } from '../attendanceUtils';
 import { AttendanceStatus, AttendanceSession } from '../enums';
+
 const useAttendanceLogic = () => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
@@ -127,6 +128,8 @@ const useAttendanceLogic = () => {
   const handleLeaveClick = (studentId: string) => {
     setAttendanceStatus((prevState) => ({ ...prevState, [studentId]: AttendanceStatus.OnLeave, }));
   };
+
+  
 
   return {
     showAlertDialog,
