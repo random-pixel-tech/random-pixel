@@ -6,7 +6,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 interface Option {
   label: string;
-  icon: IconProp;
+  icon?: IconProp;
   onPress: () => void;
 }
 
@@ -26,8 +26,10 @@ const OptionsMenu: React.FC<OptionsMenuProps> = ({ options, isOpen, onClose }) =
           <VStack>
             {options.map((option, index) => (
               <Pressable key={index} p="$2" onPress={option.onPress}>
-                <HStack py="$2">
-                  <FontAwesomeIcon icon={option.icon} color={Colors.PrimaryDark50} size={20} />
+                <HStack py="$2" alignItems="center">
+                  {option.icon && (
+                    <FontAwesomeIcon icon={option.icon} color={Colors.PrimaryDark50} size={20} />
+                  )}
                   <Text color="$pixPrimaryDark50" px="$4">
                     {option.label}
                   </Text>
