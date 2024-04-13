@@ -51,7 +51,6 @@ const useAttendanceLogic = () => {
   };
 
   // Calculate students based on their status
-
   const presentCount = studentAttendanceData.filter(
     (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.Present
   ).length;

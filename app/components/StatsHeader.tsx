@@ -5,30 +5,31 @@ import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../services/utils/colors';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import OptionsMenu from './OptionsMenu';
-import { useStatsHeaderState } from '../services/utils/statsHeaderState';
 
 interface StatsHeaderProps {
-    title: string;
-    icon?: any;
-    options?: any[];
-    onIconPress?: () => void;
-    isPopoverOpen?: boolean;
-    onPopoverOpen?: () => void;
-    onPopoverClose?: () => void;
-  }  
+  title: string;
+  selectedOption: string;
+  handlePrevDay: () => void;
+  handleNextDay: () => void;
+  handleOptionSelect: (optionId: string) => void;
+  isOptionsMenuOpen: boolean;
+  handleOptionsMenuOpen: () => void;
+  handleOptionsMenuClose: () => void;
+  currentDate: any;
+}
 
 const StatsHeader: React.FC<StatsHeaderProps> = ({
   title,
-  icon,
-  onIconPress,
-  isPopoverOpen,
-  onPopoverOpen,
-  onPopoverClose,
+  selectedOption,
+  handlePrevDay,
+  handleNextDay,
+  handleOptionSelect,
+  isOptionsMenuOpen,
+  handleOptionsMenuOpen,
+  handleOptionsMenuClose,
+  currentDate,
 }) => {
   const navigation = useNavigation();
-  const { currentDate, selectedOption, handlePrevDay, handleNextDay, handleOptionSelect, isOptionsMenuOpen, handleOptionsMenuOpen, handleOptionsMenuClose } = useStatsHeaderState();
-
-  console.log('Selected option:', selectedOption); // Add this line to log the selected option
 
   const options = [
     { id: 'daily', label: 'Daily', onPress: () => handleOptionSelect('daily') },

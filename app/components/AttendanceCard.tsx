@@ -6,8 +6,9 @@ interface AttendanceCardProps {
     studentAttendanceData: StudentAttendanceData;
     className: string;
     section: string;
-    fetchTotalAttendance: (studentId: string) => Promise<{ monthly: number; yearly: number; weekly: number }>;
-    fetchPresentAttendance: (studentId: string) => Promise<{ monthly: number; yearly: number; weekly: number }>; // Include fetchPresentAttendance prop
+    fetchTotalAttendance: (studentId: string, option: string) => Promise<{ monthly: number; yearly: number; weekly: number }>;
+    fetchPresentAttendance: (studentId: string, option: string) => Promise<{ monthly: number; yearly: number; weekly: number }>;
+    selectedOption: string;
 }
 
 // Helper function to convert numbers to ordinal form
@@ -22,39 +23,61 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
     className,
     section,
     fetchTotalAttendance,
-    fetchPresentAttendance
+    fetchPresentAttendance,
+    selectedOption
 }) => {
     const { student, attendanceRecord } = studentAttendanceData;
     const { name, rollNumber } = student;
     const { morningStatus, afternoonStatus } = attendanceRecord || {};
-    const [totalMonthlyAttendance, setTotalMonthlyAttendance] = useState<number>(0);
-    const [totalYearlyAttendance, setTotalYearlyAttendance] = useState<number>(0);
-    const [totalWeeklyAttendance, setTotalWeeklyAttendance] = useState<number>(0);
-    const [presentMonthlyAttendance, setPresentMonthlyAttendance] = useState<number>(0);
-    const [presentYearlyAttendance, setPresentYearlyAttendance] = useState<number>(0);
-    const [presentWeeklyAttendance, setPresentWeeklyAttendance] = useState<number>(0);
+    const [totalAttendance, setTotalAttendance] = useState<number>(0);
+    const [presentAttendance, setPresentAttendance] = useState<number>(0);
 
     useEffect(() => {
-        const fetchAttendance = async () => {
-            const { monthly, yearly, weekly } = await fetchTotalAttendance(student.id);
-            setTotalMonthlyAttendance(monthly);
-            setTotalYearlyAttendance(yearly);
-            setTotalWeeklyAttendance(weekly);
+        let isMounted = true;
+    
+        const fetchData = async () => {
+            try {
+                let totalAttendance = 0;
+                let presentAttendance = 0;
+    
+                if (selectedOption === 'weekly') {
+                    const { weekly: total } = await fetchTotalAttendance(student.id, selectedOption);
+                    const { weekly: present } = await fetchPresentAttendance(student.id, selectedOption);
+                    totalAttendance = total;
+                    presentAttendance = present;
+                } else if (selectedOption === 'monthly') {
+                    const { monthly: total } = await fetchTotalAttendance(student.id, selectedOption);
+                    const { monthly: present } = await fetchPresentAttendance(student.id, selectedOption);
+                    totalAttendance = total;
+                    presentAttendance = present;
+                } else if (selectedOption === 'yearly') {
+                    const { yearly: total } = await fetchTotalAttendance(student.id, selectedOption);
+                    const { yearly: present } = await fetchPresentAttendance(student.id, selectedOption);
+                    totalAttendance = total;
+                    presentAttendance = present;
+                }
+    
+                if (isMounted) {
+                    setTotalAttendance(totalAttendance);
+                    setPresentAttendance(presentAttendance);
+                }
+            } catch (error) {
+                console.error('Error fetching attendance:', error);
+            }
         };
-
-        fetchAttendance();
-    }, [fetchTotalAttendance, student.id]);
-
-    useEffect(() => {
-        const fetchAttendance = async () => {
-            const { monthly, yearly, weekly } = await fetchPresentAttendance(student.id);
-            setPresentMonthlyAttendance(monthly);
-            setPresentYearlyAttendance(yearly);
-            setPresentWeeklyAttendance(weekly);
+    
+        if (selectedOption && isMounted) {
+            fetchData();
+        }
+    
+        return () => {
+            isMounted = false;
         };
+    }, [fetchTotalAttendance, fetchPresentAttendance, student.id, selectedOption]);
+    
 
-        fetchAttendance();
-    }, [fetchPresentAttendance, student.id]);
+    const percentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
+
 
     // Convert className to ordinal form
     const classNameOrdinal = toOrdinal(parseInt(className));
@@ -112,11 +135,11 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
 
                 <Box alignContent='center' display='flex' flexDirection='row'>
                     <Box display='flex' flexDirection='column' mr='$2'>
-                        <Text fontSize="$md" color='$pixText100' alignSelf='center'>{presentMonthlyAttendance}/{totalMonthlyAttendance}</Text>
+                        <Text fontSize="$md" color='$pixText100' alignSelf='center'>{presentAttendance}/{totalAttendance}</Text>
                         <Text fontSize="$sm" color='$pixSecondary2'>Attendance</Text>
                     </Box>
                     <Box display='flex' flexDirection='column'>
-                        <Text fontSize="$md" color='$pixText100' alignSelf='center'>80%</Text>
+                    <Text fontSize="$md" color='$pixText100' alignSelf='center'>{percentage.toFixed(0)}%</Text>
                         <Text fontSize="$sm" color='$pixSecondary2'>Percentage</Text>
                     </Box>
                 </Box>

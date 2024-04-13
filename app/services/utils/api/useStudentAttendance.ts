@@ -391,7 +391,7 @@ const fetchPresentAttendance = async (studentId: string): Promise<{ monthly: num
           .from('attendance_records')
           .select('*')
           .eq('studentId', studentId)
-          .eq('morningStatus', AttendanceStatus.Present) // Assuming the status for present is defined
+          .eq('morningStatus', AttendanceStatus.Present)
           .gte('date', firstDayOfMonth)
           .lte('date', today.toISOString().split('T')[0]);
 
@@ -405,7 +405,7 @@ const fetchPresentAttendance = async (studentId: string): Promise<{ monthly: num
           .from('attendance_records')
           .select('*')
           .eq('studentId', studentId)
-          .eq('morningStatus', AttendanceStatus.Present) // Assuming the status for present is defined
+          .eq('morningStatus', AttendanceStatus.Present)
           .gte('date', firstDayOfYear)
           .lte('date', today.toISOString().split('T')[0]);
 
@@ -419,7 +419,7 @@ const fetchPresentAttendance = async (studentId: string): Promise<{ monthly: num
           .from('attendance_records')
           .select('*')
           .eq('studentId', studentId)
-          .eq('morningStatus', AttendanceStatus.Present) // Assuming the status for present is defined
+          .eq('morningStatus', AttendanceStatus.Present)
           .gte('date', firstDayOfWeek)
           .lte('date', today.toISOString().split('T')[0]);
 
