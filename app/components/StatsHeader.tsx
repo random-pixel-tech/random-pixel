@@ -28,6 +28,8 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
   const navigation = useNavigation();
   const { currentDate, selectedOption, handlePrevDay, handleNextDay, handleOptionSelect, isOptionsMenuOpen, handleOptionsMenuOpen, handleOptionsMenuClose } = useStatsHeaderState();
 
+  console.log('Selected option:', selectedOption); // Add this line to log the selected option
+
   const options = [
     { id: 'daily', label: 'Daily', onPress: () => handleOptionSelect('daily') },
     { id: 'weekly', label: 'Weekly', onPress: () => handleOptionSelect('weekly') },

@@ -28,10 +28,19 @@ export interface AttendanceRecord {
 }
 
 // Interface for combining student data and attendance record
-interface StudentAttendanceData {
+export interface StudentAttendanceData {
   student: Student;
   attendanceRecord: AttendanceRecord | null;
 }
+
+// Create a new interface for the data fetched by fetchAllStudentAttendance
+export interface AllStudentAttendanceData {
+  student: Student;
+  attendanceRecord: AttendanceRecord | null;
+  className: string;
+  section: string;
+}
+
 
 export type TeacherId = string;
 
@@ -186,7 +195,87 @@ const useStudentAttendance = () => {
     }
   };
 
-  return { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, section, today };
+
+  const fetchAllStudentAttendance = async (): Promise<AllStudentAttendanceData[]> => {
+    try {
+      // Fetch classes data
+      const { data: classesData, error: classesError } = await supabase
+        .from('classes')
+        .select('*')
+        .order('name', { ascending: true, nullsFirst: true }); // Order classes by name numerically
+  
+      if (classesError) {
+        console.error('Error fetching classes:', classesError);
+        return [];
+      }
+  
+      const allStudentAttendanceData: AllStudentAttendanceData[] = [];
+  
+      // Loop through each class
+      for (const classData of classesData) {
+        const classNumber = Number(classData.name.replace(/\D/g, '')); // Extract the class number from the name
+  
+        // Fetch students data for the current class in ascending order of rollNumber
+        const { data: studentsData, error: studentsError } = await supabase
+          .from('students')
+          .select('*')
+          .eq('classId', classData.id)
+          .order('rollNumber', { ascending: true });
+  
+        if (studentsError) {
+          console.error('Error fetching students:', studentsError);
+          return [];
+        }
+  
+        // Fetch attendance records for the current class and current date
+        const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
+          .from('attendance_records')
+          .select('*')
+          .eq('classId', classData.id)
+          .eq('date', today);
+  
+        if (attendanceRecordsError) {
+          console.error('Error fetching attendance records:', attendanceRecordsError);
+          return [];
+        }
+  
+        // Combine student data, attendance records, class, and section
+        const classStudentAttendanceData: AllStudentAttendanceData[] = studentsData.map((student) => {
+          const existingRecord = attendanceRecordsData.find(
+            (record) => record.studentId === student.id
+          );
+  
+          return {
+            student,
+            attendanceRecord: existingRecord || null,
+            className: classData.name,
+            section: classData.section,
+          };
+        });
+  
+        // Add classStudentAttendanceData to the allStudentAttendanceData array
+        allStudentAttendanceData.push(...classStudentAttendanceData);
+      }
+  
+      // Sort the allStudentAttendanceData array by the extracted class number
+      allStudentAttendanceData.sort((a, b) => {
+        const aClassNumber = Number(a.className.replace(/\D/g, ''));
+        const bClassNumber = Number(b.className.replace(/\D/g, ''));
+        return aClassNumber - bClassNumber;
+      });
+  
+      return allStudentAttendanceData;
+    } catch (error) {
+      console.error('Error fetching all student attendance data:', error);
+      return [];
+    }
+  };
+
+  
+  
+  
+
+  return { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, section, today, fetchAllStudentAttendance };
 };
 
-export default useStudentAttendance;
+export default useStudentAttendance; 
