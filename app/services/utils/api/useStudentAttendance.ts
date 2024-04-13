@@ -271,11 +271,149 @@ const useStudentAttendance = () => {
     }
   };
 
-  
+  const fetchTotalAttendance = async (studentId: string): Promise<{ monthly: number; yearly: number; weekly: number }> => {
+    try {
+        const today = new Date();
+        const currentMonth = today.getMonth() + 1;
+        const currentYear = today.getFullYear();
+
+        // Calculate the first day of the current month
+        const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1).toISOString().split('T')[0];
+
+        // Calculate the first day of the current year
+        const firstDayOfYear = new Date(currentYear, 0, 1).toISOString().split('T')[0];
+
+        // Calculate the first day of the current week (Sunday)
+        const firstDayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()).toISOString().split('T')[0];
+
+        // Calculate the last day of the current week (Saturday)
+        const lastDayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() + 6).toISOString().split('T')[0];
+
+        // Fetch monthly attendance records
+        const { data: monthlyAttendanceRecords, error: monthlyAttendanceError } = await supabase
+            .from('attendance_records')
+            .select('*')
+            .eq('studentId', studentId)
+            .gte('date', firstDayOfMonth)
+            .lte('date', today.toISOString().split('T')[0]);
+
+        if (monthlyAttendanceError) {
+            console.error('Error fetching monthly attendance records:', monthlyAttendanceError);
+            return { monthly: 0, yearly: 0, weekly: 0 };
+        }
+
+        // Fetch yearly attendance records
+        const { data: yearlyAttendanceRecords, error: yearlyAttendanceError } = await supabase
+            .from('attendance_records')
+            .select('*')
+            .eq('studentId', studentId)
+            .gte('date', firstDayOfYear)
+            .lte('date', today.toISOString().split('T')[0]);
+
+        if (yearlyAttendanceError) {
+            console.error('Error fetching yearly attendance records:', yearlyAttendanceError);
+            return { monthly: 0, yearly: 0, weekly: 0 };
+        }
+
+        // Fetch weekly attendance records
+        const { data: weeklyAttendanceRecords, error: weeklyAttendanceError } = await supabase
+            .from('attendance_records')
+            .select('*')
+            .eq('studentId', studentId)
+            .gte('date', firstDayOfWeek)
+            .lte('date', today.toISOString().split('T')[0]);
+
+        if (weeklyAttendanceError) {
+            console.error('Error fetching weekly attendance records:', weeklyAttendanceError);
+            return { monthly: 0, yearly: 0, weekly: 0 };
+        }
+
+        return {
+            monthly: monthlyAttendanceRecords.length,
+            yearly: yearlyAttendanceRecords.length,
+            weekly: weeklyAttendanceRecords.length,
+        };
+    } catch (error) {
+        console.error('Error fetching total attendance:', error);
+        return { monthly: 0, yearly: 0, weekly: 0 };
+    }
+};
+
+const fetchPresentAttendance = async (studentId: string): Promise<{ monthly: number; yearly: number; weekly: number }> => {
+  try {
+      const today = new Date();
+      const currentMonth = today.getMonth() + 1;
+      const currentYear = today.getFullYear();
+
+      // Calculate the first day of the current month
+      const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1).toISOString().split('T')[0];
+
+      // Calculate the first day of the current year
+      const firstDayOfYear = new Date(currentYear, 0, 1).toISOString().split('T')[0];
+
+      // Calculate the first day of the current week (Sunday)
+      const firstDayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()).toISOString().split('T')[0];
+
+      // Calculate the last day of the current week (Saturday)
+      const lastDayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() + 6).toISOString().split('T')[0];
+
+      // Fetch monthly present attendance
+      const { data: monthlyAttendanceRecords, error: monthlyAttendanceError } = await supabase
+          .from('attendance_records')
+          .select('*')
+          .eq('studentId', studentId)
+          .eq('morningStatus', AttendanceStatus.Present) // Assuming the status for present is defined
+          .gte('date', firstDayOfMonth)
+          .lte('date', today.toISOString().split('T')[0]);
+
+      if (monthlyAttendanceError) {
+          console.error('Error fetching monthly present attendance:', monthlyAttendanceError);
+          return { monthly: 0, yearly: 0, weekly: 0 };
+      }
+
+      // Fetch yearly present attendance
+      const { data: yearlyAttendanceRecords, error: yearlyAttendanceError } = await supabase
+          .from('attendance_records')
+          .select('*')
+          .eq('studentId', studentId)
+          .eq('morningStatus', AttendanceStatus.Present) // Assuming the status for present is defined
+          .gte('date', firstDayOfYear)
+          .lte('date', today.toISOString().split('T')[0]);
+
+      if (yearlyAttendanceError) {
+          console.error('Error fetching yearly present attendance:', yearlyAttendanceError);
+          return { monthly: 0, yearly: 0, weekly: 0 };
+      }
+
+      // Fetch weekly present attendance
+      const { data: weeklyAttendanceRecords, error: weeklyAttendanceError } = await supabase
+          .from('attendance_records')
+          .select('*')
+          .eq('studentId', studentId)
+          .eq('morningStatus', AttendanceStatus.Present) // Assuming the status for present is defined
+          .gte('date', firstDayOfWeek)
+          .lte('date', today.toISOString().split('T')[0]);
+
+      if (weeklyAttendanceError) {
+          console.error('Error fetching weekly present attendance:', weeklyAttendanceError);
+          return { monthly: 0, yearly: 0, weekly: 0 };
+      }
+
+      return {
+          monthly: monthlyAttendanceRecords.length,
+          yearly: yearlyAttendanceRecords.length,
+          weekly: weeklyAttendanceRecords.length,
+      };
+  } catch (error) {
+      console.error('Error fetching present attendance:', error);
+      return { monthly: 0, yearly: 0, weekly: 0 };
+  }
+};
+
   
   
 
-  return { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, section, today, fetchAllStudentAttendance };
+  return { studentAttendanceData, fetchTotalAttendance, fetchPresentAttendance, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, section, today, fetchAllStudentAttendance };
 };
 
 export default useStudentAttendance; 

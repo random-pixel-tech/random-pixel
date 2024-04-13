@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Text } from '@gluestack-ui/themed';
 import { StudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 
@@ -6,6 +6,8 @@ interface AttendanceCardProps {
     studentAttendanceData: StudentAttendanceData;
     className: string;
     section: string;
+    fetchTotalAttendance: (studentId: string) => Promise<{ monthly: number; yearly: number; weekly: number }>;
+    fetchPresentAttendance: (studentId: string) => Promise<{ monthly: number; yearly: number; weekly: number }>; // Include fetchPresentAttendance prop
 }
 
 // Helper function to convert numbers to ordinal form
@@ -19,10 +21,40 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
     studentAttendanceData,
     className,
     section,
+    fetchTotalAttendance,
+    fetchPresentAttendance
 }) => {
     const { student, attendanceRecord } = studentAttendanceData;
     const { name, rollNumber } = student;
     const { morningStatus, afternoonStatus } = attendanceRecord || {};
+    const [totalMonthlyAttendance, setTotalMonthlyAttendance] = useState<number>(0);
+    const [totalYearlyAttendance, setTotalYearlyAttendance] = useState<number>(0);
+    const [totalWeeklyAttendance, setTotalWeeklyAttendance] = useState<number>(0);
+    const [presentMonthlyAttendance, setPresentMonthlyAttendance] = useState<number>(0);
+    const [presentYearlyAttendance, setPresentYearlyAttendance] = useState<number>(0);
+    const [presentWeeklyAttendance, setPresentWeeklyAttendance] = useState<number>(0);
+
+    useEffect(() => {
+        const fetchAttendance = async () => {
+            const { monthly, yearly, weekly } = await fetchTotalAttendance(student.id);
+            setTotalMonthlyAttendance(monthly);
+            setTotalYearlyAttendance(yearly);
+            setTotalWeeklyAttendance(weekly);
+        };
+
+        fetchAttendance();
+    }, [fetchTotalAttendance, student.id]);
+
+    useEffect(() => {
+        const fetchAttendance = async () => {
+            const { monthly, yearly, weekly } = await fetchPresentAttendance(student.id);
+            setPresentMonthlyAttendance(monthly);
+            setPresentYearlyAttendance(yearly);
+            setPresentWeeklyAttendance(weekly);
+        };
+
+        fetchAttendance();
+    }, [fetchPresentAttendance, student.id]);
 
     // Convert className to ordinal form
     const classNameOrdinal = toOrdinal(parseInt(className));
@@ -77,18 +109,10 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
                         #189/232
                     </Text>
                 </Box>
-                {/* <Box alignContent='center'>
-                    <Box display='flex' flexDirection='row'>
-                    <Text fontSize="$md" color='$pixSecondary2'>S-1</Text>
-                    <Text fontSize="$md" color='$pixText100' mr='$2'>: A</Text>
-                    <Text fontSize="$md" color='$pixSecondary2'>S-2</Text>
-                    <Text fontSize="$md" color='$pixText100'>: P</Text>
-                    </Box>
-                    <Text fontSize="$sm" color='$pixSecondary2' alignSelf='center'>Attendance</Text>
-                </Box> */}
+
                 <Box alignContent='center' display='flex' flexDirection='row'>
                     <Box display='flex' flexDirection='column' mr='$2'>
-                        <Text fontSize="$md" color='$pixText100' alignSelf='center'>4/5</Text>
+                        <Text fontSize="$md" color='$pixText100' alignSelf='center'>{presentMonthlyAttendance}/{totalMonthlyAttendance}</Text>
                         <Text fontSize="$sm" color='$pixSecondary2'>Attendance</Text>
                     </Box>
                     <Box display='flex' flexDirection='column'>

@@ -6,7 +6,7 @@ import useStudentAttendance, { AllStudentAttendanceData } from '../services/util
 
 const AttendanceView: React.FC = () => {
     const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<AllStudentAttendanceData[]>([]);
-    const { fetchAllStudentAttendance } = useStudentAttendance(); // Remove className and section from here
+    const { fetchAllStudentAttendance, fetchTotalAttendance, fetchPresentAttendance } = useStudentAttendance();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +26,8 @@ const AttendanceView: React.FC = () => {
           studentAttendanceData={data}
           className={data.className}
           section={data.section}
+          fetchTotalAttendance={fetchTotalAttendance}
+          fetchPresentAttendance={fetchPresentAttendance}
         />
         
         ))}
