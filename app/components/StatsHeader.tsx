@@ -43,12 +43,14 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
     <Box
       bg="$pixSecondaryLight50"
       w="$full"
-      h="$20"
+      h="$28"
       display="flex"
       flexDirection="row"
       alignItems="center"
       justifyContent="space-between"
       px="$4"
+      pt="$8"
+      pb="$2"
       borderBottomWidth={2}
       borderBottomColor={Colors.SecondaryLight100}
     >
@@ -56,7 +58,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
         <FontAwesomeIcon icon="arrow-left" size={20} color={Colors.Text100} />
       </Pressable>
       <Box display="flex" flexDirection="column" alignItems="center">
-        <Text color={Colors.Text100} fontSize="$md" fontWeight="$medium" mb="$4">
+        <Text color={Colors.Text100} fontSize="$md" fontWeight="$medium" mb="$2">
           {title}
         </Text>
         <Box display="flex" flexDirection="row" alignItems="center">

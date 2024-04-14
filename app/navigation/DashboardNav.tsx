@@ -17,7 +17,7 @@ const DashboardNav = () => {
       <Stack.Screen
         name={RouteNames.AttendanceStats}
         component={AttendanceStats}
-        // options={{ headerShown: false }}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

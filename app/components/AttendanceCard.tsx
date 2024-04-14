@@ -138,6 +138,8 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
                         <Text fontSize="$sm" color='$pixSecondary2'>Percentage</Text>
                     </Box>
                 </Box>
+
+            
             </Box>
         </Box>
     );

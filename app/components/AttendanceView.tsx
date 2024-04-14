@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { ScrollView } from 'react-native';
-import { Box } from '@gluestack-ui/themed';
+import { Box, Text } from '@gluestack-ui/themed';
 import AttendanceCard from './AttendanceCard';
 import useStudentAttendance, { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 
@@ -35,7 +35,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({ selectedOption }) => {
         <ScrollView>
             <Box p="$4">
                 {isLoading ? (
-                    <Box>Loading...</Box>
+                    <Box><Text>Loading...</Text></Box>
                 ) : (
                     allStudentAttendanceData.map((data) => (
                         <AttendanceCard
