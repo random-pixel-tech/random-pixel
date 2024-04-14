@@ -1,43 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { ScrollView } from 'react-native';
 import { Box } from '@gluestack-ui/themed';
 import AttendanceCard from './AttendanceCard';
 import useStudentAttendance, { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 
 interface AttendanceViewProps {
-  selectedOption: string;
+    selectedOption: string;
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({ selectedOption }) => {
-  const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<AllStudentAttendanceData[]>([]);
-  const { fetchAllStudentAttendance, fetchTotalAttendance, fetchPresentAttendance } = useStudentAttendance();
+    const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<AllStudentAttendanceData[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { fetchAllStudentAttendance, fetchAttendanceByTime } = useStudentAttendance();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchAllStudentAttendance();
-      setAllStudentAttendanceData(data);
-    };
+    // Memoize fetchAllStudentAttendance to prevent unnecessary re-renders
+    const memoizedFetchAllStudentAttendance = useMemo(() => fetchAllStudentAttendance, []);
 
-    fetchData();
-  }, [fetchAllStudentAttendance]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                const data = await memoizedFetchAllStudentAttendance();
+                setAllStudentAttendanceData(data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching attendance data:', error);
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, [memoizedFetchAllStudentAttendance]);
 
-  return (
-    <ScrollView>
-      <Box p="$4">
-        {allStudentAttendanceData.map((data) => (
-          <AttendanceCard
-            key={data.student.id}
-            studentAttendanceData={data}
-            className={data.className}
-            section={data.section}
-            fetchTotalAttendance={fetchTotalAttendance}
-            fetchPresentAttendance={fetchPresentAttendance}
-            selectedOption={selectedOption}
-          />
-        ))}
-      </Box>
-    </ScrollView>
-  );
+    return (
+        <ScrollView>
+            <Box p="$4">
+                {isLoading ? (
+                    <Box>Loading...</Box>
+                ) : (
+                    allStudentAttendanceData.map((data) => (
+                        <AttendanceCard
+                            key={data.student.id}
+                            studentAttendanceData={data}
+                            className={data.className}
+                            section={data.section}
+                            fetchAttendanceByTime={fetchAttendanceByTime}
+                            selectedOption={selectedOption}
+                        />
+                    ))
+                )}
+            </Box>
+        </ScrollView>
+    );
 };
 
 export default AttendanceView;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Box, Text } from '@gluestack-ui/themed';
 import { StudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 
@@ -6,8 +6,7 @@ interface AttendanceCardProps {
     studentAttendanceData: StudentAttendanceData;
     className: string;
     section: string;
-    fetchTotalAttendance: (studentId: string, option: string) => Promise<{ monthly: number; yearly: number; weekly: number }>;
-    fetchPresentAttendance: (studentId: string, option: string) => Promise<{ monthly: number; yearly: number; weekly: number }>;
+    fetchAttendanceByTime: (studentId: string) => Promise<{ totalMonthly: number; totalYearly: number; totalWeekly: number; presentMonthly: number; presentYearly: number; presentWeekly: number }>;
     selectedOption: string;
 }
 
@@ -22,41 +21,39 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
     studentAttendanceData,
     className,
     section,
-    fetchTotalAttendance,
-    fetchPresentAttendance,
+    fetchAttendanceByTime,
     selectedOption
 }) => {
     const { student, attendanceRecord } = studentAttendanceData;
     const { name, rollNumber } = student;
-    const { morningStatus, afternoonStatus } = attendanceRecord || {};
     const [totalAttendance, setTotalAttendance] = useState<number>(0);
     const [presentAttendance, setPresentAttendance] = useState<number>(0);
 
+    // Memoize fetchAttendanceByTime
+    const memoizedfetchAttendanceByTime = useCallback(fetchAttendanceByTime, []);
+
     useEffect(() => {
         let isMounted = true;
-    
+
         const fetchData = async () => {
             try {
+                const { totalMonthly, totalYearly, totalWeekly, presentMonthly, presentYearly, presentWeekly } = await memoizedfetchAttendanceByTime(student.id);
+
                 let totalAttendance = 0;
                 let presentAttendance = 0;
-    
+
+                // Set total and present attendance based on selected option
                 if (selectedOption === 'weekly') {
-                    const { weekly: total } = await fetchTotalAttendance(student.id, selectedOption);
-                    const { weekly: present } = await fetchPresentAttendance(student.id, selectedOption);
-                    totalAttendance = total;
-                    presentAttendance = present;
+                    totalAttendance = totalWeekly;
+                    presentAttendance = presentWeekly;
                 } else if (selectedOption === 'monthly') {
-                    const { monthly: total } = await fetchTotalAttendance(student.id, selectedOption);
-                    const { monthly: present } = await fetchPresentAttendance(student.id, selectedOption);
-                    totalAttendance = total;
-                    presentAttendance = present;
+                    totalAttendance = totalMonthly;
+                    presentAttendance = presentMonthly;
                 } else if (selectedOption === 'yearly') {
-                    const { yearly: total } = await fetchTotalAttendance(student.id, selectedOption);
-                    const { yearly: present } = await fetchPresentAttendance(student.id, selectedOption);
-                    totalAttendance = total;
-                    presentAttendance = present;
+                    totalAttendance = totalYearly;
+                    presentAttendance = presentYearly;
                 }
-    
+
                 if (isMounted) {
                     setTotalAttendance(totalAttendance);
                     setPresentAttendance(presentAttendance);
@@ -65,19 +62,17 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
                 console.error('Error fetching attendance:', error);
             }
         };
-    
+
         if (selectedOption && isMounted) {
             fetchData();
         }
-    
+
         return () => {
             isMounted = false;
         };
-    }, [fetchTotalAttendance, fetchPresentAttendance, student.id, selectedOption]);
-    
+    }, [memoizedfetchAttendanceByTime, student.id, selectedOption]);
 
     const percentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
-
 
     // Convert className to ordinal form
     const classNameOrdinal = toOrdinal(parseInt(className));
@@ -139,7 +134,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
                         <Text fontSize="$sm" color='$pixSecondary2'>Attendance</Text>
                     </Box>
                     <Box display='flex' flexDirection='column'>
-                    <Text fontSize="$md" color='$pixText100' alignSelf='center'>{percentage.toFixed(0)}%</Text>
+                        <Text fontSize="$md" color='$pixText100' alignSelf='center'>{percentage.toFixed(0)}%</Text>
                         <Text fontSize="$sm" color='$pixSecondary2'>Percentage</Text>
                     </Box>
                 </Box>

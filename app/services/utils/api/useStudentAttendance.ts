@@ -271,9 +271,8 @@ const useStudentAttendance = () => {
     }
   };
 
-  // @anukrati: Redundant code. Refactor later. DON'T FORGET. 
 
-  const fetchTotalAttendance = async (studentId: string): Promise<{ monthly: number; yearly: number; weekly: number }> => {
+  const fetchAttendanceByTime = async (studentId: string): Promise<{ totalMonthly: number; totalYearly: number; totalWeekly: number; presentMonthly: number; presentYearly: number; presentWeekly: number }> => {
     try {
         const today = new Date();
         const currentMonth = today.getMonth() + 1;
@@ -288,192 +287,70 @@ const useStudentAttendance = () => {
         // Calculate the first day of the current week (Sunday)
         const firstDayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()).toISOString().split('T')[0];
 
-        // Fetch monthly attendance records
-        const { data: monthlyAttendanceRecords, error: monthlyAttendanceError } = await supabase
-            .from('attendance_records')
-            .select('*')
-            .eq('studentId', studentId)
-            .gte('date', firstDayOfMonth)
-            .lte('date', today.toISOString().split('T')[0]);
-
-        if (monthlyAttendanceError) {
-            console.error('Error fetching monthly attendance records:', monthlyAttendanceError);
-            return { monthly: 0, yearly: 0, weekly: 0 };
-        }
-
-        // Fetch yearly attendance records
-        const { data: yearlyAttendanceRecords, error: yearlyAttendanceError } = await supabase
+        // Fetch attendance records for the student
+        const { data: attendanceRecords, error: attendanceError } = await supabase
             .from('attendance_records')
             .select('*')
             .eq('studentId', studentId)
             .gte('date', firstDayOfYear)
             .lte('date', today.toISOString().split('T')[0]);
 
-        if (yearlyAttendanceError) {
-            console.error('Error fetching yearly attendance records:', yearlyAttendanceError);
-            return { monthly: 0, yearly: 0, weekly: 0 };
+        if (attendanceError) {
+            console.error('Error fetching attendance records:', attendanceError);
+            return { totalMonthly: 0, totalYearly: 0, totalWeekly: 0, presentMonthly: 0, presentYearly: 0, presentWeekly: 0 };
         }
 
-        // Fetch weekly attendance records
-        const { data: weeklyAttendanceRecords, error: weeklyAttendanceError } = await supabase
-            .from('attendance_records')
-            .select('*')
-            .eq('studentId', studentId)
-            .gte('date', firstDayOfWeek)
-            .lte('date', today.toISOString().split('T')[0]);
+        let totalMonthly = 0;
+        let totalYearly = 0;
+        let totalWeekly = 0;
+        let presentMonthly = 0;
+        let presentYearly = 0;
+        let presentWeekly = 0;
 
-        if (weeklyAttendanceError) {
-            console.error('Error fetching weekly attendance records:', weeklyAttendanceError);
-            return { monthly: 0, yearly: 0, weekly: 0 };
-        }
+        attendanceRecords.forEach(record => {
+            const recordDate = new Date(record.date);
 
-        // Initialize counters
-        let monthlyAttendance = 0;
-        let yearlyAttendance = 0;
-        let weeklyAttendance = 0;
+            // Check if the record is within the current month
+            if (recordDate >= new Date(firstDayOfMonth)) {
+                if (record.morningStatus !== null) totalMonthly += 0.5;
+                if (record.afternoonStatus !== null) totalMonthly += 0.5;
+                if (record.morningStatus === AttendanceStatus.Present) presentMonthly += 0.5;
+                if (record.afternoonStatus === AttendanceStatus.Present) presentMonthly += 0.5;
+            }
 
-        // Calculate attendance for each record
-        monthlyAttendanceRecords.forEach(record => {
-            if (record.morningStatus) {
-                monthlyAttendance += 0.5;
+            // Check if the record is within the current year
+            if (recordDate >= new Date(firstDayOfYear)) {
+                if (record.morningStatus !== null) totalYearly += 0.5;
+                if (record.afternoonStatus !== null) totalYearly += 0.5;
+                if (record.morningStatus === AttendanceStatus.Present) presentYearly += 0.5;
+                if (record.afternoonStatus === AttendanceStatus.Present) presentYearly += 0.5;
             }
-            if (record.afternoonStatus) {
-                monthlyAttendance += 0.5;
-            }
-        });
 
-        yearlyAttendanceRecords.forEach(record => {
-            if (record.morningStatus) {
-                yearlyAttendance += 0.5;
-            }
-            if (record.afternoonStatus) {
-                yearlyAttendance += 0.5;
-            }
-        });
-
-        weeklyAttendanceRecords.forEach(record => {
-            if (record.morningStatus) {
-                weeklyAttendance += 0.5;
-            }
-            if (record.afternoonStatus) {
-                weeklyAttendance += 0.5;
+            // Check if the record is within the current week
+            if (recordDate >= new Date(firstDayOfWeek)) {
+                if (record.morningStatus !== null) totalWeekly += 0.5;
+                if (record.afternoonStatus !== null) totalWeekly += 0.5;
+                if (record.morningStatus === AttendanceStatus.Present) presentWeekly += 0.5;
+                if (record.afternoonStatus === AttendanceStatus.Present) presentWeekly += 0.5;
             }
         });
 
         return {
-            monthly: monthlyAttendance,
-            yearly: yearlyAttendance,
-            weekly: weeklyAttendance,
+            totalMonthly,
+            totalYearly,
+            totalWeekly,
+            presentMonthly,
+            presentYearly,
+            presentWeekly,
         };
     } catch (error) {
-        console.error('Error fetching total attendance:', error);
-        return { monthly: 0, yearly: 0, weekly: 0 };
+        console.error('Error fetching attendance:', error);
+        return { totalMonthly: 0, totalYearly: 0, totalWeekly: 0, presentMonthly: 0, presentYearly: 0, presentWeekly: 0 };
     }
 };
 
-const fetchPresentAttendance = async (studentId: string): Promise<{ monthly: number; yearly: number; weekly: number }> => {
-  try {
-      const today = new Date();
-      const currentMonth = today.getMonth() + 1;
-      const currentYear = today.getFullYear();
 
-      // Calculate the first day of the current month
-      const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1).toISOString().split('T')[0];
-
-      // Calculate the first day of the current year
-      const firstDayOfYear = new Date(currentYear, 0, 1).toISOString().split('T')[0];
-
-      // Calculate the first day of the current week (Sunday)
-      const firstDayOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay()).toISOString().split('T')[0];
-
-      // Fetch monthly present attendance
-      const { data: monthlyAttendanceRecords, error: monthlyAttendanceError } = await supabase
-          .from('attendance_records')
-          .select('*')
-          .eq('studentId', studentId)
-          .eq('morningStatus', AttendanceStatus.Present)
-          .gte('date', firstDayOfMonth)
-          .lte('date', today.toISOString().split('T')[0]);
-
-      if (monthlyAttendanceError) {
-          console.error('Error fetching monthly present attendance:', monthlyAttendanceError);
-          return { monthly: 0, yearly: 0, weekly: 0 };
-      }
-
-      // Fetch yearly present attendance
-      const { data: yearlyAttendanceRecords, error: yearlyAttendanceError } = await supabase
-          .from('attendance_records')
-          .select('*')
-          .eq('studentId', studentId)
-          .eq('morningStatus', AttendanceStatus.Present)
-          .gte('date', firstDayOfYear)
-          .lte('date', today.toISOString().split('T')[0]);
-
-      if (yearlyAttendanceError) {
-          console.error('Error fetching yearly present attendance:', yearlyAttendanceError);
-          return { monthly: 0, yearly: 0, weekly: 0 };
-      }
-
-      // Fetch weekly present attendance
-      const { data: weeklyAttendanceRecords, error: weeklyAttendanceError } = await supabase
-          .from('attendance_records')
-          .select('*')
-          .eq('studentId', studentId)
-          .eq('morningStatus', AttendanceStatus.Present)
-          .gte('date', firstDayOfWeek)
-          .lte('date', today.toISOString().split('T')[0]);
-
-      if (weeklyAttendanceError) {
-          console.error('Error fetching weekly present attendance:', weeklyAttendanceError);
-          return { monthly: 0, yearly: 0, weekly: 0 };
-      }
-
-      // Initialize counters
-      let monthlyAttendance = 0;
-      let yearlyAttendance = 0;
-      let weeklyAttendance = 0;
-
-      // Calculate attendance for each record
-      monthlyAttendanceRecords.forEach(record => {
-          if (record.morningStatus) {
-              monthlyAttendance += 0.5;
-          }
-          if (record.afternoonStatus) {
-              monthlyAttendance += 0.5;
-          }
-      });
-
-      yearlyAttendanceRecords.forEach(record => {
-          if (record.morningStatus) {
-              yearlyAttendance += 0.5;
-          }
-          if (record.afternoonStatus) {
-              yearlyAttendance += 0.5;
-          }
-      });
-
-      weeklyAttendanceRecords.forEach(record => {
-          if (record.morningStatus) {
-              weeklyAttendance += 0.5;
-          }
-          if (record.afternoonStatus) {
-              weeklyAttendance += 0.5;
-          }
-      });
-
-      return {
-          monthly: monthlyAttendance,
-          yearly: yearlyAttendance,
-          weekly: weeklyAttendance,
-      };
-  } catch (error) {
-      console.error('Error fetching present attendance:', error);
-      return { monthly: 0, yearly: 0, weekly: 0 };
-  }
-};
-
-
-  return { studentAttendanceData, fetchTotalAttendance, fetchPresentAttendance, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, section, today, fetchAllStudentAttendance };
+  return { studentAttendanceData, fetchAttendanceByTime, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, section, today, fetchAllStudentAttendance };
 };
 
 export default useStudentAttendance; 
