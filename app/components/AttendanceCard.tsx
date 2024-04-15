@@ -90,7 +90,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
       borderWidth={1}
     >
       <Box display="flex" flexDirection="column">
-        <Text fontSize="$lg" fontWeight="$bold" mb="$2" color="$pixPrimaryDark50">
+        <Text fontSize="$lg" fontWeight="$semibold" mb="$2" color="$pixPrimaryDark50">
           {name}
         </Text>
         <Box display="flex" flexDirection="row" alignContent="center" mb="$2">

@@ -8,7 +8,7 @@ import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
 import Profile from '../../screens/Profile';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import AttendanceActionSheetNav from '../ControlRoomNav/AttendanceActionSheetNav';
-import DashboardNav from '../DashboardNav';
+import DashNav from '../DashNav';
 
 const Tab = createBottomTabNavigator();
 
@@ -57,7 +57,7 @@ const TabNavigator: React.FC = () => {
                 />
                 <Tab.Screen
                     name="Dashboard"
-                    component={DashboardNav}
+                    component={DashNav}
                     options={{
                         tabBarIcon: ({ color, focused }) => (
                             <FontAwesomeIcon icon="chart-simple" size={focused ? 24 : 20} color={color} style={ {marginLeft: 10}}/>

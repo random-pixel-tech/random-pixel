@@ -6,7 +6,7 @@ import { RouteNames } from '../services/utils/RouteNames';
 
 const Stack = createNativeStackNavigator();
 
-const DashboardNav = () => {
+const DashNav = () => {
   return (
     <Stack.Navigator initialRouteName={RouteNames.Dashboard}>
       <Stack.Screen
@@ -23,4 +23,4 @@ const DashboardNav = () => {
   );
 };
 
-export default DashboardNav;
+export default DashNav;
