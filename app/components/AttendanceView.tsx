@@ -5,13 +5,25 @@ import AttendanceCard from './AttendanceCard';
 import useStudentAttendance, { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 
 interface AttendanceViewProps {
-    selectedOption: string;
+  selectedOption: string;
+  startDate: string;
+  endDate: string;
+  fetchAttendanceByTime: (
+    studentId: string,
+    startDate: string,
+    endDate: string
+  ) => Promise<{
+    totalAttendance: number;
+    presentAttendance: number;
+  }>;
 }
 
-const AttendanceView: React.FC<AttendanceViewProps> = ({ selectedOption }) => {
+const AttendanceView: React.FC<AttendanceViewProps> = ({ selectedOption,   startDate,
+  endDate,
+  fetchAttendanceByTime, }) => {
     const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<AllStudentAttendanceData[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const { fetchAllStudentAttendance, fetchAttendanceByTime } = useStudentAttendance();
+    const { fetchAllStudentAttendance } = useStudentAttendance();
 
     // Memoize fetchAllStudentAttendance to prevent unnecessary re-renders
     const memoizedFetchAllStudentAttendance = useMemo(() => fetchAllStudentAttendance, []);
@@ -45,6 +57,8 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({ selectedOption }) => {
                             section={data.section}
                             fetchAttendanceByTime={fetchAttendanceByTime}
                             selectedOption={selectedOption}
+                            startDate={startDate}
+                            endDate={endDate}
                         />
                     ))
                 )}

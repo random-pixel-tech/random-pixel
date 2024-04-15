@@ -14,6 +14,9 @@ const AttendanceStats = () => {
     handleOptionsMenuOpen,
     handleOptionsMenuClose,
     currentDate,
+    startDate,
+    endDate,
+    fetchAttendanceByTime,
   } = useStatsHeaderState();
 
   return (
@@ -29,7 +32,11 @@ const AttendanceStats = () => {
         handleOptionsMenuClose={handleOptionsMenuClose}
         currentDate={currentDate}
       />
-      <AttendanceView selectedOption={selectedOption} />
+      <AttendanceView selectedOption={selectedOption} 
+       startDate={startDate}
+       endDate={endDate}
+       fetchAttendanceByTime={fetchAttendanceByTime} 
+      />
     </Box>
   );
 };
