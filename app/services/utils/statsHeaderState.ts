@@ -11,6 +11,7 @@ export const useStatsHeaderState = () => {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [startDate, setStartDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(dayjs().format('YYYY-MM-DD'));
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
     const calculateDates = () => {
@@ -67,7 +68,21 @@ export const useStatsHeaderState = () => {
     console.log('Selected option:', optionId);
     setSelectedOption(optionId);
     setIsOptionsMenuOpen(false);
-    setCurrentDate(dayjs()); // Reset currentDate to the current date
+    setCurrentDate(dayjs());
+
+    if (optionId === 'customRange') {
+      setShowDatePicker(true);
+    }
+  };
+
+  const handleDatePickerCancel = () => {
+    setShowDatePicker(false);
+  };
+
+  const handleDatePickerOk = (startDate: string, endDate: string) => {
+    setStartDate(startDate);
+    setEndDate(endDate);
+    setShowDatePicker(false);
   };
 
   const handleOptionsMenuOpen = () => {
@@ -132,5 +147,8 @@ export const useStatsHeaderState = () => {
       startDate,
       endDate,
       fetchAttendanceByTime,
+      handleDatePickerCancel,
+      handleDatePickerOk,
+      showDatePicker
     };
   };

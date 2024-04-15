@@ -3,6 +3,7 @@ import { Box } from '@gluestack-ui/themed';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
 import { useStatsHeaderState } from '../../services/utils/statsHeaderState';
+import DatePicker from '../../components/DatePicker';
 
 const AttendanceStats = () => {
   const {
@@ -17,6 +18,9 @@ const AttendanceStats = () => {
     startDate,
     endDate,
     fetchAttendanceByTime,
+    showDatePicker,
+    handleDatePickerCancel,
+    handleDatePickerOk,
   } = useStatsHeaderState();
 
   return (
@@ -36,6 +40,11 @@ const AttendanceStats = () => {
        startDate={startDate}
        endDate={endDate}
        fetchAttendanceByTime={fetchAttendanceByTime} 
+      />
+      <DatePicker
+        isOpen={showDatePicker}
+        onCancel={handleDatePickerCancel}
+        onOk={handleDatePickerOk}
       />
     </Box>
   );
