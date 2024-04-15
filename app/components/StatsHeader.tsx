@@ -57,7 +57,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
       <Pressable onPress={() => navigation.goBack()}>
         <FontAwesomeIcon icon="arrow-left" size={20} color={Colors.Text100} />
       </Pressable>
-      <Box display="flex" flexDirection="column" alignItems="center">
+      <Box display="flex" flexDirection="column" alignItems="center" minWidth="$48">
         <Text color={Colors.Text100} fontSize="$md" fontWeight="$medium" mb="$2">
           {title}
         </Text>
@@ -79,7 +79,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
           </Pressable>
         </Box>
       </Box>
-      <Box display="flex" flexDirection="column" alignItems="center">
+      <Box display="flex" flexDirection="column" alignItems="center" minWidth="$16">
         <Pressable onPress={handleOptionsMenuOpen}>
           <FontAwesomeIcon icon={faCalendarAlt} size={20} color={Colors.Primary} />
         </Pressable>

@@ -21,8 +21,8 @@ interface AttendanceCardProps {
 
 // Helper function to convert numbers to ordinal form
 const toOrdinal = (n: number): string => {
-  const suffixes = ['th', 'st', 'nd', 'rd'];
-  const v = n % 100;
+    const suffixes = ['ᵗʰ', 'ˢᵗ', 'ⁿᵈ', 'ʳᵈ'];
+    const v = n % 100;
   return n + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
 };
 
@@ -124,7 +124,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
       <Box display="flex" flexDirection="column" justifyContent="space-between">
         <Box bg="#DFD6F8" px="$2" py="$0.5" rounded="$md" alignSelf="flex-end">
           <Text fontSize="$sm" color="$pixPrimaryDark50">
-            #{presentAttendance}/{totalAttendance}
+          {percentage.toFixed(0)}%
           </Text>
         </Box>
 
