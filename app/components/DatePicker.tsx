@@ -17,7 +17,27 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
     const [endMonth, setEndMonth] = useState('');
     const [endYear, setEndYear] = useState('');
 
+    const isValidDay = (day: string) => {
+        const validDays = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
+        return validDays.includes(day);
+    };
+
+    const isValidMonth = (month: string) => {
+        const validMonths = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+        return validMonths.includes(month);
+    };
+
+    const isValidYear = (year: string) => {
+        const yearRegex = /^[0-9]{4}$/;
+        return yearRegex.test(year);
+    };
+
     const handleOk = () => {
+        if (!isValidDay(startDay) || !isValidMonth(startMonth) || !isValidYear(startYear) || !isValidDay(endDay) || !isValidMonth(endMonth) || !isValidYear(endYear)) {
+            // Handle invalid input, show an error message or perform any other desired action
+            return;
+        }
+
         const formattedStartDate = dayjs(`${startDay} ${startMonth} ${startYear}`, 'DD MMM YYYY').format('YYYY-MM-DD');
         const formattedEndDate = dayjs(`${endDay} ${endMonth} ${endYear}`, 'DD MMM YYYY').format('YYYY-MM-DD');
         handleDatePickerOk(formattedStartDate, formattedEndDate);
@@ -26,7 +46,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
     const renderStartDateInput = () => (
         <Box display="flex" flexDirection='row' justifyContent='space-between' mb="$4">
             <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined">
+                <Input variant="underlined" isInvalid={!isValidDay(startDay)}>
                     <InputField w="$0.5" placeholder='01' value={startDay} onChangeText={setStartDay}>
                     </InputField>
                 </Input>
@@ -35,7 +55,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
                 </Text>
             </Box>
             <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined">
+                <Input variant="underlined" isInvalid={!isValidMonth(startMonth)}>
                     <InputField w="$0.5" placeholder='JAN' value={startMonth} onChangeText={setStartMonth}>
                     </InputField>
                 </Input>
@@ -44,7 +64,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
                 </Text>
             </Box>
             <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined">
+                <Input variant="underlined" isInvalid={!isValidYear(startYear)}>
                     <InputField w="$0.5" placeholder='2024' value={startYear} onChangeText={setStartYear}>
                     </InputField>
                 </Input>
@@ -58,7 +78,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
     const renderEndDateInput = () => (
         <Box display="flex" flexDirection='row' justifyContent='space-between' mb="$4">
             <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined">
+                <Input variant="underlined" isInvalid={!isValidDay(endDay)}>
                     <InputField w="$0.5" placeholder='01' value={endDay} onChangeText={setEndDay}>
                     </InputField>
                 </Input>
@@ -67,7 +87,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
                 </Text>
             </Box>
             <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined">
+                <Input variant="underlined" isInvalid={!isValidMonth(endMonth)}>
                     <InputField w="$0.5" placeholder='JAN' value={endMonth} onChangeText={setEndMonth}>
                     </InputField>
                 </Input>
@@ -76,7 +96,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
                 </Text>
             </Box>
             <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined">
+                <Input variant="underlined" isInvalid={!isValidYear(endYear)}>
                     <InputField w="$0.5" placeholder='2024' value={endYear} onChangeText={setEndYear}>
                     </InputField>
                 </Input>
