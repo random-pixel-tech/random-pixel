@@ -35,16 +35,19 @@ const AttendanceStats = () => {
         handleOptionsMenuOpen={handleOptionsMenuOpen}
         handleOptionsMenuClose={handleOptionsMenuClose}
         currentDate={currentDate}
+        startDate={startDate}
+        endDate={endDate}
       />
-      <AttendanceView selectedOption={selectedOption} 
-       startDate={startDate}
-       endDate={endDate}
-       fetchAttendanceByTime={fetchAttendanceByTime} 
+      <AttendanceView
+        selectedOption={selectedOption}
+        startDate={startDate}
+        endDate={endDate}
+        fetchAttendanceByTime={fetchAttendanceByTime}
       />
       <DatePicker
         isOpen={showDatePicker}
-        onCancel={handleDatePickerCancel}
-        onOk={handleDatePickerOk}
+        handleDatePickerCancel={handleDatePickerCancel}
+        handleDatePickerOk={handleDatePickerOk}
       />
     </Box>
   );

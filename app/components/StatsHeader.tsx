@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../services/utils/colors';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import OptionsMenu from './OptionsMenu';
+import dayjs from 'dayjs';
 
 interface StatsHeaderProps {
   title: string;
@@ -16,6 +17,8 @@ interface StatsHeaderProps {
   handleOptionsMenuOpen: () => void;
   handleOptionsMenuClose: () => void;
   currentDate: any;
+  startDate: string;
+  endDate: string;
 }
 
 const StatsHeader: React.FC<StatsHeaderProps> = ({
@@ -28,6 +31,8 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
   handleOptionsMenuOpen,
   handleOptionsMenuClose,
   currentDate,
+  startDate,
+  endDate,
 }) => {
   const navigation = useNavigation();
 
@@ -38,6 +43,10 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
     { id: 'yearly', label: 'Yearly', onPress: () => handleOptionSelect('yearly') },
     { id: 'customRange', label: 'Custom Date Range', onPress: () => handleOptionSelect('customRange') },
   ];
+
+  const formatDate = (date: string) => {
+    return dayjs(date).format('DD, MMM - YYYY');
+  };
 
   return (
     <Box
@@ -66,7 +75,9 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
             <FontAwesomeIcon icon="arrow-left" size={16} color={Colors.Primary} />
           </Pressable>
           <Text px="$2">
-            {selectedOption === 'monthly'
+            {selectedOption === 'customRange'
+              ? `${formatDate(startDate)} to ${formatDate(endDate)}`
+              : selectedOption === 'monthly'
               ? currentDate.format('MMM - YYYY')
               : selectedOption === 'yearly'
               ? currentDate.format('YYYY')
