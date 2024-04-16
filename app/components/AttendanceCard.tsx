@@ -9,20 +9,20 @@ interface AttendanceCardProps {
   fetchAttendanceByTime: (
     studentId: string,
     startDate: string,
-    endDate: string
+    endDate: string,
   ) => Promise<{
     totalAttendance: number;
     presentAttendance: number;
+
   }>;
   selectedOption: string;
   startDate: string;
   endDate: string;
 }
 
-// Helper function to convert numbers to ordinal form
 const toOrdinal = (n: number): string => {
-    const suffixes = ['ᵗʰ', 'ˢᵗ', 'ⁿᵈ', 'ʳᵈ'];
-    const v = n % 100;
+  const suffixes = ['ᵗʰ', 'ˢᵗ', 'ⁿᵈ', 'ʳᵈ'];
+  const v = n % 100;
   return n + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
 };
 
@@ -40,7 +40,6 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
   const [totalAttendance, setTotalAttendance] = useState<number>(0);
   const [presentAttendance, setPresentAttendance] = useState<number>(0);
 
-  // Memoize fetchAttendanceByTime
   const memoizedFetchAttendanceByTime = useCallback(fetchAttendanceByTime, []);
 
   useEffect(() => {
@@ -48,16 +47,20 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
 
     const fetchData = async () => {
       try {
-        const { totalAttendance, presentAttendance } = await memoizedFetchAttendanceByTime(
+        const {
+          totalAttendance,
+          presentAttendance,
+ 
+        } = await memoizedFetchAttendanceByTime(
           student.id,
           startDate,
-          endDate
+          endDate,
         );
 
         if (isMounted) {
           setTotalAttendance(totalAttendance);
           setPresentAttendance(presentAttendance);
-        }
+      }
       } catch (error) {
         console.error('Error fetching attendance:', error);
       }
@@ -74,8 +77,43 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
 
   const percentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
 
-  // Convert className to ordinal form
   const classNameOrdinal = toOrdinal(parseInt(className));
+
+  const renderAttendanceBox = () => {
+
+    if (selectedOption === 'daily') {
+      return (
+        <Box alignContent="center" display="flex" flexDirection="row">
+          <Box display="flex" flexDirection="column">
+            <Box display="flex" flexDirection="row" alignSelf="center">
+              <Text fontSize="$md" color="$pixText100">S-1</Text>
+              <Text fontSize="$md" color="$pixSecondary2" mr="$2">: A</Text>
+              <Text fontSize="$md" color="$pixText100">S-2</Text>
+              <Text fontSize="$md" color="$pixSecondary2">: P</Text>
+            </Box>
+            <Text fontSize="$sm" color="$pixSecondary2" alignSelf="center">Attendance</Text>
+          </Box>
+        </Box>
+      );
+    } else {
+      return (
+        <Box alignContent="center" display="flex" flexDirection="row">
+          <Box display="flex" flexDirection="column" mr="$2">
+            <Text fontSize="$md" color="$pixText100" alignSelf="center">
+              {presentAttendance}/{totalAttendance}
+            </Text>
+            <Text fontSize="$sm" color="$pixSecondary2">Attendance</Text>
+          </Box>
+          <Box display="flex" flexDirection="column">
+            <Text fontSize="$md" color="$pixText100" alignSelf="center">
+              {percentage.toFixed(0)}%
+            </Text>
+            <Text fontSize="$sm" color="$pixSecondary2">Percentage</Text>
+          </Box>
+        </Box>
+      );
+    }
+  };
 
   return (
     <Box
@@ -124,28 +162,11 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
       <Box display="flex" flexDirection="column" justifyContent="space-between">
         <Box bg="#DFD6F8" px="$2" py="$0.5" rounded="$md" alignSelf="flex-end">
           <Text fontSize="$sm" color="$pixPrimaryDark50">
-          {percentage.toFixed(0)}%
+            {percentage.toFixed(0)}%
           </Text>
         </Box>
 
-        <Box alignContent="center" display="flex" flexDirection="row">
-          <Box display="flex" flexDirection="column" mr="$2">
-            <Text fontSize="$md" color="$pixText100" alignSelf="center">
-              {presentAttendance}/{totalAttendance}
-            </Text>
-            <Text fontSize="$sm" color="$pixSecondary2">
-              Attendance
-            </Text>
-          </Box>
-          <Box display="flex" flexDirection="column">
-            <Text fontSize="$md" color="$pixText100" alignSelf="center">
-              {percentage.toFixed(0)}%
-            </Text>
-            <Text fontSize="$sm" color="$pixSecondary2">
-              Percentage
-            </Text>
-          </Box>
-        </Box>
+        {renderAttendanceBox()}
       </Box>
     </Box>
   );
