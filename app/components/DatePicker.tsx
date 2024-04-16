@@ -43,6 +43,14 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
         handleDatePickerOk(formattedStartDate, formattedEndDate);
     };
 
+    const handleStartMonthChange = (value: string) => {
+        setStartMonth(value.toUpperCase());
+    };
+
+    const handleEndMonthChange = (value: string) => {
+        setEndMonth(value.toUpperCase());
+    };
+
     const renderStartDateInput = () => (
         <Box display="flex" flexDirection='row' justifyContent='space-between' mb="$4">
             <Box display="flex" flexDirection='column' w="$1/5">
@@ -56,7 +64,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
             </Box>
             <Box display="flex" flexDirection='column' w="$1/5">
                 <Input variant="underlined" isInvalid={!isValidMonth(startMonth)}>
-                    <InputField w="$0.5" placeholder='JAN' value={startMonth} onChangeText={setStartMonth}>
+                    <InputField w="$0.5" placeholder='JAN' value={startMonth} onChangeText={handleStartMonthChange}>
                     </InputField>
                 </Input>
                 <Text alignSelf='center'>
@@ -88,7 +96,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
             </Box>
             <Box display="flex" flexDirection='column' w="$1/5">
                 <Input variant="underlined" isInvalid={!isValidMonth(endMonth)}>
-                    <InputField w="$0.5" placeholder='JAN' value={endMonth} onChangeText={setEndMonth}>
+                    <InputField w="$0.5" placeholder='JAN' value={endMonth} onChangeText={handleEndMonthChange}>
                     </InputField>
                 </Input>
                 <Text alignSelf='center'>
