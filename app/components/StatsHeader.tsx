@@ -65,8 +65,8 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
       borderBottomWidth={2}
       borderBottomColor={Colors.SecondaryLight100}
     >
-      <Pressable onPress={() => navigation.goBack()}>
-        <FontAwesomeIcon icon="arrow-left" size={20} color={Colors.Text100} />
+      <Pressable onPress={() => navigation.goBack()} p="$4">
+        <FontAwesomeIcon icon="arrow-left" size={18} color={Colors.Text100} />
       </Pressable>
       <Box display="flex" flexDirection="column" alignItems="center" minWidth="$48">
         <Text color={Colors.Text100} fontSize="$md" fontWeight="$medium" mb="$2">
@@ -74,7 +74,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
         </Text>
         <Box display="flex" flexDirection="row" alignItems="center">
           {selectedOption !== 'customRange' && (
-            <Pressable onPress={handlePrevDay}>
+            <Pressable onPress={handlePrevDay} p="$4">
               <FontAwesomeIcon icon="arrow-left" size={16} color={Colors.Primary} />
             </Pressable>
           )}
@@ -92,23 +92,22 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
                     : currentDate.format('DD, MMM - YYYY')}
           </Text>
           {selectedOption !== 'customRange' && (
-            <Pressable onPress={handleNextDay}>
+            <Pressable onPress={handleNextDay} p="$4">
               <FontAwesomeIcon icon="arrow-right" size={16} color={Colors.Primary} />
             </Pressable>
           )}
         </Box>
 
       </Box>
-      <Box display="flex" flexDirection="column" alignItems="center" minWidth="$16">
-        <Pressable onPress={handleOptionsMenuOpen}>
-          <FontAwesomeIcon icon={faCalendarAlt} size={20} color={Colors.Primary} />
-        </Pressable>
-        <Text color={Colors.Text100} mt="$1">
+        <Pressable onPress={handleOptionsMenuOpen} p="$4" display="flex" flexDirection="column" alignItems="center" minWidth="$16">
+          <FontAwesomeIcon icon={faCalendarAlt} size={18} color={Colors.Primary} />
+          <Text color={Colors.Text100} mt="$1">
           {selectedOption === 'customRange'
             ? 'Custom'
             : options.find((option) => option.id === selectedOption)?.label || 'Daily'}
         </Text>
-      </Box>
+        </Pressable>
+        
       <OptionsMenu options={options} isOpen={isOptionsMenuOpen} onClose={handleOptionsMenuClose} />
     </Box>
   );
