@@ -37,6 +37,7 @@ const AttendanceStats = () => {
         currentDate={currentDate}
         startDate={startDate}
         endDate={endDate}
+        showDatePicker={showDatePicker}
       />
       <AttendanceView
         selectedOption={selectedOption}

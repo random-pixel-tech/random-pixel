@@ -19,6 +19,7 @@ interface StatsHeaderProps {
   currentDate: any;
   startDate: string;
   endDate: string;
+  showDatePicker: boolean;
 }
 
 const StatsHeader: React.FC<StatsHeaderProps> = ({
@@ -33,6 +34,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
   currentDate,
   startDate,
   endDate,
+  showDatePicker
 }) => {
   const navigation = useNavigation();
 
@@ -78,7 +80,9 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
           )}
           <Text px="$2">
             {selectedOption === 'customRange'
-              ? `${formatDate(startDate)} to ${formatDate(endDate)}`
+              ? showDatePicker
+                ? "Start Date to End Date"
+                : `${formatDate(startDate)} to ${formatDate(endDate)}`
               : selectedOption === 'monthly'
                 ? currentDate.format('MMM - YYYY')
                 : selectedOption === 'yearly'
