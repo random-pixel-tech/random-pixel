@@ -71,24 +71,29 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
           {title}
         </Text>
         <Box display="flex" flexDirection="row" alignItems="center">
-          <Pressable onPress={handlePrevDay}>
-            <FontAwesomeIcon icon="arrow-left" size={16} color={Colors.Primary} />
-          </Pressable>
+          {selectedOption !== 'customRange' && (
+            <Pressable onPress={handlePrevDay}>
+              <FontAwesomeIcon icon="arrow-left" size={16} color={Colors.Primary} />
+            </Pressable>
+          )}
           <Text px="$2">
             {selectedOption === 'customRange'
               ? `${formatDate(startDate)} to ${formatDate(endDate)}`
               : selectedOption === 'monthly'
-              ? currentDate.format('MMM - YYYY')
-              : selectedOption === 'yearly'
-              ? currentDate.format('YYYY')
-              : selectedOption === 'weekly'
-              ? `Week ${currentDate.week() - currentDate.startOf('month').week() + 1}, ${currentDate.format('MMM - YYYY')}`
-              : currentDate.format('DD, MMM - YYYY')}
+                ? currentDate.format('MMM - YYYY')
+                : selectedOption === 'yearly'
+                  ? currentDate.format('YYYY')
+                  : selectedOption === 'weekly'
+                    ? `Week ${currentDate.week() - currentDate.startOf('month').week() + 1}, ${currentDate.format('MMM - YYYY')}`
+                    : currentDate.format('DD, MMM - YYYY')}
           </Text>
-          <Pressable onPress={handleNextDay}>
-            <FontAwesomeIcon icon="arrow-right" size={16} color={Colors.Primary} />
-          </Pressable>
+          {selectedOption !== 'customRange' && (
+            <Pressable onPress={handleNextDay}>
+              <FontAwesomeIcon icon="arrow-right" size={16} color={Colors.Primary} />
+            </Pressable>
+          )}
         </Box>
+
       </Box>
       <Box display="flex" flexDirection="column" alignItems="center" minWidth="$16">
         <Pressable onPress={handleOptionsMenuOpen}>
