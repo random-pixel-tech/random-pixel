@@ -59,18 +59,18 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <Box bg="$pixWhite" w="$full" h="$16" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" px="$4">
+    <Box bg="$pixWhite" w="$full" h="$20" pt="$4" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" px="$4">
       <Box display="flex" flexDirection="row">
-        <Pressable onPress={handleLeftArrowPress}>
-          <FontAwesomeIcon icon="arrow-left" size={20} color={Colors.Text100} />
+        <Pressable onPress={handleLeftArrowPress} p="$4">
+          <FontAwesomeIcon icon="arrow-left" size={18} color={Colors.Text100} />
         </Pressable>
-        <Text color={Colors.Text100} fontSize="$lg" px="$8" fontWeight="$medium">
+        <Text color={Colors.Text100} fontSize="$lg" px="$8" py="$4" fontWeight="$medium">
           {title}
         </Text>
       </Box>
       {icon && (
-        <Pressable onPress={onIconPress}>
-          <FontAwesomeIcon icon={icon} size={20} color={Colors.Text100} />
+        <Pressable onPress={onIconPress} p="$4">
+          <FontAwesomeIcon icon={icon} size={18} color={Colors.Text100} />
         </Pressable>
       )}
       {options && (
