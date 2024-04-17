@@ -27,7 +27,7 @@ export const useHandleNavigateToScreen = (
       console.log('Marked Students:', markedStudents);
 
       // Check if all students' attendance is marked
-      const isAllAttendanceMarked = markedStudents === totalStudents;
+      const isAllAttendanceMarked = markedStudents > 0 && markedStudents === totalStudents;
       console.log('Is All Attendance Marked:', isAllAttendanceMarked);
 
       if (isAllAttendanceMarked) {
