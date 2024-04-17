@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@gluestack-ui/themed';
+import { Box, Button, ButtonText } from '@gluestack-ui/themed';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
 import { useStatsHeaderState } from '../../services/utils/statsHeaderState';
@@ -39,6 +39,7 @@ const AttendanceStats = () => {
         endDate={endDate}
         showDatePicker={showDatePicker}
       />
+     
       <AttendanceView
         selectedOption={selectedOption}
         startDate={startDate}
