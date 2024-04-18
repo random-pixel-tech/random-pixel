@@ -1,30 +1,35 @@
 import React, { useState } from 'react';
 import { Button, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText } from '@gluestack-ui/themed';
 
-const FilterAttendance: React.FC = () => {
-    const [showActionsheet, setShowActionsheet] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('Percentage');
-    const [selectedTab, setSelectedTab] = useState('Filter');
+interface FilterAttendanceProps {
+  onSortOptionSelect: (option: string) => void;
+}
 
-    const handleClose = () => {
-        setShowActionsheet(false);
-    };
+const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect }) => {
+  const [showActionsheet, setShowActionsheet] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('Percentage');
+  const [selectedTab, setSelectedTab] = useState('Filter');
 
-    const handleOptionSelect = (option: string) => {
-        setSelectedOption(option);
-    };
+  const handleClose = () => {
+    setShowActionsheet(false);
+  };
 
-    const handleSortOptionSelect = (option: string) => {
-        setSelectedOption(option);
-    };
+  const handleOptionSelect = (option: string) => {
+    setSelectedOption(option);
+  };
 
-    const handleClear = () => {
-        setShowActionsheet(false);
-    };
+  const handleSortOptionSelect = (option: string) => {
+    onSortOptionSelect(option);
+    setSelectedOption(option);
+  };
 
-    const handleApply = () => {
-        setShowActionsheet(false);
-    };
+  const handleClear = () => {
+    setShowActionsheet(false);
+  };
+
+  const handleApply = () => {
+    setShowActionsheet(false);
+  };
 
     const renderTabBar = () => (
         <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor='$pixPrimaryLight100'>
@@ -97,9 +102,9 @@ const FilterAttendance: React.FC = () => {
 
     return (
         <Button onPress={() => setShowActionsheet(true)}>
-            <ButtonText>{selectedOption}</ButtonText>
-            <Actionsheet isOpen={showActionsheet} onClose={handleClose} closeOnOverlayClick zIndex={999}>
-                <ActionsheetBackdrop />
+        <ButtonText>{selectedOption}</ButtonText>
+        <Actionsheet isOpen={showActionsheet} onClose={handleClose} closeOnOverlayClick zIndex={999}>
+          <ActionsheetBackdrop />
                 <ActionsheetContent h="$3/4" zIndex={999}>
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />

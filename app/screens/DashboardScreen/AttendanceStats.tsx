@@ -1,10 +1,11 @@
-import React from 'react';
-import { Box, Button, ButtonText } from '@gluestack-ui/themed';
+import React, { useState } from 'react';
+import { Box } from '@gluestack-ui/themed';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
 import { useStatsHeaderState } from '../../services/utils/statsHeaderState';
 import DatePicker from '../../components/DatePicker';
 import FilterAttendance from '../../components/FilterAttendance';
+
 const AttendanceStats = () => {
   const {
     selectedOption,
@@ -23,6 +24,12 @@ const AttendanceStats = () => {
     handleDatePickerOk,
   } = useStatsHeaderState();
 
+  const [sortOption, setSortOption] = useState('');
+
+  const handleSortOptionSelect = (option: string) => {
+    setSortOption(option);
+  };
+
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
       <StatsHeader
@@ -39,12 +46,13 @@ const AttendanceStats = () => {
         endDate={endDate}
         showDatePicker={showDatePicker}
       />
-     <FilterAttendance/>
+      <FilterAttendance onSortOptionSelect={handleSortOptionSelect} />
       <AttendanceView
         selectedOption={selectedOption}
         startDate={startDate}
         endDate={endDate}
         fetchAttendanceByTime={fetchAttendanceByTime}
+        sortOption={sortOption}
       />
       <DatePicker
         isOpen={showDatePicker}
