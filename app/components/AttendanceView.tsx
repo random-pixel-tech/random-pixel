@@ -12,8 +12,9 @@ interface AttendanceViewProps {
     studentId: string,
     startDate: string,
     endDate: string
-  ) => Promise<{ totalAttendance: number; presentAttendance: number; }>;
+  ) => Promise<{ totalAttendance: number; presentAttendance: number }>;
   sortOption: string;
+  selectedFilters: string[];
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
@@ -22,6 +23,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   endDate,
   fetchAttendanceByTime,
   sortOption,
+  selectedFilters,
 }) => {
   const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<AllStudentAttendanceData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -55,7 +57,8 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
           startDate,
           endDate
         );
-        const attendancePercentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
+        const attendancePercentage =
+          totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
         return { ...data, attendancePercentage };
       })
     );
@@ -77,14 +80,39 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
     return attendanceData;
   }, [attendanceDataWithPercentage, sortOption]);
 
+  // Filter attendance data based on the selected filters
+  const filteredAttendanceData = useMemo(async () => {
+    const attendanceData = await sortedAttendanceData;
+
+    if (selectedFilters.length === 0) {
+      return attendanceData;
+    }
+
+    return attendanceData.filter((data) => {
+      const percentage = data.attendancePercentage;
+      return selectedFilters.some((filter) => {
+        if (filter === '70% or below') {
+          return percentage <= 70;
+        } else if (filter === '70% to 90%') {
+          return percentage > 70 && percentage <= 90;
+        } else if (filter === 'Above 90%') {
+          return percentage > 90;
+        }
+        return false;
+      });
+    });
+  }, [sortedAttendanceData, selectedFilters]);
+
   return (
     <ScrollView>
       <Box p="$4">
         {isLoading ? (
-          <Box><Text>Loading...</Text></Box>
+          <Box>
+            <Text>Loading...</Text>
+          </Box>
         ) : (
           <AttendanceDataRenderer
-            sortedAttendanceData={sortedAttendanceData}
+            filteredAttendanceData={filteredAttendanceData}
             fetchAttendanceByTime={fetchAttendanceByTime}
             selectedOption={selectedOption}
             startDate={startDate}
@@ -97,19 +125,19 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
 };
 
 interface AttendanceDataRendererProps {
-  sortedAttendanceData: Promise<AllStudentAttendanceData[]>;
+  filteredAttendanceData: Promise<AllStudentAttendanceData[]>;
   fetchAttendanceByTime: (
     studentId: string,
     startDate: string,
     endDate: string
-  ) => Promise<{ totalAttendance: number; presentAttendance: number; }>;
+  ) => Promise<{ totalAttendance: number; presentAttendance: number }>;
   selectedOption: string;
   startDate: string;
   endDate: string;
 }
 
 const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
-  sortedAttendanceData,
+  filteredAttendanceData,
   fetchAttendanceByTime,
   selectedOption,
   startDate,
@@ -118,13 +146,13 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
   const [attendanceData, setAttendanceData] = useState<AllStudentAttendanceData[]>([]);
 
   useEffect(() => {
-    const fetchSortedData = async () => {
-      const data = await sortedAttendanceData;
+    const fetchFilteredData = async () => {
+      const data = await filteredAttendanceData;
       setAttendanceData(data);
     };
 
-    fetchSortedData();
-  }, [sortedAttendanceData]);
+    fetchFilteredData();
+  }, [filteredAttendanceData]);
 
   return (
     <>

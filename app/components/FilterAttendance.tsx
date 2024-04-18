@@ -1,35 +1,48 @@
 import React, { useState } from 'react';
-import { Button, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText } from '@gluestack-ui/themed';
+import { Button, CheckboxIcon, CheckIcon, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText, Checkbox, CheckboxIndicator } from '@gluestack-ui/themed';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 interface FilterAttendanceProps {
-  onSortOptionSelect: (option: string) => void;
+    onSortOptionSelect: (option: string) => void;
+    onFilterOptionSelect: (filters: string[]) => void;
 }
 
-const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect }) => {
-  const [showActionsheet, setShowActionsheet] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('Percentage');
-  const [selectedTab, setSelectedTab] = useState('Filter');
+const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect, onFilterOptionSelect }) => {
+    const [showActionsheet, setShowActionsheet] = useState(false);
+    const [selectedOption, setSelectedOption] = useState('Percentage');
+    const [selectedTab, setSelectedTab] = useState('Filter');
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
-  const handleClose = () => {
-    setShowActionsheet(false);
-  };
+    const handleClose = () => {
+        setShowActionsheet(false);
+        setSelectedFilters([]);
+    };
 
-  const handleOptionSelect = (option: string) => {
-    setSelectedOption(option);
-  };
+    const handleOptionSelect = (option: string) => {
+        setSelectedOption(option);
+    };
 
-  const handleSortOptionSelect = (option: string) => {
-    onSortOptionSelect(option);
-    setSelectedOption(option);
-  };
+    const handleSortOptionSelect = (option: string) => {
+        onSortOptionSelect(option);
+        setSelectedOption(option);
+    };
 
-  const handleClear = () => {
-    setShowActionsheet(false);
-  };
+    const handleFilterOptionSelect = (option: string) => {
+        const updatedFilters = selectedFilters.includes(option)
+            ? selectedFilters.filter((filter) => filter !== option)
+            : [...selectedFilters, option];
+        setSelectedFilters(updatedFilters);
+    };
 
-  const handleApply = () => {
-    setShowActionsheet(false);
-  };
+    const handleClear = () => {
+        setSelectedFilters([]);
+        setShowActionsheet(false);
+    };
+
+    const handleApply = () => {
+        onFilterOptionSelect(selectedFilters);
+        setShowActionsheet(false);
+    };
 
     const renderTabBar = () => (
         <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor='$pixPrimaryLight100'>
@@ -46,25 +59,78 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect 
         </Box>
     );
 
-
     const renderRightOptions = () => {
         if (selectedTab === 'Filter') {
             switch (selectedOption) {
-                case 'Percentage':
+                case 'Attendance':
                     return (
                         <>
-                            <ActionsheetItem onPress={handleClose}>
+                            <ActionsheetItem onPress={() => handleFilterOptionSelect('70% or below')}>
+                                <Checkbox
+                                    value="70% or below"
+                                    isChecked={selectedFilters.includes('70% or below')}
+                                    onChange={() => handleFilterOptionSelect('70% or below')}
+                                    rounded="$md"
+                                    aria-label="70% or below"
+                                    size='lg'
+                                    p="$6"
+                                >
+                                    <CheckboxIndicator
+                                        borderColor="$pixPrimary"
+                                        bg={selectedFilters.includes('70% or below') ? '$pixPrimary' : 'transparent'}
+
+                                    >
+                                        <CheckboxIcon as={CheckIcon} />
+
+                                    </CheckboxIndicator>
+                                </Checkbox>
                                 <ActionsheetItemText color='$pixText100'>70% or below</ActionsheetItemText>
                             </ActionsheetItem>
-                            <ActionsheetItem onPress={handleClose}>
+                            <ActionsheetItem onPress={() => handleFilterOptionSelect('70% to 90%')}>
+                                <Checkbox
+                                    value="70% to 90%"
+                                    isChecked={selectedFilters.includes('70% to 90%')}
+                                    onChange={() => handleFilterOptionSelect('70% to 90%')}
+                                    rounded="$md"
+                                    aria-label="70% to 90%"
+                                    size='lg'
+                                    p="$6"
+                                >
+                                    <CheckboxIndicator
+                                        borderColor="$pixPrimary"
+                                        bg={selectedFilters.includes('70% to 90%') ? '$pixPrimary' : 'transparent'}
+
+                                    >
+                                        <CheckboxIcon as={CheckIcon} />
+
+                                    </CheckboxIndicator>
+                                </Checkbox>
                                 <ActionsheetItemText color='$pixText100'>70% to 90%</ActionsheetItemText>
                             </ActionsheetItem>
-                            <ActionsheetItem onPress={handleClose}>
+                            <ActionsheetItem onPress={() => handleFilterOptionSelect('Above 90%')}>
+                                <Checkbox
+                                    value="Above 90%"
+                                    isChecked={selectedFilters.includes('Above 90%')}
+                                    onChange={() => handleFilterOptionSelect('Above 90%')}
+                                    rounded="$md"
+                                    aria-label="Above 90%"
+                                    size='lg'
+                                    p="$6"
+                                >
+                                    <CheckboxIndicator
+                                        borderColor="$pixPrimary"
+                                        bg={selectedFilters.includes('Above 90%') ? '$pixPrimary' : 'transparent'}
+
+                                    >
+                                        <CheckboxIcon as={CheckIcon} />
+
+                                    </CheckboxIndicator>
+                                </Checkbox>
                                 <ActionsheetItemText color='$pixText100'>Above 90%</ActionsheetItemText>
                             </ActionsheetItem>
                         </>
                     );
-                case 'Attendance':
+                case 'Percentage':
                 case 'Class':
                 case 'Section':
                     return null;
@@ -72,7 +138,6 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect 
                     return null;
             }
         } else if (selectedTab === 'Sort') {
-            // Render sorting options
             return (
                 <>
                     <ActionsheetItem onPress={() => handleSortOptionSelect('Percentage: Low to High')}>
@@ -99,12 +164,11 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect 
         return null;
     };
 
-
     return (
         <Button onPress={() => setShowActionsheet(true)}>
-        <ButtonText>{selectedOption}</ButtonText>
-        <Actionsheet isOpen={showActionsheet} onClose={handleClose} closeOnOverlayClick zIndex={999}>
-          <ActionsheetBackdrop />
+            <ButtonText>{selectedOption}</ButtonText>
+            <Actionsheet isOpen={showActionsheet} onClose={handleClose} closeOnOverlayClick zIndex={999}>
+                <ActionsheetBackdrop />
                 <ActionsheetContent h="$3/4" zIndex={999}>
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
@@ -134,10 +198,10 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect 
                         </Box>
                     )}
                     {selectedTab === 'Sort' && (
-                       <Box flexDirection="row" style={{ flex: 1 }} p="$1" w="$full">
-                        <Box w="$full" borderRightWidth={1} borderRightColor='$pixPrimaryLight100' h="$full">
-                            {renderRightOptions()}
-                        </Box>
+                        <Box flexDirection="row" style={{ flex: 1 }} p="$1" w="$full">
+                            <Box w="$full" borderRightWidth={1} borderRightColor='$pixPrimaryLight100' h="$full">
+                                {renderRightOptions()}
+                            </Box>
                         </Box>
                     )}
                     <Box w="$full" flexDirection="row" justifyContent="space-between" p="$4" px="$8" borderTopWidth={1} borderTopColor='$pixPrimaryLight100' mt="$1">
