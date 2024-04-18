@@ -4,7 +4,7 @@ import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
 import { useStatsHeaderState } from '../../services/utils/statsHeaderState';
 import DatePicker from '../../components/DatePicker';
-
+import FilterAttendance from '../../components/FilterAttendance';
 const AttendanceStats = () => {
   const {
     selectedOption,
@@ -39,7 +39,7 @@ const AttendanceStats = () => {
         endDate={endDate}
         showDatePicker={showDatePicker}
       />
-     
+     <FilterAttendance/>
       <AttendanceView
         selectedOption={selectedOption}
         startDate={startDate}
