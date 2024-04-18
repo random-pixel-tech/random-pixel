@@ -100,7 +100,7 @@ const FilterAttendance: React.FC = () => {
             <ButtonText>{selectedOption}</ButtonText>
             <Actionsheet isOpen={showActionsheet} onClose={handleClose} closeOnOverlayClick zIndex={999}>
                 <ActionsheetBackdrop />
-                <ActionsheetContent h="$2/3" zIndex={999}>
+                <ActionsheetContent h="$3/4" zIndex={999}>
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>
