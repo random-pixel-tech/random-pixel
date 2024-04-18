@@ -46,15 +46,36 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
     fetchData();
   }, [memoizedFetchAllStudentAttendance]);
 
+  // Calculate attendance percentage for each student
+  const attendanceDataWithPercentage = useMemo(() => {
+    return Promise.all(
+      allStudentAttendanceData.map(async (data) => {
+        const { totalAttendance, presentAttendance } = await fetchAttendanceByTime(
+          data.student.id,
+          startDate,
+          endDate
+        );
+        const attendancePercentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
+        return { ...data, attendancePercentage };
+      })
+    );
+  }, [allStudentAttendanceData, fetchAttendanceByTime, startDate, endDate]);
+
   // Sort attendance data based on the selected sort option
-  const sortedAttendanceData = useMemo(() => {
+  const sortedAttendanceData = useMemo(async () => {
+    const attendanceData = await attendanceDataWithPercentage;
+
     if (sortOption === 'Name: A to Z') {
-      return [...allStudentAttendanceData].sort((a, b) => a.student.name.localeCompare(b.student.name));
+      return [...attendanceData].sort((a, b) => a.student.name.localeCompare(b.student.name));
     } else if (sortOption === 'Name: Z to A') {
-      return [...allStudentAttendanceData].sort((a, b) => b.student.name.localeCompare(a.student.name));
+      return [...attendanceData].sort((a, b) => b.student.name.localeCompare(a.student.name));
+    } else if (sortOption === 'Attendance: Low to High') {
+      return [...attendanceData].sort((a, b) => a.attendancePercentage - b.attendancePercentage);
+    } else if (sortOption === 'Attendance: High to Low') {
+      return [...attendanceData].sort((a, b) => b.attendancePercentage - a.attendancePercentage);
     }
-    return allStudentAttendanceData;
-  }, [allStudentAttendanceData, sortOption]);
+    return attendanceData;
+  }, [attendanceDataWithPercentage, sortOption]);
 
   return (
     <ScrollView>
@@ -62,21 +83,64 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
         {isLoading ? (
           <Box><Text>Loading...</Text></Box>
         ) : (
-          sortedAttendanceData.map((data) => (
-            <AttendanceCard
-              key={data.student.id}
-              studentAttendanceData={data}
-              className={data.className}
-              section={data.section}
-              fetchAttendanceByTime={fetchAttendanceByTime}
-              selectedOption={selectedOption}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          ))
+          <AttendanceDataRenderer
+            sortedAttendanceData={sortedAttendanceData}
+            fetchAttendanceByTime={fetchAttendanceByTime}
+            selectedOption={selectedOption}
+            startDate={startDate}
+            endDate={endDate}
+          />
         )}
       </Box>
     </ScrollView>
+  );
+};
+
+interface AttendanceDataRendererProps {
+  sortedAttendanceData: Promise<AllStudentAttendanceData[]>;
+  fetchAttendanceByTime: (
+    studentId: string,
+    startDate: string,
+    endDate: string
+  ) => Promise<{ totalAttendance: number; presentAttendance: number; }>;
+  selectedOption: string;
+  startDate: string;
+  endDate: string;
+}
+
+const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
+  sortedAttendanceData,
+  fetchAttendanceByTime,
+  selectedOption,
+  startDate,
+  endDate,
+}) => {
+  const [attendanceData, setAttendanceData] = useState<AllStudentAttendanceData[]>([]);
+
+  useEffect(() => {
+    const fetchSortedData = async () => {
+      const data = await sortedAttendanceData;
+      setAttendanceData(data);
+    };
+
+    fetchSortedData();
+  }, [sortedAttendanceData]);
+
+  return (
+    <>
+      {attendanceData.map((data) => (
+        <AttendanceCard
+          key={data.student.id}
+          studentAttendanceData={data}
+          className={data.className}
+          section={data.section}
+          fetchAttendanceByTime={fetchAttendanceByTime}
+          selectedOption={selectedOption}
+          startDate={startDate}
+          endDate={endDate}
+        />
+      ))}
+    </>
   );
 };
 
