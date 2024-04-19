@@ -64,10 +64,10 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
     );
   }, [allStudentAttendanceData, fetchAttendanceByTime, startDate, endDate]);
 
-  // Sort attendance data based on the selected sort option
-  const sortedAttendanceData = useMemo(async () => {
+// Sort attendance data based on the selected sort option and class
+const sortedAttendanceData = useMemo(async () => {
     const attendanceData = await attendanceDataWithPercentage;
-
+  
     if (sortOption === 'Name: A to Z') {
       return [...attendanceData].sort((a, b) => a.student.name.localeCompare(b.student.name));
     } else if (sortOption === 'Name: Z to A') {
@@ -76,9 +76,14 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
       return [...attendanceData].sort((a, b) => a.attendancePercentage - b.attendancePercentage);
     } else if (sortOption === 'Attendance: High to Low') {
       return [...attendanceData].sort((a, b) => b.attendancePercentage - a.attendancePercentage);
+    } else if (sortOption === 'Class: Low to High') {
+      return [...attendanceData].sort((a, b) => a.className.localeCompare(b.className));
+    } else if (sortOption === 'Class: High to Low') {
+      return [...attendanceData].sort((a, b) => b.className.localeCompare(a.className));
     }
     return attendanceData;
   }, [attendanceDataWithPercentage, sortOption]);
+  
 
   // Filter attendance data based on the selected filters
   const filteredAttendanceData = useMemo(async () => {

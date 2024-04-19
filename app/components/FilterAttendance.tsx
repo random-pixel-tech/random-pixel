@@ -29,7 +29,6 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
     };
 
     const handleSortOptionSelect = (option: string) => {
-        onSortOptionSelect(option);
         setSelectedOption(option);
     };
 
@@ -53,17 +52,33 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
         });
         onFilterOptionSelect('attendance', '');
         onFilterOptionSelect('class', '');
-      };
+        setSelectedOption('');
+    };
 
-    const handleApply = () => {
-    Object.entries(selectedFilters).forEach(([category, options]) => {
-        options.forEach((option) => {
+      const handleApply = () => {
+        // Apply selected filters
+        Object.entries(selectedFilters).forEach(([category, options]) => {
+          options.forEach((option) => {
             onFilterOptionSelect(category, option);
+          });
         });
-    });
-    setShowActionsheet(false);
-};
-
+      
+        // Apply sorting
+        onSortOptionSelect(selectedOption);
+      
+        // If no filters are selected, clear the filters
+        if (Object.values(selectedFilters).every((options) => options.length === 0)) {
+          setSelectedFilters({
+            attendance: [],
+            class: [],
+          });
+          onFilterOptionSelect('attendance', '');
+          onFilterOptionSelect('class', '');
+        }
+      
+        setShowActionsheet(false);
+      };
+      
 
     const renderTabBar = () => (
         <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor='$pixPrimaryLight100'>
@@ -202,6 +217,12 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
                     <ActionsheetItem onPress={() => handleSortOptionSelect('Name: Z to A')}>
                         <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Name: Z to A' ? 'bold' : 'normal'}>Name: Z to A</ActionsheetItemText>
                     </ActionsheetItem>
+                    <ActionsheetItem onPress={() => handleSortOptionSelect('Class: Low to High')}>
+                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Class: Low to High' ? 'bold' : 'normal'}>Class: Low to High</ActionsheetItemText>
+                    </ActionsheetItem>
+                    <ActionsheetItem onPress={() => handleSortOptionSelect('Class: High to Low')}>
+                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Class: High to Low' ? 'bold' : 'normal'}>Class: High to Low</ActionsheetItemText>
+                    </ActionsheetItem>
                 </>
             );
         }
@@ -213,7 +234,7 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
             <ButtonText>{selectedOption}</ButtonText>
             <Actionsheet isOpen={showActionsheet} onClose={handleClose} closeOnOverlayClick zIndex={999}>
                 <ActionsheetBackdrop />
-                <ActionsheetContent h="$3/4" zIndex={999}>
+                <ActionsheetContent h="$5/6" zIndex={999}>
                     <ActionsheetDragIndicatorWrapper>
                         <ActionsheetDragIndicator />
                     </ActionsheetDragIndicatorWrapper>

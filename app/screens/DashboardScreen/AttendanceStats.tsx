@@ -37,18 +37,21 @@ const AttendanceStats = () => {
   const handleFilterOptionSelect = (category: string, option: string) => {
     setSelectedFilters((prevFilters) => {
       const updatedFilters = { ...prevFilters };
-      const categoryFilters = updatedFilters[category];
-
-      if (categoryFilters.includes(option)) {
-        updatedFilters[category] = categoryFilters.filter((filter) => filter !== option);
-      } else {
-        updatedFilters[category] = [...categoryFilters, option];
-      }
-
+      // const categoryFilters = updatedFilters[category];
+  
+      if (option === '') {
+        // If an empty string is passed, clear the filters for that category
+        updatedFilters[category] = [];
+      
+        } else {
+          // Add the option if it doesn't exist
+          updatedFilters[category] = [option];
+        }
+  
       return updatedFilters;
     });
   };
-
+  
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
       <StatsHeader
