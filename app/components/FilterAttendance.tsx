@@ -80,18 +80,22 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
       };
       
 
-    const renderTabBar = () => (
-        <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor='$pixPrimaryLight100'>
-            <Button onPress={() => setSelectedTab('Filter')} variant="outline" w="$1/2" rounded="$none" borderWidth={0}
-                borderBottomWidth={selectedTab === 'Filter' ? 2 : 0}
-                borderColor={selectedTab === 'Filter' ? '$pixPrimaryLight50' : undefined}>
-                <ButtonText color="$pixPrimaryDark50">Filter</ButtonText>
-            </Button>
-            <Button onPress={() => setSelectedTab('Sort')} variant="outline" w="$1/2" rounded="$none" borderWidth={0}
-                borderBottomWidth={selectedTab === 'Sort' ? 2 : 0}
-                borderColor={selectedTab === 'Sort' ? '$pixPrimaryLight50' : undefined}>
-                <ButtonText color="$pixPrimaryDark50">Sort</ButtonText>
-            </Button>
+      const renderTabBar = () => (
+        <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor="$pixPrimaryLight100">
+            {['Filter', 'Sort'].map(tab => (
+                <Button
+                    key={tab}
+                    onPress={() => setSelectedTab(tab)}
+                    variant="outline"
+                    w="$1/2"
+                    rounded="$none"
+                    borderWidth={0}
+                    borderBottomWidth={selectedTab === tab ? 2 : 0}
+                    borderColor={selectedTab === tab ? '$pixPrimaryLight50' : undefined}
+                >
+                    <ButtonText color="$pixPrimaryDark50">{tab}</ButtonText>
+                </Button>
+            ))}
         </Box>
     );
 
