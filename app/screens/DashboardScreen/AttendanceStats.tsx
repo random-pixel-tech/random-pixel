@@ -7,66 +7,83 @@ import DatePicker from '../../components/DatePicker';
 import FilterAttendance from '../../components/FilterAttendance';
 
 const AttendanceStats = () => {
-    const {
-        selectedOption,
-        handlePrevDay,
-        handleNextDay,
-        handleOptionSelect,
-        isOptionsMenuOpen,
-        handleOptionsMenuOpen,
-        handleOptionsMenuClose,
-        currentDate,
-        startDate,
-        endDate,
-        fetchAttendanceByTime,
-        showDatePicker,
-        handleDatePickerCancel,
-        handleDatePickerOk,
-    } = useStatsHeaderState();
+  const {
+    selectedOption,
+    handlePrevDay,
+    handleNextDay,
+    handleOptionSelect,
+    isOptionsMenuOpen,
+    handleOptionsMenuOpen,
+    handleOptionsMenuClose,
+    currentDate,
+    startDate,
+    endDate,
+    fetchAttendanceByTime,
+    showDatePicker,
+    handleDatePickerCancel,
+    handleDatePickerOk,
+  } = useStatsHeaderState();
 
-    const [sortOption, setSortOption] = useState('');
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [sortOption, setSortOption] = useState('');
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
+    attendance: [],
+    class: [],
+  });
 
-    const handleSortOptionSelect = (option: string) => {
-        setSortOption(option);
-    };
+  const handleSortOptionSelect = (option: string) => {
+    setSortOption(option);
+  };
 
-    const handleFilterOptionSelect = (filters: string[]) => {
-        setSelectedFilters(filters);
-    };
+  const handleFilterOptionSelect = (category: string, option: string) => {
+    setSelectedFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters };
+      const categoryFilters = updatedFilters[category];
 
-    return (
-        <Box bg="$pixWhite" w="$full" h="$full">
-            <StatsHeader
-                title="Attendance"
-                selectedOption={selectedOption}
-                handlePrevDay={handlePrevDay}
-                handleNextDay={handleNextDay}
-                handleOptionSelect={handleOptionSelect}
-                isOptionsMenuOpen={isOptionsMenuOpen}
-                handleOptionsMenuOpen={handleOptionsMenuOpen}
-                handleOptionsMenuClose={handleOptionsMenuClose}
-                currentDate={currentDate}
-                startDate={startDate}
-                endDate={endDate}
-                showDatePicker={showDatePicker}
-            />
-            <FilterAttendance onSortOptionSelect={handleSortOptionSelect} onFilterOptionSelect={handleFilterOptionSelect} />
-            <AttendanceView
-                selectedOption={selectedOption}
-                startDate={startDate}
-                endDate={endDate}
-                fetchAttendanceByTime={fetchAttendanceByTime}
-                sortOption={sortOption}
-                selectedFilters={selectedFilters}
-            />
-            <DatePicker
-                isOpen={showDatePicker}
-                handleDatePickerCancel={handleDatePickerCancel}
-                handleDatePickerOk={handleDatePickerOk}
-            />
-        </Box>
-    );
+      if (categoryFilters.includes(option)) {
+        updatedFilters[category] = categoryFilters.filter((filter) => filter !== option);
+      } else {
+        updatedFilters[category] = [...categoryFilters, option];
+      }
+
+      return updatedFilters;
+    });
+  };
+
+  return (
+    <Box bg="$pixWhite" w="$full" h="$full">
+      <StatsHeader
+        title="Attendance"
+        selectedOption={selectedOption}
+        handlePrevDay={handlePrevDay}
+        handleNextDay={handleNextDay}
+        handleOptionSelect={handleOptionSelect}
+        isOptionsMenuOpen={isOptionsMenuOpen}
+        handleOptionsMenuOpen={handleOptionsMenuOpen}
+        handleOptionsMenuClose={handleOptionsMenuClose}
+        currentDate={currentDate}
+        startDate={startDate}
+        endDate={endDate}
+        showDatePicker={showDatePicker}
+      />
+      <FilterAttendance
+        onSortOptionSelect={handleSortOptionSelect}
+        onFilterOptionSelect={handleFilterOptionSelect}
+      />
+      <AttendanceView
+        selectedOption={selectedOption}
+        startDate={startDate}
+        endDate={endDate}
+        fetchAttendanceByTime={fetchAttendanceByTime}
+        sortOption={sortOption}
+        selectedFilters={selectedFilters}
+      />
+      <DatePicker
+        isOpen={showDatePicker}
+        handleDatePickerCancel={handleDatePickerCancel}
+        handleDatePickerOk={handleDatePickerOk}
+      />
+    </Box>
+  );
 };
 
 export default AttendanceStats;

@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
-import { Button, CheckboxIcon, CheckIcon, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText, Checkbox, CheckboxIndicator } from '@gluestack-ui/themed';
+import { Button, CheckboxIcon, CheckIcon, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText, Checkbox, CheckboxIndicator, ScrollView, ActionsheetScrollView } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 interface FilterAttendanceProps {
     onSortOptionSelect: (option: string) => void;
-    onFilterOptionSelect: (filters: string[]) => void;
+    onFilterOptionSelect: (category: string, option: string) => void;
 }
 
 const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect, onFilterOptionSelect }) => {
     const [showActionsheet, setShowActionsheet] = useState(false);
     const [selectedOption, setSelectedOption] = useState('Percentage');
     const [selectedTab, setSelectedTab] = useState('Filter');
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+    const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
+        attendance: [],
+        class: [],
+    });
 
     const handleClose = () => {
         setShowActionsheet(false);
-        setSelectedFilters([]);
+        setSelectedFilters({
+            attendance: [],
+            class: [],
+        });
     };
 
     const handleOptionSelect = (option: string) => {
@@ -27,22 +33,37 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
         setSelectedOption(option);
     };
 
-    const handleFilterOptionSelect = (option: string) => {
-        const updatedFilters = selectedFilters.includes(option)
-            ? selectedFilters.filter((filter) => filter !== option)
-            : [...selectedFilters, option];
+    const handleFilterOptionSelect = (category: string, option: string) => {
+        const updatedFilters = { ...selectedFilters };
+        const categoryFilters = updatedFilters[category];
+
+        if (categoryFilters.includes(option)) {
+            updatedFilters[category] = categoryFilters.filter((filter) => filter !== option);
+        } else {
+            updatedFilters[category] = [...categoryFilters, option];
+        }
+
         setSelectedFilters(updatedFilters);
     };
 
     const handleClear = () => {
-        setSelectedFilters([]);
-        setShowActionsheet(false);
-    };
+        setSelectedFilters({
+          attendance: [],
+          class: [],
+        });
+        onFilterOptionSelect('attendance', '');
+        onFilterOptionSelect('class', '');
+      };
 
     const handleApply = () => {
-        onFilterOptionSelect(selectedFilters);
-        setShowActionsheet(false);
-    };
+    Object.entries(selectedFilters).forEach(([category, options]) => {
+        options.forEach((option) => {
+            onFilterOptionSelect(category, option);
+        });
+    });
+    setShowActionsheet(false);
+};
+
 
     const renderTabBar = () => (
         <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor='$pixPrimaryLight100'>
@@ -59,79 +80,102 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
         </Box>
     );
 
+    const renderAttendanceOptions = () => (
+        <>
+            <ActionsheetItem onPress={() => handleFilterOptionSelect('attendance', '70% or below')}>
+                <Checkbox
+                    value="70% or below"
+                    isChecked={selectedFilters.attendance.includes('70% or below')}
+                    onChange={() => handleFilterOptionSelect('attendance', '70% or below')}
+                    rounded="$md"
+                    aria-label="70% or below"
+                    size='lg'
+                    p="$6"
+                >
+                    <CheckboxIndicator
+                        borderColor="$pixPrimary"
+                        bg={selectedFilters.attendance.includes('70% or below') ? '$pixPrimary' : 'transparent'}
+                    >
+                        <CheckboxIcon as={CheckIcon} />
+                    </CheckboxIndicator>
+                </Checkbox>
+                <ActionsheetItemText color='$pixText100'>70% or below</ActionsheetItemText>
+            </ActionsheetItem>
+            <ActionsheetItem onPress={() => handleFilterOptionSelect('attendance', '70% to 90%')}>
+                <Checkbox
+                    value="70% to 90%"
+                    isChecked={selectedFilters.attendance.includes('70% to 90%')}
+                    onChange={() => handleFilterOptionSelect('attendance', '70% to 90%')}
+                    rounded="$md"
+                    aria-label="70% to 90%"
+                    size='lg'
+                    p="$6"
+                >
+                    <CheckboxIndicator
+                        borderColor="$pixPrimary"
+                        bg={selectedFilters.attendance.includes('70% to 90%') ? '$pixPrimary' : 'transparent'}
+                    >
+                        <CheckboxIcon as={CheckIcon} />
+                    </CheckboxIndicator>
+                </Checkbox>
+                <ActionsheetItemText color='$pixText100'>70% to 90%</ActionsheetItemText>
+            </ActionsheetItem>
+            <ActionsheetItem onPress={() => handleFilterOptionSelect('attendance', 'Above 90%')}>
+                <Checkbox
+                    value="Above 90%"
+                    isChecked={selectedFilters.attendance.includes('Above 90%')}
+                    onChange={() => handleFilterOptionSelect('attendance', 'Above 90%')}
+                    rounded="$md"
+                    aria-label="Above 90%"
+                    size='lg'
+                    p="$6"
+                >
+                    <CheckboxIndicator
+                        borderColor="$pixPrimary"
+                        bg={selectedFilters.attendance.includes('Above 90%') ? '$pixPrimary' : 'transparent'}
+                    >
+                        <CheckboxIcon as={CheckIcon} />
+                    </CheckboxIndicator>
+                </Checkbox>
+                <ActionsheetItemText color='$pixText100'>Above 90%</ActionsheetItemText>
+            </ActionsheetItem>
+        </>
+    );
+
+    const renderClassOptions = () => (
+        <ActionsheetScrollView>
+            {Array.from({ length: 10 }, (_, index) => (
+                <ActionsheetItem key={index} onPress={() => handleFilterOptionSelect('class', `${index + 1}`)}>
+                    <Checkbox
+                        value={`${index + 1}`}
+                        isChecked={selectedFilters.class.includes(`${index + 1}`)}
+                        onChange={() => handleFilterOptionSelect('class', `${index + 1}`)}
+                        rounded="$md"
+                        aria-label={`Class ${index + 1}`}
+                        size='lg'
+                        p="$6"
+                    >
+                        <CheckboxIndicator
+                            borderColor="$pixPrimary"
+                            bg={selectedFilters.class.includes(`${index + 1}`) ? '$pixPrimary' : 'transparent'}
+                        >
+                            <CheckboxIcon as={CheckIcon} />
+                        </CheckboxIndicator>
+                    </Checkbox>
+                    <ActionsheetItemText color='$pixText100'>{`Class ${index + 1}`}</ActionsheetItemText>
+                </ActionsheetItem>
+            ))}
+        </ActionsheetScrollView>
+    );
+
     const renderRightOptions = () => {
         if (selectedTab === 'Filter') {
             switch (selectedOption) {
                 case 'Attendance':
-                    return (
-                        <>
-                            <ActionsheetItem onPress={() => handleFilterOptionSelect('70% or below')}>
-                                <Checkbox
-                                    value="70% or below"
-                                    isChecked={selectedFilters.includes('70% or below')}
-                                    onChange={() => handleFilterOptionSelect('70% or below')}
-                                    rounded="$md"
-                                    aria-label="70% or below"
-                                    size='lg'
-                                    p="$6"
-                                >
-                                    <CheckboxIndicator
-                                        borderColor="$pixPrimary"
-                                        bg={selectedFilters.includes('70% or below') ? '$pixPrimary' : 'transparent'}
-
-                                    >
-                                        <CheckboxIcon as={CheckIcon} />
-
-                                    </CheckboxIndicator>
-                                </Checkbox>
-                                <ActionsheetItemText color='$pixText100'>70% or below</ActionsheetItemText>
-                            </ActionsheetItem>
-                            <ActionsheetItem onPress={() => handleFilterOptionSelect('70% to 90%')}>
-                                <Checkbox
-                                    value="70% to 90%"
-                                    isChecked={selectedFilters.includes('70% to 90%')}
-                                    onChange={() => handleFilterOptionSelect('70% to 90%')}
-                                    rounded="$md"
-                                    aria-label="70% to 90%"
-                                    size='lg'
-                                    p="$6"
-                                >
-                                    <CheckboxIndicator
-                                        borderColor="$pixPrimary"
-                                        bg={selectedFilters.includes('70% to 90%') ? '$pixPrimary' : 'transparent'}
-
-                                    >
-                                        <CheckboxIcon as={CheckIcon} />
-
-                                    </CheckboxIndicator>
-                                </Checkbox>
-                                <ActionsheetItemText color='$pixText100'>70% to 90%</ActionsheetItemText>
-                            </ActionsheetItem>
-                            <ActionsheetItem onPress={() => handleFilterOptionSelect('Above 90%')}>
-                                <Checkbox
-                                    value="Above 90%"
-                                    isChecked={selectedFilters.includes('Above 90%')}
-                                    onChange={() => handleFilterOptionSelect('Above 90%')}
-                                    rounded="$md"
-                                    aria-label="Above 90%"
-                                    size='lg'
-                                    p="$6"
-                                >
-                                    <CheckboxIndicator
-                                        borderColor="$pixPrimary"
-                                        bg={selectedFilters.includes('Above 90%') ? '$pixPrimary' : 'transparent'}
-
-                                    >
-                                        <CheckboxIcon as={CheckIcon} />
-
-                                    </CheckboxIndicator>
-                                </Checkbox>
-                                <ActionsheetItemText color='$pixText100'>Above 90%</ActionsheetItemText>
-                            </ActionsheetItem>
-                        </>
-                    );
-                case 'Percentage':
+                    return renderAttendanceOptions();
                 case 'Class':
+                    return renderClassOptions();
+                case 'Percentage':
                 case 'Section':
                     return null;
                 default:

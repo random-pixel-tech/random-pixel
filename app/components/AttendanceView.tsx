@@ -14,7 +14,7 @@ interface AttendanceViewProps {
     endDate: string
   ) => Promise<{ totalAttendance: number; presentAttendance: number }>;
   sortOption: string;
-  selectedFilters: string[];
+  selectedFilters: Record<string, string[]>;
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
@@ -84,13 +84,18 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   const filteredAttendanceData = useMemo(async () => {
     const attendanceData = await sortedAttendanceData;
 
-    if (selectedFilters.length === 0) {
+    if (
+      (!selectedFilters.attendance || selectedFilters.attendance.length === 0) &&
+      (!selectedFilters.class || selectedFilters.class.length === 0)
+    ) {
       return attendanceData;
     }
 
     return attendanceData.filter((data) => {
       const percentage = data.attendancePercentage;
-      return selectedFilters.some((filter) => {
+      const className = data.className;
+
+      const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
         if (filter === '70% or below') {
           return percentage <= 70;
         } else if (filter === '70% to 90%') {
@@ -100,6 +105,10 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
         }
         return false;
       });
+
+      const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
+
+      return matchesAttendanceFilter && matchesClassFilter;
     });
   }, [sortedAttendanceData, selectedFilters]);
 
