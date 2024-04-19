@@ -9,7 +9,7 @@ interface FilterAttendanceProps {
 
 const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect, onFilterOptionSelect }) => {
     const [showActionsheet, setShowActionsheet] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('Percentage');
+    const [selectedOption, setSelectedOption] = useState('Attendance Percentage');
     const [selectedTab, setSelectedTab] = useState('Filter');
     const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
         attendance: [],
@@ -186,7 +186,7 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
     const renderRightOptions = () => {
         if (selectedTab === 'Filter') {
             switch (selectedOption) {
-                case 'Attendance':
+                case 'Attendance Percentage':
                     return renderAttendanceOptions();
                 case 'Class':
                     return renderClassOptions();
@@ -244,11 +244,8 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
                     {selectedTab === 'Filter' && (
                         <Box flexDirection="row" style={{ flex: 1 }} p="$1" w="$full">
                             <Box w="$1/3" borderRightWidth={1} borderRightColor='$pixPrimaryLight100' h="$full">
-                                <ActionsheetItem onPress={() => handleOptionSelect('Percentage')}>
-                                    <ActionsheetItemText color='$pixText100' fontWeight={selectedOption === 'Percentage' ? 'bold' : 'normal'}>Percentage</ActionsheetItemText>
-                                </ActionsheetItem>
-                                <ActionsheetItem onPress={() => handleOptionSelect('Attendance')}>
-                                    <ActionsheetItemText color='$pixText100' fontWeight={selectedOption === 'Attendance' ? 'bold' : 'normal'}>Attendance</ActionsheetItemText>
+                                <ActionsheetItem onPress={() => handleOptionSelect('Attendance Percentage')}>
+                                    <ActionsheetItemText color='$pixText100' fontWeight={selectedOption === 'Attendance Percentage' ? 'bold' : 'normal'}>Attendance Percentage</ActionsheetItemText>
                                 </ActionsheetItem>
                                 <ActionsheetItem onPress={() => handleOptionSelect('Class')}>
                                     <ActionsheetItemText color='$pixText100' fontWeight={selectedOption === 'Class' ? 'bold' : 'normal'}>Class</ActionsheetItemText>
