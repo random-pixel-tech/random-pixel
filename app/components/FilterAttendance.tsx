@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { Button, CheckboxIcon, CheckIcon, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText, Checkbox, CheckboxIndicator, ScrollView, ActionsheetScrollView } from '@gluestack-ui/themed';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 interface FilterAttendanceProps {
     onSortOptionSelect: (option: string) => void;
     onFilterOptionSelect: (category: string, option: string) => void;
+}
+
+interface FilterOption {
+    label: string;
+    value: string;
 }
 
 const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect, onFilterOptionSelect }) => {
@@ -99,94 +103,59 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
         </Box>
     );
 
-    const renderAttendanceOptions = () => (
-        <>
-            <ActionsheetItem onPress={() => handleFilterOptionSelect('attendance', '70% or below')}>
-                <Checkbox
-                    value="70% or below"
-                    isChecked={selectedFilters.attendance.includes('70% or below')}
-                    onChange={() => handleFilterOptionSelect('attendance', '70% or below')}
-                    rounded="$md"
-                    aria-label="70% or below"
-                    size='lg'
-                    p="$6"
-                >
-                    <CheckboxIndicator
-                        borderColor="$pixPrimary"
-                        bg={selectedFilters.attendance.includes('70% or below') ? '$pixPrimary' : 'transparent'}
-                    >
-                        <CheckboxIcon as={CheckIcon} />
-                    </CheckboxIndicator>
-                </Checkbox>
-                <ActionsheetItemText color='$pixText100'>70% or below</ActionsheetItemText>
-            </ActionsheetItem>
-            <ActionsheetItem onPress={() => handleFilterOptionSelect('attendance', '70% to 90%')}>
-                <Checkbox
-                    value="70% to 90%"
-                    isChecked={selectedFilters.attendance.includes('70% to 90%')}
-                    onChange={() => handleFilterOptionSelect('attendance', '70% to 90%')}
-                    rounded="$md"
-                    aria-label="70% to 90%"
-                    size='lg'
-                    p="$6"
-                >
-                    <CheckboxIndicator
-                        borderColor="$pixPrimary"
-                        bg={selectedFilters.attendance.includes('70% to 90%') ? '$pixPrimary' : 'transparent'}
-                    >
-                        <CheckboxIcon as={CheckIcon} />
-                    </CheckboxIndicator>
-                </Checkbox>
-                <ActionsheetItemText color='$pixText100'>70% to 90%</ActionsheetItemText>
-            </ActionsheetItem>
-            <ActionsheetItem onPress={() => handleFilterOptionSelect('attendance', 'Above 90%')}>
-                <Checkbox
-                    value="Above 90%"
-                    isChecked={selectedFilters.attendance.includes('Above 90%')}
-                    onChange={() => handleFilterOptionSelect('attendance', 'Above 90%')}
-                    rounded="$md"
-                    aria-label="Above 90%"
-                    size='lg'
-                    p="$6"
-                >
-                    <CheckboxIndicator
-                        borderColor="$pixPrimary"
-                        bg={selectedFilters.attendance.includes('Above 90%') ? '$pixPrimary' : 'transparent'}
-                    >
-                        <CheckboxIcon as={CheckIcon} />
-                    </CheckboxIndicator>
-                </Checkbox>
-                <ActionsheetItemText color='$pixText100'>Above 90%</ActionsheetItemText>
-            </ActionsheetItem>
-        </>
-    );
-
-    const renderClassOptions = () => (
-        <ActionsheetScrollView>
-            {Array.from({ length: 10 }, (_, index) => (
-                <ActionsheetItem key={index} onPress={() => handleFilterOptionSelect('class', `${index + 1}`)}>
-                    <Checkbox
-                        value={`${index + 1}`}
-                        isChecked={selectedFilters.class.includes(`${index + 1}`)}
-                        onChange={() => handleFilterOptionSelect('class', `${index + 1}`)}
-                        rounded="$md"
-                        aria-label={`Class ${index + 1}`}
-                        size='lg'
-                        p="$6"
-                    >
-                        <CheckboxIndicator
-                            borderColor="$pixPrimary"
-                            bg={selectedFilters.class.includes(`${index + 1}`) ? '$pixPrimary' : 'transparent'}
+    const renderFilterOptions = (options: FilterOption[], category: string) => {
+        return (
+            <ActionsheetScrollView>
+                {options.map(option => (
+                    <ActionsheetItem key={option.value} onPress={() => handleFilterOptionSelect(category, option.value)}>
+                        <Checkbox
+                            value={option.value}
+                            isChecked={selectedFilters[category].includes(option.value)}
+                            onChange={() => handleFilterOptionSelect(category, option.value)}
+                            rounded="$md"
+                            aria-label={option.label}
+                            size='lg'
+                            p="$6"
                         >
-                            <CheckboxIcon as={CheckIcon} />
-                        </CheckboxIndicator>
-                    </Checkbox>
-                    <ActionsheetItemText color='$pixText100'>{`Class ${index + 1}`}</ActionsheetItemText>
-                </ActionsheetItem>
-            ))}
-        </ActionsheetScrollView>
+                            <CheckboxIndicator
+                                borderColor="$pixPrimary"
+                                bg={selectedFilters[category].includes(option.value) ? '$pixPrimary' : 'transparent'}
+                            >
+                                <CheckboxIcon as={CheckIcon} />
+                            </CheckboxIndicator>
+                        </Checkbox>
+                        <ActionsheetItemText color='$pixText100'>{option.label}</ActionsheetItemText>
+                    </ActionsheetItem>
+                ))}
+            </ActionsheetScrollView>
+        );
+    };
+    
+    const renderAttendanceOptions = () => renderFilterOptions([
+        { label: '70% or below', value: '70% or below' },
+        { label: '70% to 90%', value: '70% to 90%' },
+        { label: 'Above 90%', value: 'Above 90%' }
+    ], 'attendance');
+    
+    const renderClassOptions = () => renderFilterOptions(
+        Array.from({ length: 10 }, (_, index) => ({
+            label: `Class ${index + 1}`,
+            value: `${index + 1}`
+        })),
+        'class'
     );
+    
 
+    const renderSortOptions = (options: string[]) => {
+        return options.map(option => (
+            <ActionsheetItem key={option} onPress={() => handleSortOptionSelect(option)}>
+                <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === option ? 'bold' : 'normal'}>
+                    {option}
+                </ActionsheetItemText>
+            </ActionsheetItem>
+        ));
+    };
+    
     const renderRightOptions = () => {
         if (selectedTab === 'Filter') {
             switch (selectedOption) {
@@ -201,37 +170,37 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
                     return null;
             }
         } else if (selectedTab === 'Sort') {
-            return (
-                <>
-                    <ActionsheetItem onPress={() => handleSortOptionSelect('Percentage: Low to High')}>
-                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Percentage: Low to High' ? 'bold' : 'normal'}>Percentage: Low to High</ActionsheetItemText>
-                    </ActionsheetItem>
-                    <ActionsheetItem onPress={() => handleSortOptionSelect('Percentage: High to Low')}>
-                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Percentage: High to Low' ? 'bold' : 'normal'}>Percentage: High to Low</ActionsheetItemText>
-                    </ActionsheetItem>
-                    <ActionsheetItem onPress={() => handleSortOptionSelect('Attendance: Low to High')}>
-                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Attendance: Low to High' ? 'bold' : 'normal'}>Attendance: Low to High</ActionsheetItemText>
-                    </ActionsheetItem>
-                    <ActionsheetItem onPress={() => handleSortOptionSelect('Attendance: High to Low')}>
-                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Attendance: High to Low' ? 'bold' : 'normal'}>Attendance: High to Low</ActionsheetItemText>
-                    </ActionsheetItem>
-                    <ActionsheetItem onPress={() => handleSortOptionSelect('Name: A to Z')}>
-                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Name: A to Z' ? 'bold' : 'normal'}>Name: A to Z</ActionsheetItemText>
-                    </ActionsheetItem>
-                    <ActionsheetItem onPress={() => handleSortOptionSelect('Name: Z to A')}>
-                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Name: Z to A' ? 'bold' : 'normal'}>Name: Z to A</ActionsheetItemText>
-                    </ActionsheetItem>
-                    <ActionsheetItem onPress={() => handleSortOptionSelect('Class: Low to High')}>
-                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Class: Low to High' ? 'bold' : 'normal'}>Class: Low to High</ActionsheetItemText>
-                    </ActionsheetItem>
-                    <ActionsheetItem onPress={() => handleSortOptionSelect('Class: High to Low')}>
-                        <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === 'Class: High to Low' ? 'bold' : 'normal'}>Class: High to Low</ActionsheetItemText>
-                    </ActionsheetItem>
-                </>
-            );
+            const sortOptions = [
+                'Percentage: Low to High',
+                'Percentage: High to Low',
+                'Attendance: Low to High',
+                'Attendance: High to Low',
+                'Name: A to Z',
+                'Name: Z to A',
+                'Class: Low to High',
+                'Class: High to Low'
+            ];
+            return renderSortOptions(sortOptions);
         }
         return null;
     };
+    
+    const renderFilterOptionsSidebar = () => {
+        const options = [
+            { label: 'Attendance Percentage', value: 'Attendance Percentage' },
+            { label: 'Class', value: 'Class' },
+            { label: 'Section', value: 'Section' }
+        ];
+    
+        return options.map(option => (
+            <ActionsheetItem key={option.value} onPress={() => handleOptionSelect(option.value)}>
+                <ActionsheetItemText color='$pixText100' fontWeight={selectedOption === option.value ? 'bold' : 'normal'}>
+                    {option.label}
+                </ActionsheetItemText>
+            </ActionsheetItem>
+        ));
+    };
+    
 
     return (
         <Button onPress={() => setShowActionsheet(true)}>
@@ -248,15 +217,7 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
                     {selectedTab === 'Filter' && (
                         <Box flexDirection="row" style={{ flex: 1 }} p="$1" w="$full">
                             <Box w="$1/3" borderRightWidth={1} borderRightColor='$pixPrimaryLight100' h="$full">
-                                <ActionsheetItem onPress={() => handleOptionSelect('Attendance Percentage')}>
-                                    <ActionsheetItemText color='$pixText100' fontWeight={selectedOption === 'Attendance Percentage' ? 'bold' : 'normal'}>Attendance Percentage</ActionsheetItemText>
-                                </ActionsheetItem>
-                                <ActionsheetItem onPress={() => handleOptionSelect('Class')}>
-                                    <ActionsheetItemText color='$pixText100' fontWeight={selectedOption === 'Class' ? 'bold' : 'normal'}>Class</ActionsheetItemText>
-                                </ActionsheetItem>
-                                <ActionsheetItem onPress={() => handleOptionSelect('Section')}>
-                                    <ActionsheetItemText color='$pixText100' fontWeight={selectedOption === 'Section' ? 'bold' : 'normal'}>Section</ActionsheetItemText>
-                                </ActionsheetItem>
+                                {renderFilterOptionsSidebar()}
                             </Box>
                             <Box w="$2/3" borderRightWidth={1} borderRightColor='$pixPrimaryLight100' h="$full">
                                 {renderRightOptions()}
@@ -282,6 +243,7 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
             </Actionsheet>
         </Button>
     );
+    
 };
 
 export default FilterAttendance;
