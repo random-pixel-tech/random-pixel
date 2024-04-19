@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, CheckboxIcon, CheckIcon, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText, Checkbox, CheckboxIndicator, ScrollView, ActionsheetScrollView } from '@gluestack-ui/themed';
 
 interface FilterAttendanceProps {
-    onSortOptionSelect: (option: string) => void;
+    showActionsheet: boolean;
+    selectedTab: string;
+    selectedFilters: Record<string, string[]>;
+    selectedFilterOption: string;
+    onClose: () => void;
+    onTabSelect: (option: string) => void;
+    onCategorySelect: (option: string) => void;
+    onShowActionsheet: (show: boolean) => void;
     onFilterOptionSelect: (category: string, option: string) => void;
+    onSortOptionSelect: (option: string) => void;
+    onClear: () => void;
+    onApply: () => void;
+    sortOption: string;
 }
 
 interface FilterOption {
@@ -11,85 +22,27 @@ interface FilterOption {
     value: string;
 }
 
-const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect, onFilterOptionSelect }) => {
-    const [showActionsheet, setShowActionsheet] = useState(false);
-    const [selectedOption, setSelectedOption] = useState('Attendance Percentage');
-    const [selectedTab, setSelectedTab] = useState('Filter');
-    const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
-        attendance: [],
-        class: [],
-    });
-
-    const handleClose = () => {
-        setShowActionsheet(false);
-        setSelectedFilters({
-            attendance: [],
-            class: [],
-        });
-    };
-
-    const handleOptionSelect = (option: string) => {
-        setSelectedOption(option);
-    };
-
-    const handleSortOptionSelect = (option: string) => {
-        setSelectedOption(option);
-    };
-
-    const handleFilterOptionSelect = (category: string, option: string) => {
-        const updatedFilters = { ...selectedFilters };
-        const categoryFilters = updatedFilters[category];
-
-        if (categoryFilters.includes(option)) {
-            updatedFilters[category] = categoryFilters.filter((filter) => filter !== option);
-        } else {
-            updatedFilters[category] = [...categoryFilters, option];
-        }
-
-        setSelectedFilters(updatedFilters);
-    };
-
-    const handleClear = () => {
-        setSelectedFilters({
-          attendance: [],
-          class: [],
-        });
-        onFilterOptionSelect('attendance', '');
-        onFilterOptionSelect('class', '');
-        setSelectedOption('');
-    };
-
-      const handleApply = () => {
-        // Apply selected filters
-        Object.entries(selectedFilters).forEach(([category, options]) => {
-          options.forEach((option) => {
-            onFilterOptionSelect(category, option);
-          });
-        });
-      
-        // Apply sorting
-        onSortOptionSelect(selectedOption);
-      
-        // If no filters are selected, clear the filters
-        if (Object.values(selectedFilters).every((options) => options.length === 0)) {
-          setSelectedFilters({
-            attendance: [],
-            class: [],
-          });
-          onFilterOptionSelect('attendance', '');
-          onFilterOptionSelect('class', '');
-        }
-      
-        setShowActionsheet(false);
-      };
-      
-
-      const renderTabBar = () => (
+const FilterAttendance: React.FC<FilterAttendanceProps> = ({
+    showActionsheet,
+    selectedTab,
+    selectedFilters,
+    selectedFilterOption,
+    onClose,
+    onTabSelect,
+    onShowActionsheet,
+    onFilterOptionSelect,
+    onSortOptionSelect,
+    onClear,
+    onApply,
+    sortOption,
+    onCategorySelect
+}) => {
+    const renderTabBar = () => (
         <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor="$pixPrimaryLight100">
             {['Filter', 'Sort'].map(tab => (
                 <Button
                     key={tab}
-                    onPress={() => setSelectedTab(tab)}
+                    onPress={() => onTabSelect(tab)}
                     variant="outline"
                     w="$1/2"
                     rounded="$none"
@@ -103,15 +56,16 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
         </Box>
     );
 
-    const renderFilterOptions = (options: FilterOption[], category: string) => {
+
+const renderFilterOptions = (options: FilterOption[], category: string) => {
         return (
             <ActionsheetScrollView>
                 {options.map(option => (
-                    <ActionsheetItem key={option.value} onPress={() => handleFilterOptionSelect(category, option.value)}>
+                    <ActionsheetItem key={option.value} onPress={() => onFilterOptionSelect(category, option.value)}>
                         <Checkbox
                             value={option.value}
                             isChecked={selectedFilters[category].includes(option.value)}
-                            onChange={() => handleFilterOptionSelect(category, option.value)}
+                            onChange={() => onFilterOptionSelect(category, option.value)}
                             rounded="$md"
                             aria-label={option.label}
                             size='lg'
@@ -130,13 +84,14 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
             </ActionsheetScrollView>
         );
     };
-    
+
     const renderAttendanceOptions = () => renderFilterOptions([
         { label: '70% or below', value: '70% or below' },
         { label: '70% to 90%', value: '70% to 90%' },
         { label: 'Above 90%', value: 'Above 90%' }
     ], 'attendance');
-    
+
+
     const renderClassOptions = () => renderFilterOptions(
         Array.from({ length: 10 }, (_, index) => ({
             label: `Class ${index + 1}`,
@@ -144,21 +99,20 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
         })),
         'class'
     );
-    
 
     const renderSortOptions = (options: string[]) => {
         return options.map(option => (
-            <ActionsheetItem key={option} onPress={() => handleSortOptionSelect(option)}>
-                <ActionsheetItemText color="$pixText100" fontWeight={selectedOption === option ? 'bold' : 'normal'}>
+            <ActionsheetItem key={option} onPress={() => onSortOptionSelect(option)}>
+                <ActionsheetItemText color="$pixText100" fontWeight={sortOption === option ? 'bold' : 'normal'}>
                     {option}
                 </ActionsheetItemText>
             </ActionsheetItem>
         ));
     };
-    
+
     const renderRightOptions = () => {
         if (selectedTab === 'Filter') {
-            switch (selectedOption) {
+            switch (selectedFilterOption) {
                 case 'Attendance Percentage':
                     return renderAttendanceOptions();
                 case 'Class':
@@ -184,28 +138,28 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
         }
         return null;
     };
-    
+
     const renderFilterOptionsSidebar = () => {
         const options = [
             { label: 'Attendance Percentage', value: 'Attendance Percentage' },
             { label: 'Class', value: 'Class' },
             { label: 'Section', value: 'Section' }
         ];
-    
+
         return options.map(option => (
-            <ActionsheetItem key={option.value} onPress={() => handleOptionSelect(option.value)}>
-                <ActionsheetItemText color='$pixText100' fontWeight={selectedOption === option.value ? 'bold' : 'normal'}>
+            <ActionsheetItem key={option.value} onPress={() => onCategorySelect(option.value)}>
+                <ActionsheetItemText color='$pixText100' fontWeight={selectedFilterOption === option.value ? 'bold' : 'normal'}>
                     {option.label}
                 </ActionsheetItemText>
             </ActionsheetItem>
         ));
     };
-    
 
     return (
-        <Button onPress={() => setShowActionsheet(true)}>
-            <ButtonText>{selectedOption}</ButtonText>
-            <Actionsheet isOpen={showActionsheet} onClose={handleClose} closeOnOverlayClick zIndex={999}>
+        <>
+            <Button onPress={() => onShowActionsheet(true)}>
+            <ButtonText>{selectedFilterOption}</ButtonText>
+            <Actionsheet isOpen={showActionsheet} onClose={onClose} closeOnOverlayClick zIndex={999}>
                 <ActionsheetBackdrop />
                 <ActionsheetContent h="$5/6" zIndex={999}>
                     <ActionsheetDragIndicatorWrapper>
@@ -232,18 +186,18 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({ onSortOptionSelect,
                         </Box>
                     )}
                     <Box w="$full" flexDirection="row" justifyContent="space-between" p="$4" px="$8" borderTopWidth={1} borderTopColor='$pixPrimaryLight100' mt="$1">
-                        <Button variant="outline" onPress={handleClear} w="$1/2" mr="$1" rounded="$xl" borderWidth={0}>
+                        <Button variant="outline" onPress={onClear} w="$1/2" mr="$1" rounded="$xl" borderWidth={0}>
                             <ButtonText>Clear</ButtonText>
                         </Button>
-                        <Button onPress={handleApply} w="$1/2" m="$1" rounded="$xl">
+                        <Button onPress={onApply} w="$1/2" m="$1" rounded="$xl">
                             <ButtonText>Apply</ButtonText>
                         </Button>
                     </Box>
                 </ActionsheetContent>
             </Actionsheet>
-        </Button>
+            </Button>
+        </>
     );
-    
 };
 
 export default FilterAttendance;

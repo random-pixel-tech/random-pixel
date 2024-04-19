@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box } from '@gluestack-ui/themed';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
@@ -22,36 +22,21 @@ const AttendanceStats = () => {
     showDatePicker,
     handleDatePickerCancel,
     handleDatePickerOk,
+    showFilterActionsheet,
+    setShowFilterActionsheet,
+    selectedFilterTab,
+    selectedFilterOption,
+    selectedFilters,
+    handleCloseFilterActionsheet,
+    handleFilterOptionSelect,
+    handleFilterTabSelect,
+    handleFilterSortOptionSelect,
+    handleFilterClear,
+    handleFilterApply,
+    sortOption,
+    handleCategoryOptionSelect,
   } = useStatsHeaderState();
 
-  const [sortOption, setSortOption] = useState('');
-  const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
-    attendance: [],
-    class: [],
-  });
-
-  const handleSortOptionSelect = (option: string) => {
-    setSortOption(option);
-  };
-
-  const handleFilterOptionSelect = (category: string, option: string) => {
-    setSelectedFilters((prevFilters) => {
-      const updatedFilters = { ...prevFilters };
-      // const categoryFilters = updatedFilters[category];
-  
-      if (option === '') {
-        // If an empty string is passed, clear the filters for that category
-        updatedFilters[category] = [];
-      
-        } else {
-          // Add the option if it doesn't exist
-          updatedFilters[category] = [option];
-        }
-  
-      return updatedFilters;
-    });
-  };
-  
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
       <StatsHeader
@@ -69,16 +54,27 @@ const AttendanceStats = () => {
         showDatePicker={showDatePicker}
       />
       <FilterAttendance
-        onSortOptionSelect={handleSortOptionSelect}
+        showActionsheet={showFilterActionsheet}
+        selectedTab={selectedFilterTab}
+        selectedFilters={selectedFilters}
+        selectedFilterOption={selectedFilterOption}
+        onClose={handleCloseFilterActionsheet}
+        onTabSelect={handleFilterTabSelect}
+        onCategorySelect={handleCategoryOptionSelect}
         onFilterOptionSelect={handleFilterOptionSelect}
+        onSortOptionSelect={handleFilterSortOptionSelect}
+        onClear={handleFilterClear}
+        onApply={handleFilterApply}
+        onShowActionsheet={setShowFilterActionsheet}
+        sortOption={sortOption}
       />
       <AttendanceView
         selectedOption={selectedOption}
         startDate={startDate}
         endDate={endDate}
         fetchAttendanceByTime={fetchAttendanceByTime}
-        sortOption={sortOption}
         selectedFilters={selectedFilters}
+        sortOption={sortOption}
       />
       <DatePicker
         isOpen={showDatePicker}
