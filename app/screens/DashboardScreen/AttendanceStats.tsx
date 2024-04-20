@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box } from '@gluestack-ui/themed';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
@@ -22,13 +22,20 @@ const AttendanceStats = () => {
     showDatePicker,
     handleDatePickerCancel,
     handleDatePickerOk,
+    showFilterActionsheet,
+    setShowFilterActionsheet,
+    selectedFilterTab,
+    selectedFilterOption,
+    selectedFilters,
+    handleCloseFilterActionsheet,
+    handleFilterOptionSelect,
+    handleFilterTabSelect,
+    handleFilterSortOptionSelect,
+    handleFilterClear,
+    handleFilterApply,
+    sortOption,
+    handleCategoryOptionSelect,
   } = useStatsHeaderState();
-
-  const [sortOption, setSortOption] = useState('');
-
-  const handleSortOptionSelect = (option: string) => {
-    setSortOption(option);
-  };
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
@@ -46,12 +53,27 @@ const AttendanceStats = () => {
         endDate={endDate}
         showDatePicker={showDatePicker}
       />
-      <FilterAttendance onSortOptionSelect={handleSortOptionSelect} />
+      <FilterAttendance
+        showActionsheet={showFilterActionsheet}
+        selectedTab={selectedFilterTab}
+        selectedFilters={selectedFilters}
+        selectedFilterOption={selectedFilterOption}
+        onClose={handleCloseFilterActionsheet}
+        onTabSelect={handleFilterTabSelect}
+        onCategorySelect={handleCategoryOptionSelect}
+        onFilterOptionSelect={handleFilterOptionSelect}
+        onSortOptionSelect={handleFilterSortOptionSelect}
+        onClear={handleFilterClear}
+        onApply={handleFilterApply}
+        onShowActionsheet={setShowFilterActionsheet}
+        sortOption={sortOption}
+      />
       <AttendanceView
         selectedOption={selectedOption}
         startDate={startDate}
         endDate={endDate}
         fetchAttendanceByTime={fetchAttendanceByTime}
+        // selectedFilters={selectedFilters}
         sortOption={sortOption}
       />
       <DatePicker
