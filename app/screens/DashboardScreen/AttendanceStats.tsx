@@ -53,7 +53,7 @@ const AttendanceStats = () => {
         endDate={endDate}
         showDatePicker={showDatePicker}
       />
-      <FilterAttendance
+      {/* <FilterAttendance
         showActionsheet={showFilterActionsheet}
         selectedTab={selectedFilterTab}
         selectedFilters={selectedFilters}
@@ -67,7 +67,7 @@ const AttendanceStats = () => {
         onApply={handleFilterApply}
         onShowActionsheet={setShowFilterActionsheet}
         sortOption={sortOption}
-      />
+      /> */}
       <AttendanceView
         selectedOption={selectedOption}
         startDate={startDate}
