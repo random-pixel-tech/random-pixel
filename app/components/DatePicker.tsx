@@ -17,100 +17,65 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
     const [endMonth, setEndMonth] = useState('');
     const [endYear, setEndYear] = useState('');
 
-    const isValidDay = (day: string) => {
-        const validDays = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
-        return validDays.includes(day);
+    const isValidDay = (day: string, month: string, year: string) => {
+        const parsedDay = parseInt(day, 10);
+        const parsedMonth = parseInt(month, 10);
+        const parsedYear = parseInt(year, 10);
+        const maxDays = dayjs(`${parsedYear}-${parsedMonth}-01`).daysInMonth();
+        return parsedDay >= 1 && parsedDay <= maxDays;
     };
 
     const isValidMonth = (month: string) => {
-        const validMonths = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
-        return validMonths.includes(month);
+        const parsedMonth = parseInt(month, 10);
+        return parsedMonth >= 1 && parsedMonth <= 12;
     };
 
     const isValidYear = (year: string) => {
-        const yearRegex = /^[0-9]{4}$/;
-        return yearRegex.test(year);
+        const parsedYear = parseInt(year, 10);
+        const currentYear = dayjs().year();
+        return parsedYear >= currentYear - 10 && parsedYear <= currentYear + 10;
+    };
+    
+
+    const isValidDate = (day: string, month: string, year: string) => {
+        return isValidDay(day, month, year) && isValidMonth(month) && isValidYear(year);
+    };
+
+    const isEndDateValid = (startDate: string, endDate: string) => {
+        return dayjs(endDate).isAfter(startDate) || dayjs(endDate).isSame(startDate);
     };
 
     const handleOk = () => {
-        if (!isValidDay(startDay) || !isValidMonth(startMonth) || !isValidYear(startYear) || !isValidDay(endDay) || !isValidMonth(endMonth) || !isValidYear(endYear)) {
+        const startDate = `${startYear}-${startMonth}-${startDay}`;
+        const endDate = `${endYear}-${endMonth}-${endDay}`;
+
+        if (!isValidDate(startDay, startMonth, startYear) || !isValidDate(endDay, endMonth, endYear) || !isEndDateValid(startDate, endDate)) {
             // Handle invalid input, show an error message or perform any other desired action
             return;
         }
 
-        const formattedStartDate = dayjs(`${startDay} ${startMonth} ${startYear}`, 'DD MMM YYYY').format('YYYY-MM-DD');
-        const formattedEndDate = dayjs(`${endDay} ${endMonth} ${endYear}`, 'DD MMM YYYY').format('YYYY-MM-DD');
-        handleDatePickerOk(formattedStartDate, formattedEndDate);
+        handleDatePickerOk(startDate, endDate);
     };
 
-    const handleStartMonthChange = (value: string) => {
-        setStartMonth(value.toUpperCase());
-    };
-
-    const handleEndMonthChange = (value: string) => {
-        setEndMonth(value.toUpperCase());
-    };
-
-    const renderStartDateInput = () => (
-        <Box display="flex" flexDirection='row' justifyContent='space-between' mb="$4">
-            <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined" isInvalid={!isValidDay(startDay)}>
-                    <InputField w="$0.5" placeholder='01' value={startDay} onChangeText={setStartDay}>
-                    </InputField>
+    const renderDateInput = (day: string, month: string, year: string, setDay: (value: string) => void, setMonth: (value: string) => void, setYear: (value: string) => void) => (
+        <Box display="flex" flexDirection="row" justifyContent="space-between" mb="$4">
+            <Box display="flex" flexDirection="column" w="$1/5">
+                <Input variant="underlined" isInvalid={!isValidDay(day, month, year)}>
+                    <InputField w="$0.5" placeholder="DD" value={day} onChangeText={setDay} />
                 </Input>
-                <Text alignSelf='center'>
-                    Day
-                </Text>
+                <Text alignSelf="center">Day</Text>
             </Box>
-            <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined" isInvalid={!isValidMonth(startMonth)}>
-                    <InputField w="$0.5" placeholder='04' value={startMonth} onChangeText={handleStartMonthChange}>
-                    </InputField>
+            <Box display="flex" flexDirection="column" w="$1/5">
+                <Input variant="underlined" isInvalid={!isValidMonth(month)}>
+                    <InputField w="$0.5" placeholder="MM" value={month} onChangeText={setMonth} />
                 </Input>
-                <Text alignSelf='center'>
-                    Month
-                </Text>
+                <Text alignSelf="center">Month</Text>
             </Box>
-            <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined" isInvalid={!isValidYear(startYear)}>
-                    <InputField w="$0.5" placeholder='2024' value={startYear} onChangeText={setStartYear}>
-                    </InputField>
+            <Box display="flex" flexDirection="column" w="$1/5">
+                <Input variant="underlined" isInvalid={!isValidYear(year)}>
+                    <InputField w="$0.5" placeholder="YYYY" value={year} onChangeText={setYear} />
                 </Input>
-                <Text alignSelf='center'>
-                    Year
-                </Text>
-            </Box>
-        </Box>
-    );
-
-    const renderEndDateInput = () => (
-        <Box display="flex" flexDirection='row' justifyContent='space-between' mb="$4">
-            <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined" isInvalid={!isValidDay(endDay)}>
-                    <InputField w="$0.5" placeholder='01' value={endDay} onChangeText={setEndDay}>
-                    </InputField>
-                </Input>
-                <Text alignSelf='center'>
-                    Day
-                </Text>
-            </Box>
-            <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined" isInvalid={!isValidMonth(endMonth)}>
-                    <InputField w="$0.5" placeholder='JAN' value={endMonth} onChangeText={handleEndMonthChange}>
-                    </InputField>
-                </Input>
-                <Text alignSelf='center'>
-                    Month
-                </Text>
-            </Box>
-            <Box display="flex" flexDirection='column' w="$1/5">
-                <Input variant="underlined" isInvalid={!isValidYear(endYear)}>
-                    <InputField w="$0.5" placeholder='2024' value={endYear} onChangeText={setEndYear}>
-                    </InputField>
-                </Input>
-                <Text alignSelf='center'>
-                    Year
-                </Text>
+                <Text alignSelf="center">Year</Text>
             </Box>
         </Box>
     );
@@ -124,22 +89,16 @@ const DatePicker: React.FC<DatePickerProps> = ({ isOpen, handleDatePickerCancel,
                 </AlertDialogHeader>
                 <Divider />
                 <AlertDialogBody mt="$4">
-                    <Text mb="$4" color='$pixText100'>Start Date</Text>
-                    {renderStartDateInput()}
-                    <Text mb="$4" color='$pixText100'>End Date</Text>
-                    {renderEndDateInput()}
+                    <Text mb="$4" color="$pixText100">Start Date</Text>
+                    {renderDateInput(startDay, startMonth, startYear, setStartDay, setStartMonth, setStartYear)}
+                    <Text mb="$4" color="$pixText100">End Date</Text>
+                    {renderDateInput(endDay, endMonth, endYear, setEndDay, setEndMonth, setEndYear)}
                 </AlertDialogBody>
                 <AlertDialogFooter>
-                    <Button
-                        variant="outline"
-                        mr="$4"
-                        onPress={handleDatePickerCancel}
-                    >
+                    <Button variant="outline" mr="$4" onPress={handleDatePickerCancel}>
                         <ButtonText>Cancel</ButtonText>
                     </Button>
-                    <Button
-                        onPress={handleOk}
-                    >
+                    <Button onPress={handleOk}>
                         <ButtonText>Ok</ButtonText>
                     </Button>
                 </AlertDialogFooter>
