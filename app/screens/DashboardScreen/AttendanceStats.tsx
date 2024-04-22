@@ -36,6 +36,7 @@ const AttendanceStats = () => {
     handleCategoryOptionSelect,
     filteredAttendanceData,
     isLoading,
+    isNextDisabled,
   } = useAttendanceStats();
 
   return (
@@ -53,6 +54,7 @@ const AttendanceStats = () => {
         startDate={startDate}
         endDate={endDate}
         showDatePicker={showDatePicker}
+        isNextDisabled={isNextDisabled}
       />
       <FilterAttendance
         showActionsheet={showFilterActionsheet}

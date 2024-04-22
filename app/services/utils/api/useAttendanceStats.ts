@@ -174,6 +174,8 @@ useEffect(() => {
     }
   };
 
+  
+
   const handleNextDay = () => {
     if (selectedOption === 'daily') {
       setCurrentDate(currentDate.add(1, 'day'));
@@ -185,6 +187,28 @@ useEffect(() => {
       setCurrentDate(currentDate.add(1, 'year'));
     }
   };
+
+  const isNextDisabled = useMemo(() => {
+    if (selectedOption === 'customRange') {
+      return false;
+    }
+  
+    const currentDateFormatted = currentDate.format('YYYY-MM-DD');
+  
+    switch (selectedOption) {
+      case 'daily':
+        return currentDate.format('YYYY-MM-DD') >= currentDateFormatted;
+      case 'weekly':
+        return currentDate.endOf('week').format('YYYY-MM-DD') >= currentDateFormatted;
+      case 'monthly':
+        return currentDate.endOf('month').format('YYYY-MM-DD') >= currentDateFormatted;
+      case 'yearly':
+        return currentDate.endOf('year').format('YYYY-MM-DD') >= currentDateFormatted;
+      default:
+        return false;
+    }
+  }, [currentDate, selectedOption]);
+  
 
   const handleOptionSelect = (optionId: string) => {
     console.log('Selected option:', optionId);
@@ -357,5 +381,6 @@ useEffect(() => {
     filteredAttendanceData,
     attendanceDataByTime,
     attendanceDataWithPercentage,
+    isNextDisabled,
     };
 };
