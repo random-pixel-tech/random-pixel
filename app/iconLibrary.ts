@@ -20,8 +20,9 @@ import { faShare } from '@fortawesome/free-solid-svg-icons/faShare'
 import { faFileExport } from '@fortawesome/free-solid-svg-icons/faFileExport'
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons/faPenToSquare'
 import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar'
+import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter'
 
 
 export function initializeIconLibrary() {
-  library.add(fab, faArrowRight, faCircleCheck, faCalendar, faPenToSquare, faShare, faHouseUser, faFileExport, faArrowLeft, faCheck, faXmark, faPlaneDeparture, faCalendarCheck, faAddressCard, faSquareCheck, faHouse, faComment, faBookOpen, faChartSimple, faPaperclip, faEllipsisVertical)
+  library.add(fab, faFilter, faArrowRight, faCircleCheck, faCalendar, faPenToSquare, faShare, faHouseUser, faFileExport, faArrowLeft, faCheck, faXmark, faPlaneDeparture, faCalendarCheck, faAddressCard, faSquareCheck, faHouse, faComment, faBookOpen, faChartSimple, faPaperclip, faEllipsisVertical)
 }

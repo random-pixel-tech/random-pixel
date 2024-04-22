@@ -1,5 +1,7 @@
 import React from 'react';
 import { Button, CheckboxIcon, CheckIcon, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText, Checkbox, CheckboxIndicator, ScrollView, ActionsheetScrollView } from '@gluestack-ui/themed';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { Colors } from '../services/utils/colors';
 
 interface FilterAttendanceProps {
     showActionsheet: boolean;
@@ -161,9 +163,10 @@ const renderFilterOptions = (options: FilterOption[], category: string) => {
     };
 
     return (
-        <>
-            <Button onPress={() => onShowActionsheet(true)}>
-            <ButtonText>{selectedFilterOption}</ButtonText>
+        <Box p="$4">
+            <Button onPress={() => onShowActionsheet(true)} variant="outline" borderColor='$pixPrimary' w="$8" flexDirection='column' alignContent='center' justifyContent='center'>
+            <FontAwesomeIcon icon="filter" size={18} color={Colors.Primary} />
+            {/* <ButtonText>{selectedFilterOption}</ButtonText> */}
             <Actionsheet isOpen={showActionsheet} onClose={onClose} closeOnOverlayClick zIndex={999}>
                 <ActionsheetBackdrop />
                 <ActionsheetContent h="$5/6" zIndex={999}>
@@ -201,7 +204,7 @@ const renderFilterOptions = (options: FilterOption[], category: string) => {
                 </ActionsheetContent>
             </Actionsheet>
             </Button>
-        </>
+        </Box>
     );
 };
 
