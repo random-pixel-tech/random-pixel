@@ -92,9 +92,9 @@ const sortedAttendanceData = useMemo(() => {
         return a.student.name.localeCompare(b.student.name);
       case 'Name: Z to A':
         return b.student.name.localeCompare(a.student.name);
-      case 'Attendance: Low to High':
+      case 'Attendance Percentage: Low to High':
         return a.attendancePercentage - b.attendancePercentage;
-      case 'Attendance: High to Low':
+      case 'Attendance Percentage: High to Low':
         return b.attendancePercentage - a.attendancePercentage;
       case 'Class: Low to High':
         return a.className.localeCompare(b.className);
