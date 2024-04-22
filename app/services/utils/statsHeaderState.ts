@@ -103,86 +103,51 @@ export const useStatsHeaderState = () => {
   };
 
   const fetchAttendanceByTime = async (
-    studentId: string,
+    studentIds: string[],
     startDate: string,
     endDate: string
-  ): Promise<{
-    totalAttendance: number;
-    presentAttendance: number;
-  }> => {
+  ): Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }> => {
     try {
-      // Fetch attendance records for the student within the specified date range
+      // Fetch attendance records for the students within the specified date range
       const { data: attendanceRecords, error: attendanceError } = await supabase
         .from('attendance_records')
         .select('*')
-        .eq('studentId', studentId)
+        .in('studentId', studentIds)
         .gte('date', startDate)
         .lte('date', endDate);
-
+  
       if (attendanceError) {
         console.error('Error fetching attendance records:', attendanceError);
-        return { totalAttendance: 0, presentAttendance: 0 };
+        return {};
       }
-
-      let totalAttendance = 0;
-      let presentAttendance = 0;
-
-      attendanceRecords.forEach((record) => {
-        if (record.morningStatus !== null) totalAttendance += 0.5;
-        if (record.afternoonStatus !== null) totalAttendance += 0.5;
-        if (record.morningStatus === AttendanceStatus.Present) presentAttendance += 0.5;
-        if (record.afternoonStatus === AttendanceStatus.Present) presentAttendance += 0.5;
+  
+      const attendanceData: { [studentId: string]: { totalAttendance: number; presentAttendance: number } } = {};
+  
+      studentIds.forEach((studentId) => {
+        let totalAttendance = 0;
+        let presentAttendance = 0;
+  
+        attendanceRecords
+          .filter((record) => record.studentId === studentId)
+          .forEach((record) => {
+            if (record.morningStatus !== null) totalAttendance += 0.5;
+            if (record.afternoonStatus !== null) totalAttendance += 0.5;
+            if (record.morningStatus === AttendanceStatus.Present) presentAttendance += 0.5;
+            if (record.afternoonStatus === AttendanceStatus.Present) presentAttendance += 0.5;
+          });
+  
+        attendanceData[studentId] = {
+          totalAttendance,
+          presentAttendance,
+        };
       });
-
-      return {
-        totalAttendance,
-        presentAttendance,
-      };
+  
+      return attendanceData;
     } catch (error) {
       console.error('Error fetching attendance:', error);
-      return { totalAttendance: 0, presentAttendance: 0 };
+      return {};
     }
   };
-
-  // Missing
-
-//   const handleOptionSelect = (option: string) => {
-//     setSelectedOption(option);
-// };
-
-// const handleClear = () => {
-//   setSelectedFilters({
-//     attendance: [],
-//     class: [],
-//   });
-//   onFilterOptionSelect('attendance', '');
-//   onFilterOptionSelect('class', '');
-//   setSelectedOption('');
-// };
-
-// const handleApply = () => {
-//   // Apply selected filters
-//   Object.entries(selectedFilters).forEach(([category, options]) => {
-//     options.forEach((option) => {
-//       onFilterOptionSelect(category, option);
-//     });
-//   });
-
-//   // Apply sorting
-//   onSortOptionSelect(selectedOption);
-
-//   // If no filters are selected, clear the filters
-//   if (Object.values(selectedFilters).every((options) => options.length === 0)) {
-//     setSelectedFilters({
-//       attendance: [],
-//       class: [],
-//     });
-//     onFilterOptionSelect('attendance', '');
-//     onFilterOptionSelect('class', '');
-//   }
-
-//   setShowActionsheet(false);
-// };
 
 const handleCategoryOptionSelect = (option: string) => {
   setSelectedFilterOption(option);

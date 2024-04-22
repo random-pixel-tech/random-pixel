@@ -9,10 +9,10 @@ interface AttendanceViewProps {
   startDate: string;
   endDate: string;
   fetchAttendanceByTime: (
-    studentId: string,
+    studentIds: string[],
     startDate: string,
     endDate: string
-  ) => Promise<{ totalAttendance: number; presentAttendance: number }>;
+  ) => Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>;
   sortOption: string;
   selectedFilters: Record<string, string[]>;
 }
@@ -49,20 +49,16 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   }, [memoizedFetchAllStudentAttendance]);
 
   // Calculate attendance percentage for each student
-  const attendanceDataWithPercentage = useMemo(() => {
-    return Promise.all(
-      allStudentAttendanceData.map(async (data) => {
-        const { totalAttendance, presentAttendance } = await fetchAttendanceByTime(
-          data.student.id,
-          startDate,
-          endDate
-        );
-        const attendancePercentage =
-          totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
-        return { ...data, attendancePercentage };
-      })
-    );
-  }, [allStudentAttendanceData, fetchAttendanceByTime, startDate, endDate]);
+  const attendanceDataWithPercentage = useMemo(async () => {
+    const studentIds = allStudentAttendanceData.map((data) => data.student.id);
+    const attendanceData = await fetchAttendanceByTime(studentIds, startDate, endDate);
+  
+    return allStudentAttendanceData.map((data) => {
+      const { totalAttendance, presentAttendance } = attendanceData[data.student.id] || { totalAttendance: 0, presentAttendance: 0 };
+      const attendancePercentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
+      return { ...data, attendancePercentage };
+    });
+  }, [allStudentAttendanceData, startDate, endDate]);
 
 // Sort attendance data based on the selected sort option and class
 const sortedAttendanceData = useMemo(async () => {
@@ -127,8 +123,9 @@ const sortedAttendanceData = useMemo(async () => {
         ) : (
           <AttendanceDataRenderer
             filteredAttendanceData={filteredAttendanceData}
-            fetchAttendanceByTime={fetchAttendanceByTime}
-            selectedOption={selectedOption}
+            fetchAttendanceByTime={(studentIds, startDate, endDate) =>
+              fetchAttendanceByTime(studentIds, startDate, endDate)
+            }            selectedOption={selectedOption}
             startDate={startDate}
             endDate={endDate}
           />
@@ -141,10 +138,10 @@ const sortedAttendanceData = useMemo(async () => {
 interface AttendanceDataRendererProps {
   filteredAttendanceData: Promise<AllStudentAttendanceData[]>;
   fetchAttendanceByTime: (
-    studentId: string,
+    studentIds: string[],
     startDate: string,
     endDate: string
-  ) => Promise<{ totalAttendance: number; presentAttendance: number }>;
+  ) => Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>;
   selectedOption: string;
   startDate: string;
   endDate: string;
@@ -176,7 +173,9 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
           studentAttendanceData={data}
           className={data.className}
           section={data.section}
-          fetchAttendanceByTime={fetchAttendanceByTime}
+          fetchAttendanceByTime={(studentIds, startDate, endDate) =>
+            fetchAttendanceByTime([data.student.id], startDate, endDate)
+          }
           selectedOption={selectedOption}
           startDate={startDate}
           endDate={endDate}

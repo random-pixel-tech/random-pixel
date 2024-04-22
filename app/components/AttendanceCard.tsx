@@ -7,14 +7,10 @@ interface AttendanceCardProps {
   className: string;
   section: string;
   fetchAttendanceByTime: (
-    studentId: string,
+    studentIds: string[],
     startDate: string,
     endDate: string,
-  ) => Promise<{
-    totalAttendance: number;
-    presentAttendance: number;
-
-  }>;
+  ) => Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>;
   selectedOption: string;
   startDate: string;
   endDate: string;
@@ -44,37 +40,33 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
 
   useEffect(() => {
     let isMounted = true;
-
+  
     const fetchData = async () => {
       try {
-        const {
-          totalAttendance,
-          presentAttendance,
- 
-        } = await memoizedFetchAttendanceByTime(
-          student.id,
+        const attendanceData = await memoizedFetchAttendanceByTime(
+          [student.id],
           startDate,
-          endDate,
+          endDate
         );
-
+    
         if (isMounted) {
+          const { totalAttendance = 0, presentAttendance = 0 } = attendanceData[student.id] || {};
           setTotalAttendance(totalAttendance);
           setPresentAttendance(presentAttendance);
-      }
+        }
       } catch (error) {
         console.error('Error fetching attendance:', error);
       }
     };
-
+  
     if (selectedOption && startDate && endDate && isMounted) {
       fetchData();
     }
-
+  
     return () => {
       isMounted = false;
     };
   }, [memoizedFetchAttendanceByTime, student.id, selectedOption, startDate, endDate]);
-
   const percentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
 
   const classNameOrdinal = toOrdinal(parseInt(className));
