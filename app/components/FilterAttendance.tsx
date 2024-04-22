@@ -100,6 +100,12 @@ const renderFilterOptions = (options: FilterOption[], category: string) => {
         'class'
     );
 
+    const renderSectionsOptions = () => renderFilterOptions([
+        { label: 'A', value: 'A' },
+        { label: 'B', value: 'B' }
+    ], 'section');
+    
+
     const renderSortOptions = (options: string[]) => {
         return options.map(option => (
             <ActionsheetItem key={option} onPress={() => onSortOptionSelect(option)}>
@@ -117,9 +123,8 @@ const renderFilterOptions = (options: FilterOption[], category: string) => {
                     return renderAttendanceOptions();
                 case 'Class':
                     return renderClassOptions();
-                case 'Percentage':
                 case 'Section':
-                    return null;
+                    return renderSectionsOptions();
                 default:
                     return null;
             }

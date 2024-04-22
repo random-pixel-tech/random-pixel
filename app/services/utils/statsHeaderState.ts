@@ -28,6 +28,7 @@ export const useStatsHeaderState = () => {
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
     attendance: [],
     class: [],
+    section: [],
   });
 
   const [attendanceDataByTime, setAttendanceDataByTime] = useState<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>({});
@@ -105,7 +106,8 @@ const filteredAttendanceData = useMemo(() => {
 
   if (
     (!selectedFilters.attendance || selectedFilters.attendance.length === 0) &&
-    (!selectedFilters.class || selectedFilters.class.length === 0)
+    (!selectedFilters.class || selectedFilters.class.length === 0) &&
+    (!selectedFilters.section || selectedFilters.section.length === 0) // Check if there's any section selected
   ) {
     return attendanceData;
   }
@@ -113,6 +115,7 @@ const filteredAttendanceData = useMemo(() => {
   return attendanceData.filter((data) => {
     const percentage = data.attendancePercentage;
     const className = data.className;
+    const section = data.section; // Assuming you have a 'section' property in the attendance data
 
     const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
       if (filter === '70% or below') {
@@ -127,7 +130,10 @@ const filteredAttendanceData = useMemo(() => {
 
     const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
 
-    return matchesAttendanceFilter && matchesClassFilter;
+    const matchesSectionFilter = selectedFilters.section.length === 0 || selectedFilters.section.includes(section);
+
+
+    return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter;
   });
 }, [sortedAttendanceData, selectedFilters]);
 
@@ -267,6 +273,7 @@ const filteredAttendanceData = useMemo(() => {
     setSelectedFilters({
       attendance: [],
       class: [],
+      section: [],
     });
   };
 
@@ -296,6 +303,7 @@ const filteredAttendanceData = useMemo(() => {
       setSelectedFilters({
         attendance: [],
         class: [],
+        section: [],
       });
     } else if (selectedFilterTab === 'Sort') {
       setSortOption('');
