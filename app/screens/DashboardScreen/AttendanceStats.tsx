@@ -35,6 +35,8 @@ const AttendanceStats = () => {
     handleFilterApply,
     sortOption,
     handleCategoryOptionSelect,
+    attendanceData,
+    isLoading,
   } = useStatsHeaderState();
 
   return (
@@ -73,8 +75,8 @@ const AttendanceStats = () => {
         startDate={startDate}
         endDate={endDate}
         fetchAttendanceByTime={fetchAttendanceByTime}
-        selectedFilters={selectedFilters}
-        sortOption={sortOption}
+        attendanceData={attendanceData}
+        isLoading={isLoading}
       />
       <DatePicker
         isOpen={showDatePicker}

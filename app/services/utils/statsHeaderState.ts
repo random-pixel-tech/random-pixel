@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { supabase } from './supabase';
 import { AttendanceStatus } from './enums';
+import useStudentAttendance, { AllStudentAttendanceData } from '../utils/api/useStudentAttendance';
+
 dayjs.extend(weekOfYear);
 
 export const useStatsHeaderState = () => {
@@ -21,6 +23,103 @@ export const useStatsHeaderState = () => {
     attendance: [],
     class: [],
   });
+
+  const [attendanceDataByTime, setAttendanceDataByTime] = useState<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>({});
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { fetchAllStudentAttendance } = useStudentAttendance();
+
+  const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<AllStudentAttendanceData[]>([]);
+
+  // Memoize fetchAllStudentAttendance to prevent unnecessary re-renders
+  const memoizedFetchAllStudentAttendance = useMemo(() => fetchAllStudentAttendance, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const data = await memoizedFetchAllStudentAttendance();
+        setAllStudentAttendanceData(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching attendance data:', error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [memoizedFetchAllStudentAttendance]);
+
+  useEffect(() => {
+    const fetchAttendanceData = async () => {
+      const studentIds = allStudentAttendanceData.map((data) => data.student.id);
+      const attendanceData = await fetchAttendanceByTime(studentIds, startDate, endDate);
+      setAttendanceDataByTime(attendanceData);
+    };
+
+    fetchAttendanceData();
+  }, [allStudentAttendanceData, startDate, endDate]);
+
+
+  // Calculate attendance percentage for each student
+  const attendanceDataWithPercentage = useMemo(() => {
+    return allStudentAttendanceData.map((data) => {
+      const { totalAttendance, presentAttendance } = attendanceDataByTime[data.student.id] || { totalAttendance: 0, presentAttendance: 0 };
+      const attendancePercentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
+      return { ...data, attendancePercentage };
+    });
+  }, [allStudentAttendanceData, attendanceDataByTime]);
+
+  // Sort attendance data based on the selected sort option and class
+  const sortedAttendanceData = useMemo(async () => {
+    const attendanceData = await attendanceDataWithPercentage;
+
+    if (sortOption === 'Name: A to Z') {
+      return [...attendanceData].sort((a, b) => a.student.name.localeCompare(b.student.name));
+    } else if (sortOption === 'Name: Z to A') {
+      return [...attendanceData].sort((a, b) => b.student.name.localeCompare(a.student.name));
+    } else if (sortOption === 'Attendance: Low to High') {
+      return [...attendanceData].sort((a, b) => a.attendancePercentage - b.attendancePercentage);
+    } else if (sortOption === 'Attendance: High to Low') {
+      return [...attendanceData].sort((a, b) => b.attendancePercentage - a.attendancePercentage);
+    } else if (sortOption === 'Class: Low to High') {
+      return [...attendanceData].sort((a, b) => a.className.localeCompare(b.className));
+    } else if (sortOption === 'Class: High to Low') {
+      return [...attendanceData].sort((a, b) => b.className.localeCompare(a.className));
+    }
+    return attendanceData;
+  }, [attendanceDataWithPercentage, sortOption]);
+
+  // Filter attendance data based on the selected filters
+  const attendanceData = useMemo(async () => {
+    const attendanceData = await sortedAttendanceData;
+
+    if (
+      (!selectedFilters.attendance || selectedFilters.attendance.length === 0) &&
+      (!selectedFilters.class || selectedFilters.class.length === 0)
+    ) {
+      return attendanceData;
+    }
+
+    return attendanceData.filter((data) => {
+      const percentage = data.attendancePercentage;
+      const className = data.className;
+
+      const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
+        if (filter === '70% or below') {
+          return percentage <= 70;
+        } else if (filter === '70% to 90%') {
+          return percentage > 70 && percentage <= 90;
+        } else if (filter === 'Above 90%') {
+          return percentage > 90;
+        }
+        return false;
+      });
+
+      const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
+
+      return matchesAttendanceFilter && matchesClassFilter;
+    });
+  }, [sortedAttendanceData, selectedFilters]);
 
   useEffect(() => {
     const calculateDates = () => {
@@ -107,7 +206,7 @@ export const useStatsHeaderState = () => {
     startDate: string,
     endDate: string
   ): Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }> => {
-    try {
+   try {
       // Fetch attendance records for the students within the specified date range
       const { data: attendanceRecords, error: attendanceError } = await supabase
         .from('attendance_records')
@@ -149,9 +248,9 @@ export const useStatsHeaderState = () => {
     }
   };
 
-const handleCategoryOptionSelect = (option: string) => {
-  setSelectedFilterOption(option);
-};
+  const handleCategoryOptionSelect = (option: string) => {
+    setSelectedFilterOption(option);
+  };
 
   const handleCloseFilterActionsheet = () => {
     setShowFilterActionsheet(false);
@@ -184,17 +283,14 @@ const handleCategoryOptionSelect = (option: string) => {
 
   const handleFilterClear = () => {
     if (selectedFilterTab === 'Filter') {
-        setSelectedFilters({
-            attendance: [],
-            class: [],
-        });
+      setSelectedFilters({
+        attendance: [],
+        class: [],
+      });
     } else if (selectedFilterTab === 'Sort') {
-        setSortOption('');
+      setSortOption('');
     }
-};
-
-
-  
+  };
 
   const handleFilterApply = () => {
     // Apply selected filters and sorting
@@ -229,6 +325,9 @@ const handleCategoryOptionSelect = (option: string) => {
     selectedFilterOption,
     setSelectedFilterOption,
     sortOption,
-    handleCategoryOptionSelect
+    handleCategoryOptionSelect,
+    isLoading,
+    attendanceData,
+    attendanceDataByTime
   };
 };

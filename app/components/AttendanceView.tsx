@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { Box, Text } from '@gluestack-ui/themed';
 import AttendanceCard from './AttendanceCard';
-import useStudentAttendance, { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
+import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 
 interface AttendanceViewProps {
   selectedOption: string;
@@ -13,8 +13,8 @@ interface AttendanceViewProps {
     startDate: string,
     endDate: string
   ) => Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>;
-  sortOption: string;
-  selectedFilters: Record<string, string[]>;
+  attendanceData: Promise<AllStudentAttendanceData[]>;
+  isLoading: boolean;
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
@@ -22,96 +22,19 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   startDate,
   endDate,
   fetchAttendanceByTime,
-  sortOption,
-  selectedFilters,
+  attendanceData,
+  isLoading,
 }) => {
-  const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<AllStudentAttendanceData[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { fetchAllStudentAttendance } = useStudentAttendance();
-
-  // Memoize fetchAllStudentAttendance to prevent unnecessary re-renders
-  const memoizedFetchAllStudentAttendance = useMemo(() => fetchAllStudentAttendance, []);
+  const [data, setData] = useState<AllStudentAttendanceData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await memoizedFetchAllStudentAttendance();
-        setAllStudentAttendanceData(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching attendance data:', error);
-        setIsLoading(false);
-      }
+      const fetchedData = await attendanceData;
+      setData(fetchedData);
     };
 
     fetchData();
-  }, [memoizedFetchAllStudentAttendance]);
-
-  // Calculate attendance percentage for each student
-  const attendanceDataWithPercentage = useMemo(async () => {
-    const studentIds = allStudentAttendanceData.map((data) => data.student.id);
-    const attendanceData = await fetchAttendanceByTime(studentIds, startDate, endDate);
-  
-    return allStudentAttendanceData.map((data) => {
-      const { totalAttendance, presentAttendance } = attendanceData[data.student.id] || { totalAttendance: 0, presentAttendance: 0 };
-      const attendancePercentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
-      return { ...data, attendancePercentage };
-    });
-  }, [allStudentAttendanceData, startDate, endDate]);
-
-// Sort attendance data based on the selected sort option and class
-const sortedAttendanceData = useMemo(async () => {
-    const attendanceData = await attendanceDataWithPercentage;
-  
-    if (sortOption === 'Name: A to Z') {
-      return [...attendanceData].sort((a, b) => a.student.name.localeCompare(b.student.name));
-    } else if (sortOption === 'Name: Z to A') {
-      return [...attendanceData].sort((a, b) => b.student.name.localeCompare(a.student.name));
-    } else if (sortOption === 'Attendance: Low to High') {
-      return [...attendanceData].sort((a, b) => a.attendancePercentage - b.attendancePercentage);
-    } else if (sortOption === 'Attendance: High to Low') {
-      return [...attendanceData].sort((a, b) => b.attendancePercentage - a.attendancePercentage);
-    } else if (sortOption === 'Class: Low to High') {
-      return [...attendanceData].sort((a, b) => a.className.localeCompare(b.className));
-    } else if (sortOption === 'Class: High to Low') {
-      return [...attendanceData].sort((a, b) => b.className.localeCompare(a.className));
-    }
-    return attendanceData;
-  }, [attendanceDataWithPercentage, sortOption]);
-  
-
-  // Filter attendance data based on the selected filters
-  const filteredAttendanceData = useMemo(async () => {
-    const attendanceData = await sortedAttendanceData;
-
-    if (
-      (!selectedFilters.attendance || selectedFilters.attendance.length === 0) &&
-      (!selectedFilters.class || selectedFilters.class.length === 0)
-    ) {
-      return attendanceData;
-    }
-
-    return attendanceData.filter((data) => {
-      const percentage = data.attendancePercentage;
-      const className = data.className;
-
-      const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
-        if (filter === '70% or below') {
-          return percentage <= 70;
-        } else if (filter === '70% to 90%') {
-          return percentage > 70 && percentage <= 90;
-        } else if (filter === 'Above 90%') {
-          return percentage > 90;
-        }
-        return false;
-      });
-
-      const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
-
-      return matchesAttendanceFilter && matchesClassFilter;
-    });
-  }, [sortedAttendanceData, selectedFilters]);
+  }, [attendanceData]);
 
   return (
     <ScrollView>
@@ -122,10 +45,9 @@ const sortedAttendanceData = useMemo(async () => {
           </Box>
         ) : (
           <AttendanceDataRenderer
-            filteredAttendanceData={filteredAttendanceData}
-            fetchAttendanceByTime={(studentIds, startDate, endDate) =>
-              fetchAttendanceByTime(studentIds, startDate, endDate)
-            }            selectedOption={selectedOption}
+            attendanceData={data}
+            fetchAttendanceByTime={fetchAttendanceByTime}
+            selectedOption={selectedOption}
             startDate={startDate}
             endDate={endDate}
           />
@@ -136,7 +58,7 @@ const sortedAttendanceData = useMemo(async () => {
 };
 
 interface AttendanceDataRendererProps {
-  filteredAttendanceData: Promise<AllStudentAttendanceData[]>;
+  attendanceData: AllStudentAttendanceData[];
   fetchAttendanceByTime: (
     studentIds: string[],
     startDate: string,
@@ -148,23 +70,12 @@ interface AttendanceDataRendererProps {
 }
 
 const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
-  filteredAttendanceData,
+  attendanceData,
   fetchAttendanceByTime,
   selectedOption,
   startDate,
   endDate,
 }) => {
-  const [attendanceData, setAttendanceData] = useState<AllStudentAttendanceData[]>([]);
-
-  useEffect(() => {
-    const fetchFilteredData = async () => {
-      const data = await filteredAttendanceData;
-      setAttendanceData(data);
-    };
-
-    fetchFilteredData();
-  }, [filteredAttendanceData]);
-
   return (
     <>
       {attendanceData.map((data) => (
