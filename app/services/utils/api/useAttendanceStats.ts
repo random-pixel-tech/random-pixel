@@ -193,21 +193,22 @@ useEffect(() => {
       return false;
     }
   
-    const currentDateFormatted = currentDate.format('YYYY-MM-DD');
+    const today = dayjs();
   
     switch (selectedOption) {
       case 'daily':
-        return currentDate.format('YYYY-MM-DD') >= currentDateFormatted;
-      case 'weekly':
-        return currentDate.endOf('week').format('YYYY-MM-DD') >= currentDateFormatted;
+        return currentDate.isSame(today, 'day');
+        case 'weekly':
+        return currentDate.endOf('week').isAfter(today, 'day');
       case 'monthly':
-        return currentDate.endOf('month').format('YYYY-MM-DD') >= currentDateFormatted;
+        return currentDate.endOf('month').isAfter(today, 'day');
       case 'yearly':
-        return currentDate.endOf('year').format('YYYY-MM-DD') >= currentDateFormatted;
+        return currentDate.endOf('year').isAfter(today, 'day');
       default:
         return false;
     }
   }, [currentDate, selectedOption]);
+  
   
 
   const handleOptionSelect = (optionId: string) => {
