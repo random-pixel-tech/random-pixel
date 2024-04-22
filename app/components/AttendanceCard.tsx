@@ -1,19 +1,20 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import { Box, Text } from '@gluestack-ui/themed';
-import { StudentAttendanceData } from '../services/utils/api/useStudentAttendance';
+import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
+
+interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
+  attendancePercentage: number;
+  totalAttendance: number;
+  presentAttendance: number;
+}
 
 interface AttendanceCardProps {
-  studentAttendanceData: StudentAttendanceData;
+  studentAttendanceData: StudentAttendanceDataWithPercentage;
   className: string;
   section: string;
-  fetchAttendanceByTime: (
-    studentIds: string[],
-    startDate: string,
-    endDate: string,
-  ) => Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>;
   selectedOption: string;
-  startDate: string;
-  endDate: string;
+  totalAttendance: number;
+  presentAttendance: number;
 }
 
 const toOrdinal = (n: number): string => {
@@ -26,53 +27,18 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
   studentAttendanceData,
   className,
   section,
-  fetchAttendanceByTime,
   selectedOption,
-  startDate,
-  endDate,
+  totalAttendance,
+  presentAttendance,
 }) => {
-  const { student, attendanceRecord } = studentAttendanceData;
+  const { student } = studentAttendanceData;
   const { name, rollNumber } = student;
-  const [totalAttendance, setTotalAttendance] = useState<number>(0);
-  const [presentAttendance, setPresentAttendance] = useState<number>(0);
 
-  const memoizedFetchAttendanceByTime = useCallback(fetchAttendanceByTime, []);
-
-  useEffect(() => {
-    let isMounted = true;
-  
-    const fetchData = async () => {
-      try {
-        const attendanceData = await memoizedFetchAttendanceByTime(
-          [student.id],
-          startDate,
-          endDate
-        );
-    
-        if (isMounted) {
-          const { totalAttendance = 0, presentAttendance = 0 } = attendanceData[student.id] || {};
-          setTotalAttendance(totalAttendance);
-          setPresentAttendance(presentAttendance);
-        }
-      } catch (error) {
-        console.error('Error fetching attendance:', error);
-      }
-    };
-  
-    if (selectedOption && startDate && endDate && isMounted) {
-      fetchData();
-    }
-  
-    return () => {
-      isMounted = false;
-    };
-  }, [memoizedFetchAttendanceByTime, student.id, selectedOption, startDate, endDate]);
   const percentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
 
   const classNameOrdinal = toOrdinal(parseInt(className));
 
   const renderAttendanceBox = () => {
-
     if (selectedOption === 'daily') {
       return (
         <Box alignContent="center" display="flex" flexDirection="row">

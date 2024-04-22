@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ScrollView } from 'react-native';
 import { Box, Text } from '@gluestack-ui/themed';
 import AttendanceCard from './AttendanceCard';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 
+interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
+  attendancePercentage: number;
+  totalAttendance: number;
+  presentAttendance: number;
+}
+
 interface AttendanceViewProps {
   selectedOption: string;
   startDate: string;
   endDate: string;
-  fetchAttendanceByTime: (
-    studentIds: string[],
-    startDate: string,
-    endDate: string
-  ) => Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>;
-  attendanceData: Promise<AllStudentAttendanceData[]>;
+  attendanceDataWithPercentage: StudentAttendanceDataWithPercentage[];
   isLoading: boolean;
 }
 
@@ -21,21 +22,9 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   selectedOption,
   startDate,
   endDate,
-  fetchAttendanceByTime,
-  attendanceData,
+  attendanceDataWithPercentage,
   isLoading,
 }) => {
-  const [data, setData] = useState<AllStudentAttendanceData[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const fetchedData = await attendanceData;
-      setData(fetchedData);
-    };
-
-    fetchData();
-  }, [attendanceData]);
-
   return (
     <ScrollView>
       <Box p="$4">
@@ -45,8 +34,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
           </Box>
         ) : (
           <AttendanceDataRenderer
-            attendanceData={data}
-            fetchAttendanceByTime={fetchAttendanceByTime}
+            attendanceData={attendanceDataWithPercentage}
             selectedOption={selectedOption}
             startDate={startDate}
             endDate={endDate}
@@ -58,12 +46,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
 };
 
 interface AttendanceDataRendererProps {
-  attendanceData: AllStudentAttendanceData[];
-  fetchAttendanceByTime: (
-    studentIds: string[],
-    startDate: string,
-    endDate: string
-  ) => Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>;
+  attendanceData: StudentAttendanceDataWithPercentage[];
   selectedOption: string;
   startDate: string;
   endDate: string;
@@ -71,7 +54,6 @@ interface AttendanceDataRendererProps {
 
 const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
   attendanceData,
-  fetchAttendanceByTime,
   selectedOption,
   startDate,
   endDate,
@@ -84,12 +66,9 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
           studentAttendanceData={data}
           className={data.className}
           section={data.section}
-          fetchAttendanceByTime={(studentIds, startDate, endDate) =>
-            fetchAttendanceByTime([data.student.id], startDate, endDate)
-          }
           selectedOption={selectedOption}
-          startDate={startDate}
-          endDate={endDate}
+          totalAttendance={data.totalAttendance}
+          presentAttendance={data.presentAttendance}
         />
       ))}
     </>

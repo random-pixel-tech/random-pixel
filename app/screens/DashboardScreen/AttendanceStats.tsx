@@ -18,7 +18,6 @@ const AttendanceStats = () => {
     currentDate,
     startDate,
     endDate,
-    fetchAttendanceByTime,
     showDatePicker,
     handleDatePickerCancel,
     handleDatePickerOk,
@@ -35,7 +34,7 @@ const AttendanceStats = () => {
     handleFilterApply,
     sortOption,
     handleCategoryOptionSelect,
-    attendanceData,
+    filteredAttendanceData,
     isLoading,
   } = useStatsHeaderState();
 
@@ -74,8 +73,7 @@ const AttendanceStats = () => {
         selectedOption={selectedOption}
         startDate={startDate}
         endDate={endDate}
-        fetchAttendanceByTime={fetchAttendanceByTime}
-        attendanceData={attendanceData}
+        attendanceDataWithPercentage={filteredAttendanceData}
         isLoading={isLoading}
       />
       <DatePicker
