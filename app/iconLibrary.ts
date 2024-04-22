@@ -24,5 +24,5 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter'
 
 
 export function initializeIconLibrary() {
-  library.add(fab, faArrowRight, faFilter, faCircleCheck, faCalendar, faPenToSquare, faShare, faHouseUser, faFileExport, faArrowLeft, faCheck, faXmark, faPlaneDeparture, faCalendarCheck, faAddressCard, faSquareCheck, faHouse, faComment, faBookOpen, faChartSimple, faPaperclip, faEllipsisVertical)
+  library.add(fab, faFilter, faArrowRight, faFilter, faCircleCheck, faCalendar, faPenToSquare, faShare, faHouseUser, faFileExport, faArrowLeft, faCheck, faXmark, faPlaneDeparture, faCalendarCheck, faAddressCard, faSquareCheck, faHouse, faComment, faBookOpen, faChartSimple, faPaperclip, faEllipsisVertical)
 }

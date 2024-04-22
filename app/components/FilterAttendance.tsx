@@ -102,6 +102,12 @@ const renderFilterOptions = (options: FilterOption[], category: string) => {
         'class'
     );
 
+    const renderSectionsOptions = () => renderFilterOptions([
+        { label: 'A', value: 'A' },
+        { label: 'B', value: 'B' }
+    ], 'section');
+    
+
     const renderSortOptions = (options: string[]) => {
         return options.map(option => (
             <ActionsheetItem key={option} onPress={() => onSortOptionSelect(option)}>
@@ -119,9 +125,8 @@ const renderFilterOptions = (options: FilterOption[], category: string) => {
                     return renderAttendanceOptions();
                 case 'Class':
                     return renderClassOptions();
-                case 'Percentage':
                 case 'Section':
-                    return null;
+                    return renderSectionsOptions();
                 default:
                     return null;
             }
@@ -158,11 +163,10 @@ const renderFilterOptions = (options: FilterOption[], category: string) => {
     };
 
     return (
-        <>
-            <Button onPress={() => onShowActionsheet(true)} variant='outline' w="$1/2">
-            {/* <ButtonText>{selectedFilterOption} */}
-            <FontAwesomeIcon icon="filter" size={18} color={Colors.Primary}/>
-            {/* </ButtonText> */}
+        <Box p="$4">
+            <Button onPress={() => onShowActionsheet(true)} variant="outline" borderColor='$pixPrimary' w="$8" flexDirection='column' alignContent='center' justifyContent='center'>
+            <FontAwesomeIcon icon="filter" size={18} color={Colors.Primary} />
+            {/* <ButtonText>{selectedFilterOption}</ButtonText> */}
             <Actionsheet isOpen={showActionsheet} onClose={onClose} closeOnOverlayClick zIndex={999}>
                 <ActionsheetBackdrop />
                 <ActionsheetContent h="$5/6" zIndex={999}>
@@ -200,7 +204,7 @@ const renderFilterOptions = (options: FilterOption[], category: string) => {
                 </ActionsheetContent>
             </Actionsheet>
             </Button>
-        </>
+        </Box>
     );
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@gluestack-ui/themed';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
-import { useStatsHeaderState } from '../../services/utils/statsHeaderState';
+import { useAttendanceStats } from '../../services/utils/api/useAttendanceStats';
 import DatePicker from '../../components/DatePicker';
 import FilterAttendance from '../../components/FilterAttendance';
 
@@ -18,7 +18,6 @@ const AttendanceStats = () => {
     currentDate,
     startDate,
     endDate,
-    fetchAttendanceByTime,
     showDatePicker,
     handleDatePickerCancel,
     handleDatePickerOk,
@@ -35,7 +34,10 @@ const AttendanceStats = () => {
     handleFilterApply,
     sortOption,
     handleCategoryOptionSelect,
-  } = useStatsHeaderState();
+    filteredAttendanceData,
+    isLoading,
+    isNextDisabled,
+  } = useAttendanceStats();
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
@@ -52,8 +54,9 @@ const AttendanceStats = () => {
         startDate={startDate}
         endDate={endDate}
         showDatePicker={showDatePicker}
+        isNextDisabled={isNextDisabled}
       />
-      {/* <FilterAttendance
+      <FilterAttendance
         showActionsheet={showFilterActionsheet}
         selectedTab={selectedFilterTab}
         selectedFilters={selectedFilters}
@@ -67,14 +70,13 @@ const AttendanceStats = () => {
         onApply={handleFilterApply}
         onShowActionsheet={setShowFilterActionsheet}
         sortOption={sortOption}
-      /> */}
+      />
       <AttendanceView
         selectedOption={selectedOption}
         startDate={startDate}
         endDate={endDate}
-        fetchAttendanceByTime={fetchAttendanceByTime}
-        // selectedFilters={selectedFilters}
-        sortOption={sortOption}
+        attendanceDataWithPercentage={filteredAttendanceData}
+        isLoading={isLoading}
       />
       <DatePicker
         isOpen={showDatePicker}

@@ -20,6 +20,7 @@ interface StatsHeaderProps {
   startDate: string;
   endDate: string;
   showDatePicker: boolean;
+  isNextDisabled: boolean;
 }
 
 const StatsHeader: React.FC<StatsHeaderProps> = ({
@@ -34,7 +35,8 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
   currentDate,
   startDate,
   endDate,
-  showDatePicker
+  showDatePicker,
+  isNextDisabled
 }) => {
   const navigation = useNavigation();
 
@@ -92,7 +94,9 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
                     : currentDate.format('DD, MMM - YYYY')}
           </Text>
           {selectedOption !== 'customRange' && (
-            <Pressable onPress={handleNextDay} p="$4">
+            <Pressable onPress={handleNextDay} p="$4" disabled={isNextDisabled}
+            opacity={isNextDisabled ? 0.5 : 1}
+        >
               <FontAwesomeIcon icon="arrow-right" size={16} color={Colors.Primary} />
             </Pressable>
           )}
