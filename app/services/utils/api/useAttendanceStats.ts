@@ -37,6 +37,54 @@ export const useAttendanceStats = () => {
 
   const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<AllStudentAttendanceData[]>([]);
 
+  const [startDay, setStartDay] = useState('');
+  const [startMonth, setStartMonth] = useState('');
+  const [startYear, setStartYear] = useState('');
+  const [endDay, setEndDay] = useState('');
+  const [endMonth, setEndMonth] = useState('');
+  const [endYear, setEndYear] = useState('');
+
+  const isValidDay = (day: string, month: string, year: string) => {
+    const parsedDay = parseInt(day, 10);
+    const parsedMonth = parseInt(month, 10);
+    const parsedYear = parseInt(year, 10);
+    const maxDays = dayjs(`${parsedYear}-${parsedMonth}-01`).daysInMonth();
+    return parsedDay >= 1 && parsedDay <= maxDays;
+};
+
+const isValidMonth = (month: string) => {
+    const parsedMonth = parseInt(month, 10);
+    return parsedMonth >= 1 && parsedMonth <= 12;
+};
+
+const isValidYear = (year: string) => {
+    const parsedYear = parseInt(year, 10);
+    const currentYear = dayjs().year();
+    return parsedYear >= currentYear - 10 && parsedYear <= currentYear + 10;
+};
+
+
+const isValidDate = (day: string, month: string, year: string) => {
+    return isValidDay(day, month, year) && isValidMonth(month) && isValidYear(year);
+};
+
+const isEndDateValid = (startDate: string, endDate: string) => {
+    return dayjs(endDate).isAfter(startDate) || dayjs(endDate).isSame(startDate);
+};
+
+
+const handleOk = () => {
+  const startDate = `${startYear}-${startMonth}-${startDay}`;
+  const endDate = `${endYear}-${endMonth}-${endDay}`;
+
+  if (!isValidDate(startDay, startMonth, startYear) || !isValidDate(endDay, endMonth, endYear) || !isEndDateValid(startDate, endDate)) {
+      // Handle invalid input, show an error message or perform any other desired action
+      return;
+  }
+
+  handleDatePickerOk(startDate, endDate);
+};
+
   // Memoize fetchAllStudentAttendance to prevent unnecessary re-renders
   const memoizedFetchAllStudentAttendance = useMemo(() => fetchAllStudentAttendance, []);
 
@@ -383,5 +431,21 @@ useEffect(() => {
     attendanceDataByTime,
     attendanceDataWithPercentage,
     isNextDisabled,
+    handleOk,
+    startDay,
+    startMonth,
+    startYear,
+    endDay,
+    endMonth,
+    endYear,
+    setStartDay,
+    setStartMonth,
+    setStartYear,
+    setEndDay,
+    setEndMonth,
+    setEndYear,
+    isValidDay,
+    isValidMonth,
+    isValidYear
     };
 };

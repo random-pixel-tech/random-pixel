@@ -37,6 +37,22 @@ const AttendanceStats = () => {
     filteredAttendanceData,
     isLoading,
     isNextDisabled,
+    handleOk,
+    startDay,
+    startMonth,
+    startYear,
+    endDay,
+    endMonth,
+    endYear,
+    setStartDay,
+    setStartMonth,
+    setStartYear,
+    setEndDay,
+    setEndMonth,
+    setEndYear,
+    isValidDay,
+    isValidMonth,
+    isValidYear,
   } = useAttendanceStats();
 
   return (
@@ -81,7 +97,22 @@ const AttendanceStats = () => {
       <DatePicker
         isOpen={showDatePicker}
         handleDatePickerCancel={handleDatePickerCancel}
-        handleDatePickerOk={handleDatePickerOk}
+        handleOk={handleOk}
+        startDay={startDay}
+        startMonth={startMonth}
+        startYear={startYear}
+        endDay={endDay}
+        endMonth={endMonth}
+        endYear={endYear}
+        setStartDay={setStartDay}
+        setStartMonth={setStartMonth}
+        setStartYear={setStartYear}
+        setEndDay={setEndDay}
+        setEndMonth={setEndMonth}
+        setEndYear={setEndYear}
+        isValidDay={isValidDay}
+        isValidMonth={isValidMonth}
+        isValidYear={isValidYear}
       />
     </Box>
   );
