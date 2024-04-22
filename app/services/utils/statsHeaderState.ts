@@ -183,11 +183,18 @@ const handleCategoryOptionSelect = (option: string) => {
   };
 
   const handleFilterClear = () => {
-    setSelectedFilters({
-      attendance: [],
-      class: [],
-    });
-  };
+    if (selectedFilterTab === 'Filter') {
+        setSelectedFilters({
+            attendance: [],
+            class: [],
+        });
+    } else if (selectedFilterTab === 'Sort') {
+        setSortOption('');
+    }
+};
+
+
+  
 
   const handleFilterApply = () => {
     // Apply selected filters and sorting
