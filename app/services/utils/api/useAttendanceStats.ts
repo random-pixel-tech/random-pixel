@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import { supabase } from './supabase';
-import { AttendanceStatus } from './enums';
-import useStudentAttendance, { AllStudentAttendanceData } from '../utils/api/useStudentAttendance';
+import { supabase } from '../supabase';
+import { AttendanceStatus } from '../enums';
+import useStudentAttendance, { AllStudentAttendanceData } from './useStudentAttendance';
 
 dayjs.extend(weekOfYear);
 
@@ -13,7 +13,7 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   presentAttendance: number;
 }
 
-export const useStatsHeaderState = () => {
+export const useAttendanceStats = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [selectedOption, setSelectedOption] = useState('daily');
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
@@ -82,40 +82,41 @@ const attendanceDataWithPercentage: StudentAttendanceDataWithPercentage[] = useM
 
 // Sort attendance data based on the selected sort option and class
 const sortedAttendanceData = useMemo(() => {
-  const attendanceData = attendanceDataWithPercentage;
+  // Check if the sort option is not changed
+  if (!sortOption) return attendanceDataWithPercentage;
 
-  if (sortOption === 'Name: A to Z') {
-    return [...attendanceData].sort((a, b) => a.student.name.localeCompare(b.student.name));
-  } else if (sortOption === 'Name: Z to A') {
-    return [...attendanceData].sort((a, b) => b.student.name.localeCompare(a.student.name));
-  } else if (sortOption === 'Attendance: Low to High') {
-    return [...attendanceData].sort((a, b) => a.attendancePercentage - b.attendancePercentage);
-  } else if (sortOption === 'Attendance: High to Low') {
-    return [...attendanceData].sort((a, b) => b.attendancePercentage - a.attendancePercentage);
-  } else if (sortOption === 'Class: Low to High') {
-    return [...attendanceData].sort((a, b) => a.className.localeCompare(b.className));
-  } else if (sortOption === 'Class: High to Low') {
-    return [...attendanceData].sort((a, b) => b.className.localeCompare(a.className));
-  }
-  return attendanceData;
+  // Sort function based on the selected option
+  const sortFunction = (a: StudentAttendanceDataWithPercentage, b: StudentAttendanceDataWithPercentage) => {
+    switch (sortOption) {
+      case 'Name: A to Z':
+        return a.student.name.localeCompare(b.student.name);
+      case 'Name: Z to A':
+        return b.student.name.localeCompare(a.student.name);
+      case 'Attendance: Low to High':
+        return a.attendancePercentage - b.attendancePercentage;
+      case 'Attendance: High to Low':
+        return b.attendancePercentage - a.attendancePercentage;
+      case 'Class: Low to High':
+        return a.className.localeCompare(b.className);
+      case 'Class: High to Low':
+        return b.className.localeCompare(a.className);
+      default:
+        return 0;
+    }
+  };
+
+  // Sort only if the sort option has changed
+  return [...attendanceDataWithPercentage].sort(sortFunction);
 }, [attendanceDataWithPercentage, sortOption]);
+
 
 // Filter attendance data based on the selected filters
 const filteredAttendanceData = useMemo(() => {
-  const attendanceData = sortedAttendanceData;
-
-  if (
-    (!selectedFilters.attendance || selectedFilters.attendance.length === 0) &&
-    (!selectedFilters.class || selectedFilters.class.length === 0) &&
-    (!selectedFilters.section || selectedFilters.section.length === 0) // Check if there's any section selected
-  ) {
-    return attendanceData;
-  }
-
-  return attendanceData.filter((data) => {
+  // Filter function to check if a data point matches the selected filters
+  const filterFunction = (data: StudentAttendanceDataWithPercentage) => {
     const percentage = data.attendancePercentage;
     const className = data.className;
-    const section = data.section; // Assuming you have a 'section' property in the attendance data
+    const section = data.section;
 
     const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
       if (filter === '70% or below') {
@@ -132,37 +133,34 @@ const filteredAttendanceData = useMemo(() => {
 
     const matchesSectionFilter = selectedFilters.section.length === 0 || selectedFilters.section.includes(section);
 
-
     return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter;
-  });
+  };
+
+  // Apply filters only if any filters are selected
+  if (
+    (!selectedFilters.attendance || selectedFilters.attendance.length === 0) &&
+    (!selectedFilters.class || selectedFilters.class.length === 0) &&
+    (!selectedFilters.section || selectedFilters.section.length === 0) // Check if there's any section selected
+  ) {
+    return sortedAttendanceData; // No filters selected, return sorted data directly
+  } else {
+    return sortedAttendanceData.filter(filterFunction);
+  }
 }, [sortedAttendanceData, selectedFilters]);
 
-  useEffect(() => {
-    const calculateDates = () => {
-      if (selectedOption === 'daily') {
-        const date = currentDate.format('YYYY-MM-DD');
-        setStartDate(date);
-        setEndDate(date);
-      } else if (selectedOption === 'weekly') {
-        const startOfWeek = currentDate.startOf('week').format('YYYY-MM-DD');
-        const endOfWeek = currentDate.endOf('week').format('YYYY-MM-DD');
-        setStartDate(startOfWeek);
-        setEndDate(endOfWeek);
-      } else if (selectedOption === 'monthly') {
-        const startOfMonth = currentDate.startOf('month').format('YYYY-MM-DD');
-        const endOfMonth = currentDate.endOf('month').format('YYYY-MM-DD');
-        setStartDate(startOfMonth);
-        setEndDate(endOfMonth);
-      } else if (selectedOption === 'yearly') {
-        const startOfYear = currentDate.startOf('year').format('YYYY-MM-DD');
-        const endOfYear = currentDate.endOf('year').format('YYYY-MM-DD');
-        setStartDate(startOfYear);
-        setEndDate(endOfYear);
-      }
-    };
+useEffect(() => {
+  const dateRanges: Record<string, [string, string]> = {
+    daily: [currentDate.format('YYYY-MM-DD'), currentDate.format('YYYY-MM-DD')],
+    weekly: [currentDate.startOf('week').format('YYYY-MM-DD'), currentDate.endOf('week').format('YYYY-MM-DD')],
+    monthly: [currentDate.startOf('month').format('YYYY-MM-DD'), currentDate.endOf('month').format('YYYY-MM-DD')],
+    yearly: [currentDate.startOf('year').format('YYYY-MM-DD'), currentDate.endOf('year').format('YYYY-MM-DD')],
+  };
 
-    calculateDates();
-  }, [currentDate, selectedOption]);
+  const [startDate, endDate] = dateRanges[selectedOption] || [currentDate.format('YYYY-MM-DD'), currentDate.format('YYYY-MM-DD')];
+  setStartDate(startDate);
+  setEndDate(endDate);
+}, [currentDate, selectedOption]);
+
 
   const handlePrevDay = () => {
     if (selectedOption === 'daily') {
@@ -222,7 +220,7 @@ const filteredAttendanceData = useMemo(() => {
     startDate: string,
     endDate: string
   ): Promise<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }> => {
-   try {
+    try {
       // Fetch attendance records for the students within the specified date range
       const { data: attendanceRecords, error: attendanceError } = await supabase
         .from('attendance_records')
@@ -236,21 +234,30 @@ const filteredAttendanceData = useMemo(() => {
         return {};
       }
   
+      // Initialize attendance data object
       const attendanceData: { [studentId: string]: { totalAttendance: number; presentAttendance: number } } = {};
   
-      studentIds.forEach((studentId) => {
+      // Iterate over each student
+      studentIds.forEach(studentId => {
+        // Initialize total and present attendance counters for the current student
         let totalAttendance = 0;
         let presentAttendance = 0;
   
-        attendanceRecords
-          .filter((record) => record.studentId === studentId)
-          .forEach((record) => {
-            if (record.morningStatus !== null) totalAttendance += 0.5;
-            if (record.afternoonStatus !== null) totalAttendance += 0.5;
-            if (record.morningStatus === AttendanceStatus.Present) presentAttendance += 0.5;
-            if (record.afternoonStatus === AttendanceStatus.Present) presentAttendance += 0.5;
-          });
+        // Filter attendance records for the current student
+        const studentAttendanceRecords = attendanceRecords.filter(record => record.studentId === studentId);
   
+        // Iterate over attendance records for the current student
+        studentAttendanceRecords.forEach(record => {
+          // Increment total attendance for each recorded session
+          if (record.morningStatus !== null) totalAttendance += 0.5;
+          if (record.afternoonStatus !== null) totalAttendance += 0.5;
+  
+          // Increment present attendance for each recorded session marked as present
+          if (record.morningStatus === AttendanceStatus.Present) presentAttendance += 0.5;
+          if (record.afternoonStatus === AttendanceStatus.Present) presentAttendance += 0.5;
+        });
+  
+        // Store total and present attendance for the current student
         attendanceData[studentId] = {
           totalAttendance,
           presentAttendance,
@@ -263,6 +270,7 @@ const filteredAttendanceData = useMemo(() => {
       return {};
     }
   };
+  
 
   const handleCategoryOptionSelect = (option: string) => {
     setSelectedFilterOption(option);
@@ -275,6 +283,7 @@ const filteredAttendanceData = useMemo(() => {
       class: [],
       section: [],
     });
+    setSortOption('');
   };
 
   const handleFilterOptionSelect = (category: string, option: string) => {

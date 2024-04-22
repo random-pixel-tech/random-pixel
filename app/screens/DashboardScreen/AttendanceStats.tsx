@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@gluestack-ui/themed';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
-import { useStatsHeaderState } from '../../services/utils/statsHeaderState';
+import { useAttendanceStats } from '../../services/utils/api/useAttendanceStats';
 import DatePicker from '../../components/DatePicker';
 import FilterAttendance from '../../components/FilterAttendance';
 
@@ -36,7 +36,7 @@ const AttendanceStats = () => {
     handleCategoryOptionSelect,
     filteredAttendanceData,
     isLoading,
-  } = useStatsHeaderState();
+  } = useAttendanceStats();
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
