@@ -38,18 +38,18 @@ const ClassAttendanceCard: React.FC<ClassAttendanceCardProps> = ({ classData }) 
         <Box display="flex" flexDirection="row" alignContent="center" justifyContent="space-between" mb="$4">
           <Box display="flex" flexDirection="row" alignContent="center">
             <Box display="flex" flexDirection="row" alignContent="center" mr="$2">
-              <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
+              <Text fontSize="$md" color="$pixPrimaryDark50" pr="$1">
                 Class:
               </Text>
-              <Text fontSize="$sm" color="$pixPrimaryDark50" pr="$1">
+              <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
                 {classNameOrdinal}
               </Text>
             </Box>
             <Box display="flex" flexDirection="row" alignContent="center">
-              <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
+              <Text fontSize="$md" color="$pixPrimaryDark50" pr="$1">
                 Section:
               </Text>
-              <Text fontSize="$sm" color="$pixPrimaryDark50">
+              <Text fontSize="$sm" color="$pixSecondary2">
                 {section}
               </Text>
             </Box>
@@ -62,26 +62,26 @@ const ClassAttendanceCard: React.FC<ClassAttendanceCardProps> = ({ classData }) 
         </Box>
         <Box display="flex" flexDirection="row" alignContent="center" justifyContent="space-between">
           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
+            <Text fontSize="$md" color="$pixPrimaryDark50" pr="$1">
               {totalStudents}
             </Text>
-            <Text fontSize="$sm" color="$pixPrimaryDark50">
+            <Text fontSize="$sm" color="$pixSecondary2">
               Students
             </Text>
           </Box>
           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
+            <Text fontSize="$md" color="$pixPrimaryDark50" pr="$1">
               {presentStudents}/{totalStudents}
             </Text>
-            <Text fontSize="$sm" color="$pixPrimaryDark50">
+            <Text fontSize="$sm" color="$pixSecondary2">
               Attendance
             </Text>
           </Box>
           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-            <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
+            <Text fontSize="$md" color="$pixPrimaryDark50" pr="$1">
               {presentPercentage.toFixed(0)}%
             </Text>
-            <Text fontSize="$sm" color="$pixPrimaryDark50">
+            <Text fontSize="$sm" color="$pixSecondary2">
               Percentage
             </Text>
           </Box>
