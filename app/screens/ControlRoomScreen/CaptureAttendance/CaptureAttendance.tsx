@@ -9,7 +9,7 @@ import Header from '../../../components/Header';
 import AttendanceList from './AttendanceList';
 import AttendanceHeader from './AttendanceHeader';
 import { RouteNames, RootStackParamList } from '../../../services/utils/RouteNames';
-
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 const CaptureAttendance = () => {
   const {
     showAlertDialog,
@@ -31,15 +31,39 @@ const CaptureAttendance = () => {
     today,
     totalStudents,
     markedStudents,
-    section
+    section,
+    isOptionsMenuOpen,
+    handleOptionsMenuOpen,
+    handleOptionsMenuClose,
+    handleIconPress,
   } = useAttendanceLogic();
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const options = [
+    {
+      label: 'Switch to Session Two',
+      icon: 'toggle-on' as IconProp,
+      onPress: () => {
+        // Handle switching to Session Two
+      },
+    },
+    {
+      label: 'Generate Attendance Report',
+      icon: 'file-export' as IconProp,
+      onPress: () => {
+        // Handle switching to Session Two
+      },
+    },
+  ];
+
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
       <Header title="Attendance" icon="check" onIconPress={handleSaveAttendance} showConfirmation={true} confirmationHeading="Are you sure you want to leave?"
-      confirmationText="You will lose the captured attendance if you leave without saving."/>
+      confirmationText="You will lose the captured attendance if you leave without saving." options={options} isOptionsMenuOpen={isOptionsMenuOpen}
+      handleOptionsMenuOpen={handleOptionsMenuOpen}
+      handleOptionsMenuClose={handleOptionsMenuClose}
+      handleIconPress={handleIconPress}/>
       <AttendanceHeader section={section} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
       />
       <AttendanceList
