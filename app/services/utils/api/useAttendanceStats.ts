@@ -417,51 +417,68 @@ useEffect(() => {
         const { data: classes, error: classesError } = await supabase
           .from('classes')
           .select('id, name, section');
-
+  
         if (classesError) {
           console.error('Error fetching classes:', classesError);
           return;
         }
-
-        // Fetch the total number of students in each class
-        const classDataPromises = classes.map(async (classItem) => {
-          const { data: students, error: studentsError } = await supabase
-            .from('students')
-            .select('id')
-            .eq('classId', classItem.id);
-
-          if (studentsError) {
-            console.error('Error fetching students for class:', classItem.name, studentsError);
-            return null;
+  
+        // Fetch all students and their class IDs
+        const { data: students, error: studentsError } = await supabase
+          .from('students')
+          .select('id, classId');
+  
+        if (studentsError) {
+          console.error('Error fetching students:', studentsError);
+          return;
+        }
+  
+        // Fetch attendance records for the current date
+        const { data: attendanceRecords, error: attendanceError } = await supabase
+          .from('attendance_records')
+          .select('morningStatus, afternoonStatus, studentId')
+          .eq('date', currentDate.format('YYYY-MM-DD'));
+  
+        if (attendanceError) {
+          console.error('Error fetching attendance records:', attendanceError);
+          return;
+        }
+  
+        // Create a map of class IDs to student IDs
+        const classStudentsMap = new Map<string, string[]>();
+        students.forEach((student) => {
+          const classId = student.classId;
+          if (!classStudentsMap.has(classId)) {
+            classStudentsMap.set(classId, []);
           }
-
-          const totalStudents = students.length;
-
-          // Fetch the attendance records for the current date and class
-          const { data: attendanceRecords, error: attendanceError } = await supabase
-            .from('attendance_records')
-            .select('morningStatus, afternoonStatus')
-            .eq('classId', classItem.id)
-            .eq('date', currentDate.format('YYYY-MM-DD'));
-
-          if (attendanceError) {
-            console.error('Error fetching attendance records for class:', classItem.name, attendanceError);
-            return null;
-          }
-
-          // Calculate the number of present students
-          const presentStudents = attendanceRecords.filter((record) => {
-            return (
-              record.morningStatus === AttendanceStatus.Present ||
-              record.afternoonStatus === AttendanceStatus.Present
-            );
+          classStudentsMap.get(classId)!.push(student.id);
+        });
+  
+        // Create a map of student IDs to attendance status
+        const studentAttendanceMap = new Map<string, { morning: boolean; afternoon: boolean }>();
+        attendanceRecords.forEach((record) => {
+          const studentId = record.studentId;
+          studentAttendanceMap.set(studentId, {
+            morning: record.morningStatus === AttendanceStatus.Present,
+            afternoon: record.afternoonStatus === AttendanceStatus.Present,
+          });
+        });
+  
+        // Calculate class data
+        const classDataResults = classes.map((classItem) => {
+          const classId = classItem.id;
+          const studentIds = classStudentsMap.get(classId) || [];
+          const totalStudents = studentIds.length;
+  
+          const presentStudents = studentIds.filter((studentId) => {
+            const attendance = studentAttendanceMap.get(studentId);
+            return attendance && (attendance.morning || attendance.afternoon);
           }).length;
-
-          // Calculate the percentage of present students
+  
           const presentPercentage = totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0;
-
+  
           return {
-            classId: classItem.id,
+            classId,
             className: classItem.name,
             section: classItem.section,
             totalStudents,
@@ -469,19 +486,13 @@ useEffect(() => {
             presentPercentage,
           };
         });
-
-        // Wait for all class data promises to resolve
-        const classDataResults = await Promise.all(classDataPromises);
-
-        // Filter out any null values
-        const filteredClassData = classDataResults.filter((data): data is ClassData => data !== null);
-
-        setClassData(filteredClassData);
+  
+        setClassData(classDataResults);
       } catch (error) {
         console.error('Error fetching class data:', error);
       }
     };
-
+  
     fetchClassData();
   }, [currentDate]);
 
