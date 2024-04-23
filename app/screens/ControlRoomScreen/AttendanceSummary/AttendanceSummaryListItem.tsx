@@ -1,9 +1,10 @@
+// AttendanceSummaryListItem.tsx
 import React, { useState } from 'react';
-import { Box, ScrollView, Text } from '@gluestack-ui/themed';
+import { Box, Text, ScrollView } from '@gluestack-ui/themed';
 import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
 import AttendanceOptions from '../CaptureAttendance/AttendanceOptions';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-
+import { AttendanceSession } from '../../../services/utils/enums';
 
 interface AttendanceSummaryListItemProps {
   student: Student;
@@ -11,13 +12,16 @@ interface AttendanceSummaryListItemProps {
   isPopoverOpen: boolean;
   onPopoverOpen: () => void;
   onPopoverClose: () => void;
+  session: AttendanceSession;
 }
 
 const AttendanceSummaryListItem: React.FC<AttendanceSummaryListItemProps> = ({
   student,
+  attendanceRecord,
   isPopoverOpen,
   onPopoverOpen,
   onPopoverClose,
+  session,
 }) => {
   const options = [
     {
@@ -28,6 +32,9 @@ const AttendanceSummaryListItem: React.FC<AttendanceSummaryListItemProps> = ({
       },
     },
   ];
+
+  const attendanceStatus = attendanceRecord?.[`${session.toLowerCase()}Status`];
+
   return (
     <Box display="flex" py="$6" flexDirection="row" minHeight={40}>
       <Box w="$1/6" px="$4">
@@ -41,13 +48,9 @@ const AttendanceSummaryListItem: React.FC<AttendanceSummaryListItemProps> = ({
           isOpen={isPopoverOpen}
           onClose={onPopoverClose}
           onOpen={onPopoverOpen}
-          student={{
-            id: student.id,
-            name: student.name,
-            rollNumber: student.rollNumber,
-          }}
+          student={{ id: student.id, name: student.name, rollNumber: student.rollNumber }}
           options={options}
-          />
+        />
       </Box>
     </Box>
   );

@@ -97,7 +97,7 @@ const CaptureAttendance = () => {
         onClose={() => setShowAlertDialog(false)}
         onConfirm={() => {
           setShowAlertDialog(false);
-          navigation.navigate(RouteNames.AttendanceSummary);
+          navigation.navigate(RouteNames.AttendanceSummary, { session });
         }}
         message={alertMessage}
         heading="Attendance Complete!"

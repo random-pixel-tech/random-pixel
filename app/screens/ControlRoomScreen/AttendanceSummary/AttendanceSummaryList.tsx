@@ -1,14 +1,17 @@
+// AttendanceSummaryList.tsx
 import React from 'react';
 import { Box, ScrollView } from '@gluestack-ui/themed';
 import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
 import AttendanceSummaryListItem from './AttendanceSummaryListItem';
 import AttendanceListHeader from '../CaptureAttendance/AttendanceListHeader';
+import { AttendanceSession } from '../../../services/utils/enums';
 
 interface AttendanceSummaryListProps {
   filteredStudents: Array<{ student: Student; attendanceRecord: AttendanceRecord | null; }>;
   isPopoverOpen: Record<string, boolean>;
   handlePopoverOpen: (studentId: string) => void;
   handlePopoverClose: (studentId: string) => void;
+  session: AttendanceSession;
 }
 
 const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
@@ -16,6 +19,7 @@ const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
   isPopoverOpen,
   handlePopoverOpen,
   handlePopoverClose,
+  session,
 }) => {
   return (
     <Box display="flex" flexDirection="column" flex={1}>
@@ -30,6 +34,7 @@ const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
               isPopoverOpen={isPopoverOpen[student.id]}
               onPopoverOpen={() => handlePopoverOpen(student.id)}
               onPopoverClose={() => handlePopoverClose(student.id)}
+              session={session}
             />
           ))}
         </ScrollView>

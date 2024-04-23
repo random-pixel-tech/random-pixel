@@ -3,7 +3,7 @@ import useStudentAttendance, { TeacherId } from './useStudentAttendance';
 import { getInitialAttendanceState, getUpdatedRecords } from '../attendanceUtils';
 import { AttendanceStatus, AttendanceSession } from '../enums';
 
-const useAttendanceLogic = () => {
+const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSession.Morning) => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
@@ -15,7 +15,7 @@ const useAttendanceLogic = () => {
   const [selectedStatus, setSelectedStatus] = useState<AttendanceStatus | null>(null);
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
 
-  const [session, setSession] = useState<AttendanceSession>(AttendanceSession.Morning);
+  const [session, setSession] = useState<AttendanceSession>(initialSession);
 
   const handleSessionToggle = () => {
     setSession((prevSession) =>

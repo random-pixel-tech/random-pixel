@@ -1,3 +1,5 @@
+import { AttendanceSession } from './enums';
+
 export enum RouteNames {
 
     // Control Room
@@ -18,7 +20,7 @@ export enum RouteNames {
     [RouteNames.CaptureAttendance]: undefined;
     [RouteNames.ClassAttendance]: undefined;
     [RouteNames.StudentAttendance]: undefined;
-    [RouteNames.AttendanceSummary]: undefined;
+    [RouteNames.AttendanceSummary]: { session: AttendanceSession };
 
     // Dashboard
     [RouteNames.Dashboard]: undefined;
