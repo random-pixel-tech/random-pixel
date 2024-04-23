@@ -2,6 +2,7 @@ import React from 'react';
 import { Box } from '@gluestack-ui/themed';
 import FilterAttendance from './FilterAttendance';
 import ToggleButtons from './ToggleButtons';
+import SearchButton from './SearchButton';
 
 interface ToggleBarProps {
   selectedTab: string;
@@ -51,6 +52,7 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
         onLeftButtonClick={() => console.log('Left button clicked')}
         onRightButtonClick={() => console.log('Right button clicked')}
       />
+      <SearchButton/>
     </Box>
   );
 };
