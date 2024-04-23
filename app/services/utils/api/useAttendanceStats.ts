@@ -13,7 +13,7 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   presentAttendance: number;
 }
 
-interface ClassData {
+export interface ClassData {
   classId: string;
   className: string;
   section: string;
@@ -54,6 +54,7 @@ export const useAttendanceStats = () => {
   const [endYear, setEndYear] = useState('');
 
   const [classData, setClassData] = useState<ClassData[]>([]);
+  const [selectedButton, setSelectedButton] = useState<'left' | 'right'>('left'); // Add selectedButton state
 
 
   const isValidDay = (day: string, month: string, year: string) => {
@@ -484,7 +485,15 @@ useEffect(() => {
     fetchClassData();
   }, [currentDate]);
 
+  const handleLeftButtonClick = () => {
+    setSelectedButton('left');
+    // Perform any additional actions when the left button is clicked
+  };
 
+  const handleRightButtonClick = () => {
+    setSelectedButton('right');
+    // Perform any additional actions when the right button is clicked
+  };
 
   return {
     currentDate,
@@ -536,6 +545,9 @@ useEffect(() => {
     isValidDay,
     isValidMonth,
     isValidYear,
-    classData
+    classData,
+    selectedButton,
+    handleLeftButtonClick,
+    handleRightButtonClick,
     };
 };

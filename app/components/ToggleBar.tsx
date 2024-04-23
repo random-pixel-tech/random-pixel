@@ -5,56 +5,69 @@ import ToggleButtons from './ToggleButtons';
 import SearchButton from './SearchButton';
 
 interface ToggleBarProps {
-  selectedTab: string;
-  selectedFilters: Record<string, string[]>;
-  selectedFilterOption: string;
-  onTabSelect: (option: string) => void;
-  onCategorySelect: (option: string) => void;
-  onFilterOptionSelect: (category: string, option: string) => void;
-  onSortOptionSelect: (option: string) => void;
-  onClear: () => void;
-  onApply: () => void;
-  sortOption: string;
+    showActionsheet: boolean;
+    selectedTab: string;
+    selectedFilters: Record<string, string[]>;
+    selectedFilterOption: string;
+    onTabSelect: (option: string) => void;
+    onCategorySelect: (option: string) => void;
+    onFilterOptionSelect: (category: string, option: string) => void;
+    onSortOptionSelect: (option: string) => void;
+    onClear: () => void;
+    onApply: () => void;
+    sortOption: string;
+    onShowActionsheet: (show: boolean) => void;
+    onClose: () => void;
+    selectedButton: 'left' | 'right';
+    onLeftButtonClick: () => void;
+    onRightButtonClick: () => void;
 }
 
 const ToggleBar: React.FC<ToggleBarProps> = ({
-  selectedTab,
-  selectedFilters,
-  selectedFilterOption,
-  onTabSelect,
-  onCategorySelect,
-  onFilterOptionSelect,
-  onSortOptionSelect,
-  onClear,
-  onApply,
-  sortOption,
+    showActionsheet,
+    selectedTab,
+    selectedFilters,
+    selectedFilterOption,
+    onTabSelect,
+    onCategorySelect,
+    onFilterOptionSelect,
+    onSortOptionSelect,
+    onClear,
+    onApply,
+    sortOption,
+    onShowActionsheet,
+    onClose,
+    selectedButton,
+    onLeftButtonClick,
+    onRightButtonClick,
 }) => {
-  return (
-    <Box display='flex' flexDirection='row' alignContent='center'>
-      <FilterAttendance
-        showActionsheet={false} // Adjust as needed
-        selectedTab={selectedTab}
-        selectedFilters={selectedFilters}
-        selectedFilterOption={selectedFilterOption}
-        onClose={() => {}} // Adjust as needed
-        onTabSelect={onTabSelect}
-        onCategorySelect={onCategorySelect}
-        onShowActionsheet={() => {}} // Adjust as needed
-        onFilterOptionSelect={onFilterOptionSelect}
-        onSortOptionSelect={onSortOptionSelect}
-        onClear={onClear}
-        onApply={onApply}
-        sortOption={sortOption}
-      />
-      <ToggleButtons
-        leftButtonLabel="Classes"
-        rightButtonLabel="Students"
-        onLeftButtonClick={() => console.log('Left button clicked')}
-        onRightButtonClick={() => console.log('Right button clicked')}
-      />
-      <SearchButton/>
-    </Box>
-  );
+    return (
+        <Box display='flex' flexDirection='row' alignContent='center'>
+            <FilterAttendance
+                showActionsheet={showActionsheet}
+                selectedTab={selectedTab}
+                selectedFilters={selectedFilters}
+                selectedFilterOption={selectedFilterOption}
+                onClose={onClose}
+                onTabSelect={onTabSelect}
+                onCategorySelect={onCategorySelect}
+                onFilterOptionSelect={onFilterOptionSelect}
+                onSortOptionSelect={onSortOptionSelect}
+                onClear={onClear}
+                onApply={onApply}
+                onShowActionsheet={onShowActionsheet}
+                sortOption={sortOption}
+            />
+            <ToggleButtons
+                  leftButtonLabel="Classes"
+                  rightButtonLabel="Students"
+                  selectedButton={selectedButton}
+                  onLeftButtonClick={onLeftButtonClick}
+                  onRightButtonClick={onRightButtonClick}
+            />
+            <SearchButton />
+        </Box>
+    );
 };
 
 export default ToggleBar;

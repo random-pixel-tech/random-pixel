@@ -16,12 +16,6 @@ const Home: React.FC = () => {
         <ClassAttendanceCard key={data.classId} classData={data} />
       ))}
       </ScrollView> */}
-<ToggleButtons
-        leftButtonLabel="Left Button"
-        rightButtonLabel="Right Button"
-        onLeftButtonClick={() => console.log('Left button clicked')}
-        onRightButtonClick={() => console.log('Right button clicked')}
-      />
           </Box>
   );
 };

@@ -3,6 +3,8 @@ import { ScrollView } from 'react-native';
 import { Box, Text } from '@gluestack-ui/themed';
 import AttendanceCard from './AttendanceCard';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
+import ClassAttendanceCard from './ClassAttendanceCard';
+import { ClassData } from '../services/utils/api/useAttendanceStats';
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -16,6 +18,8 @@ interface AttendanceViewProps {
   endDate: string;
   attendanceDataWithPercentage: StudentAttendanceDataWithPercentage[];
   isLoading: boolean;
+  selectedButton: 'left' | 'right';
+  classData: ClassData[];
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
@@ -24,6 +28,8 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   endDate,
   attendanceDataWithPercentage,
   isLoading,
+  selectedButton,
+  classData,
 }) => {
   return (
     <ScrollView>
@@ -38,6 +44,8 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
             selectedOption={selectedOption}
             startDate={startDate}
             endDate={endDate}
+            selectedButton={selectedButton}
+            classData={classData}
           />
         )}
       </Box>
@@ -50,6 +58,8 @@ interface AttendanceDataRendererProps {
   selectedOption: string;
   startDate: string;
   endDate: string;
+  selectedButton: 'left' | 'right';
+  classData: ClassData[];
 }
 
 const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
@@ -57,20 +67,28 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
   selectedOption,
   startDate,
   endDate,
+  selectedButton,
+  classData,
 }) => {
   return (
     <>
-      {attendanceData.map((data) => (
-        <AttendanceCard
-          key={data.student.id}
-          studentAttendanceData={data}
-          className={data.className}
-          section={data.section}
-          selectedOption={selectedOption}
-          totalAttendance={data.totalAttendance}
-          presentAttendance={data.presentAttendance}
-        />
-      ))}
+      {selectedButton === 'left' ? (
+        classData.map((data) => (
+          <ClassAttendanceCard key={data.classId} classData={data} />
+        ))
+      ) : (
+        attendanceData.map((data) => (
+          <AttendanceCard
+            key={data.student.id}
+            studentAttendanceData={data}
+            className={data.className}
+            section={data.section}
+            selectedOption={selectedOption}
+            totalAttendance={data.totalAttendance}
+            presentAttendance={data.presentAttendance}
+          />
+        ))
+      )}
     </>
   );
 };
