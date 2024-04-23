@@ -56,6 +56,21 @@ export const useAttendanceStats = () => {
   const [classData, setClassData] = useState<ClassData[]>([]);
   const [selectedButton, setSelectedButton] = useState<'left' | 'right'>('left'); // Add selectedButton state
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchInput, setShowSearchInput] = useState(false);
+
+  const handleSearchButtonClick = () => {
+    setShowSearchInput(true);
+  };
+
+  const handleSearchInputChange = (value: string) => {
+    setSearchQuery(value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setShowSearchInput(false);
+  };
 
   const isValidDay = (day: string, month: string, year: string) => {
     const parsedDay = parseInt(day, 10);
@@ -173,11 +188,12 @@ const sortedAttendanceData = useMemo(() => {
 
 // Filter attendance data based on the selected filters
 const filteredAttendanceData = useMemo(() => {
-  // Filter function to check if a data point matches the selected filters
+  // Filter function to check if a data point matches the selected filters and search query
   const filterFunction = (data: StudentAttendanceDataWithPercentage) => {
     const percentage = data.attendancePercentage;
     const className = data.className;
     const section = data.section;
+    const studentName = data.student.name.toLowerCase();
 
     const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
       if (filter === '70% or below') {
@@ -194,20 +210,26 @@ const filteredAttendanceData = useMemo(() => {
 
     const matchesSectionFilter = selectedFilters.section.length === 0 || selectedFilters.section.includes(section);
 
-    return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter;
+    const matchesSearchQuery = selectedButton === 'left'
+      ? className.toLowerCase().includes(searchQuery.toLowerCase())
+      : studentName.includes(searchQuery.toLowerCase());
+
+    return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter && matchesSearchQuery;
   };
 
-  // Apply filters only if any filters are selected
+  // Apply filters and search query only if any filters are selected or search query is entered
   if (
     (!selectedFilters.attendance || selectedFilters.attendance.length === 0) &&
     (!selectedFilters.class || selectedFilters.class.length === 0) &&
-    (!selectedFilters.section || selectedFilters.section.length === 0) // Check if there's any section selected
+    (!selectedFilters.section || selectedFilters.section.length === 0) &&
+    !searchQuery
   ) {
-    return sortedAttendanceData; // No filters selected, return sorted data directly
+    return sortedAttendanceData; // No filters or search query, return sorted data directly
   } else {
     return sortedAttendanceData.filter(filterFunction);
   }
-}, [sortedAttendanceData, selectedFilters]);
+}, [sortedAttendanceData, selectedFilters, searchQuery, selectedButton]);
+
 
 useEffect(() => {
   const dateRanges: Record<string, [string, string]> = {
@@ -572,5 +594,10 @@ useEffect(() => {
     selectedButton,
     handleLeftButtonClick,
     handleRightButtonClick,
+    searchQuery,
+    showSearchInput,
+    handleSearchButtonClick,
+    handleSearchInputChange,
+    handleClearSearch,
     };
 };
