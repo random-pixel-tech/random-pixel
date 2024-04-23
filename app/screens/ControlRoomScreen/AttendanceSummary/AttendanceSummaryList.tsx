@@ -23,7 +23,7 @@ const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
 }) => {
   return (
     <Box display="flex" flexDirection="column" flex={1}>
-      <AttendanceListHeader FirstColumnText="Roll No." SecondColumnText="Name" icon="ellipsis-vertical" />
+      <AttendanceListHeader FirstColumnText="R.N." SecondColumnText="Name" icon="ellipsis-vertical" />
       <Box flex={1}>
         <ScrollView>
           {filteredStudents.map(({ student, attendanceRecord }) => (
