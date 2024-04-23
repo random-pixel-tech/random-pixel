@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from '@gluestack-ui/themed';
 import FilterAttendance from './FilterAttendance';
+import ToggleButtons from './ToggleButtons';
 
 interface ToggleBarProps {
   selectedTab: string;
@@ -28,7 +29,7 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
   sortOption,
 }) => {
   return (
-    <Box>
+    <Box display='flex' flexDirection='row' alignContent='center'>
       <FilterAttendance
         showActionsheet={false} // Adjust as needed
         selectedTab={selectedTab}
@@ -43,6 +44,12 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
         onClear={onClear}
         onApply={onApply}
         sortOption={sortOption}
+      />
+      <ToggleButtons
+        leftButtonLabel="Classes"
+        rightButtonLabel="Students"
+        onLeftButtonClick={() => console.log('Left button clicked')}
+        onRightButtonClick={() => console.log('Right button clicked')}
       />
     </Box>
   );
