@@ -10,6 +10,7 @@ import AttendanceList from './AttendanceList';
 import AttendanceHeader from './AttendanceHeader';
 import { RouteNames, RootStackParamList } from '../../../services/utils/RouteNames';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { AttendanceSession } from '../../../services/utils/enums';
 const CaptureAttendance = () => {
   const {
     showAlertDialog,
@@ -36,23 +37,27 @@ const CaptureAttendance = () => {
     handleOptionsMenuOpen,
     handleOptionsMenuClose,
     handleIconPress,
+    session,
+    handleSessionToggle,
   } = useAttendanceLogic();
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const options = [
     {
-      label: 'Switch to Session Two',
+      label: session === AttendanceSession.Morning ? 'Switch to Session Two' : 'Switch to Session One',
       icon: 'toggle-on' as IconProp,
       onPress: () => {
-        // Handle switching to Session Two
+        handleSessionToggle();
+        handleOptionsMenuClose();
       },
+
     },
     {
       label: 'Generate Attendance Report',
       icon: 'file-export' as IconProp,
       onPress: () => {
-        // Handle switching to Session Two
+        handleOptionsMenuClose();
       },
     },
   ];
@@ -64,7 +69,7 @@ const CaptureAttendance = () => {
       handleOptionsMenuOpen={handleOptionsMenuOpen}
       handleOptionsMenuClose={handleOptionsMenuClose}
       handleIconPress={handleIconPress}/>
-      <AttendanceHeader section={section} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
+      <AttendanceHeader section={section} session={session} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
       />
       <AttendanceList
         studentAttendanceData={studentAttendanceData}

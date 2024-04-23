@@ -25,6 +25,7 @@ export interface AttendanceRecord {
   afternoonAttendanceTakenAt: string | null;
   createdAt: string;
   updatedAt: string;
+  [key: string]: AttendanceStatus | string | number | null;
 }
 
 // Interface for combining student data and attendance record

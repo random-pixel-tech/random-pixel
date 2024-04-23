@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Heading, Text } from '@gluestack-ui/themed';
+import { AttendanceSession } from '../../../services/utils/enums';
 
 interface SummaryValues {
   [key: string]: number;
@@ -10,6 +11,7 @@ interface AttendanceHeaderProps {
   section: string;
   today: string;
   summaryValues: SummaryValues;
+  session: AttendanceSession;
 }
 
 const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({
@@ -17,6 +19,7 @@ const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({
   section,
   today,
   summaryValues,
+  session
 }) => {
   const summaryKeys = Object.keys(summaryValues);
 
@@ -35,7 +38,7 @@ const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({
         <Heading fontSize="$lg">
           Class: {className} {section}
         </Heading>
-        <Text fontSize="$md">{today}</Text>
+        <Text fontSize="$md">{today} | {session === AttendanceSession.Morning ? 'Session one' : 'Session two'}</Text>
       </Box>
       <Box>
         <Heading fontSize="$lg" alignSelf="flex-end">
