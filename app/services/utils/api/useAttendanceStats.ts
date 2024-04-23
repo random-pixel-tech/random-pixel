@@ -463,6 +463,18 @@ useEffect(() => {
             afternoon: record.afternoonStatus === AttendanceStatus.Present,
           });
         });
+
+        // Sort classes based on numeric order and section
+        const sortedClasses = classes.sort((a, b) => {
+        const classNameA = parseInt(a.name, 10);
+        const classNameB = parseInt(b.name, 10);
+
+        if (classNameA === classNameB) {
+          return a.section.localeCompare(b.section);
+        }
+
+        return classNameA - classNameB;
+      });
   
         // Calculate class data
         const classDataResults = classes.map((classItem) => {
