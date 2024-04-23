@@ -13,6 +13,15 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   presentAttendance: number;
 }
 
+interface ClassData {
+  classId: string;
+  className: string;
+  section: string;
+  totalStudents: number;
+  presentStudents: number;
+  presentPercentage: number;
+}
+
 export const useAttendanceStats = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [selectedOption, setSelectedOption] = useState('daily');
@@ -43,6 +52,9 @@ export const useAttendanceStats = () => {
   const [endDay, setEndDay] = useState('');
   const [endMonth, setEndMonth] = useState('');
   const [endYear, setEndYear] = useState('');
+
+  const [classData, setClassData] = useState<ClassData[]>([]);
+
 
   const isValidDay = (day: string, month: string, year: string) => {
     const parsedDay = parseInt(day, 10);
@@ -397,6 +409,83 @@ useEffect(() => {
     setShowFilterActionsheet(false);
   };
 
+  useEffect(() => {
+    const fetchClassData = async () => {
+      try {
+        // Fetch all classes
+        const { data: classes, error: classesError } = await supabase
+          .from('classes')
+          .select('id, name, section');
+
+        if (classesError) {
+          console.error('Error fetching classes:', classesError);
+          return;
+        }
+
+        // Fetch the total number of students in each class
+        const classDataPromises = classes.map(async (classItem) => {
+          const { data: students, error: studentsError } = await supabase
+            .from('students')
+            .select('id')
+            .eq('classId', classItem.id);
+
+          if (studentsError) {
+            console.error('Error fetching students for class:', classItem.name, studentsError);
+            return null;
+          }
+
+          const totalStudents = students.length;
+
+          // Fetch the attendance records for the current date and class
+          const { data: attendanceRecords, error: attendanceError } = await supabase
+            .from('attendance_records')
+            .select('morningStatus, afternoonStatus')
+            .eq('classId', classItem.id)
+            .eq('date', currentDate.format('YYYY-MM-DD'));
+
+          if (attendanceError) {
+            console.error('Error fetching attendance records for class:', classItem.name, attendanceError);
+            return null;
+          }
+
+          // Calculate the number of present students
+          const presentStudents = attendanceRecords.filter((record) => {
+            return (
+              record.morningStatus === AttendanceStatus.Present ||
+              record.afternoonStatus === AttendanceStatus.Present
+            );
+          }).length;
+
+          // Calculate the percentage of present students
+          const presentPercentage = totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0;
+
+          return {
+            classId: classItem.id,
+            className: classItem.name,
+            section: classItem.section,
+            totalStudents,
+            presentStudents,
+            presentPercentage,
+          };
+        });
+
+        // Wait for all class data promises to resolve
+        const classDataResults = await Promise.all(classDataPromises);
+
+        // Filter out any null values
+        const filteredClassData = classDataResults.filter((data): data is ClassData => data !== null);
+
+        setClassData(filteredClassData);
+      } catch (error) {
+        console.error('Error fetching class data:', error);
+      }
+    };
+
+    fetchClassData();
+  }, [currentDate]);
+
+
+
   return {
     currentDate,
     selectedOption,
@@ -446,6 +535,7 @@ useEffect(() => {
     setEndYear,
     isValidDay,
     isValidMonth,
-    isValidYear
+    isValidYear,
+    classData
     };
 };

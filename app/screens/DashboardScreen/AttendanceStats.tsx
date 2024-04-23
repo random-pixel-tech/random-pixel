@@ -4,7 +4,7 @@ import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
 import { useAttendanceStats } from '../../services/utils/api/useAttendanceStats';
 import DatePicker from '../../components/DatePicker';
-import FilterAttendance from '../../components/FilterAttendance';
+import ToggleBar from '../../components/ToggleBar'; // Import ToggleBar component
 
 const AttendanceStats = () => {
   const {
@@ -21,14 +21,11 @@ const AttendanceStats = () => {
     showDatePicker,
     handleDatePickerCancel,
     handleDatePickerOk,
-    showFilterActionsheet,
-    setShowFilterActionsheet,
     selectedFilterTab,
     selectedFilterOption,
     selectedFilters,
-    handleCloseFilterActionsheet,
-    handleFilterOptionSelect,
     handleFilterTabSelect,
+    handleFilterOptionSelect,
     handleFilterSortOptionSelect,
     handleFilterClear,
     handleFilterApply,
@@ -72,19 +69,16 @@ const AttendanceStats = () => {
         showDatePicker={showDatePicker}
         isNextDisabled={isNextDisabled}
       />
-      <FilterAttendance
-        showActionsheet={showFilterActionsheet}
+      <ToggleBar
         selectedTab={selectedFilterTab}
         selectedFilters={selectedFilters}
         selectedFilterOption={selectedFilterOption}
-        onClose={handleCloseFilterActionsheet}
         onTabSelect={handleFilterTabSelect}
         onCategorySelect={handleCategoryOptionSelect}
         onFilterOptionSelect={handleFilterOptionSelect}
         onSortOptionSelect={handleFilterSortOptionSelect}
         onClear={handleFilterClear}
         onApply={handleFilterApply}
-        onShowActionsheet={setShowFilterActionsheet}
         sortOption={sortOption}
       />
       <AttendanceView
