@@ -172,7 +172,7 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
 
     return (
         <Box p="$4">
-            <Button onPress={() => onShowActionsheet(true)} variant="outline" borderColor='$pixPrimary' w="$8" flexDirection='column' alignContent='center' justifyContent='center'>
+            <Button onPress={() => onShowActionsheet(true)} variant="outline" w="$8" flexDirection='column' alignContent='center' justifyContent='center'>
                 <FontAwesomeIcon icon="filter" size={18} color={Colors.Primary} />
                 {/* <ButtonText>{selectedFilterOption}</ButtonText> */}
                 <Actionsheet isOpen={showActionsheet} onClose={onClose} closeOnOverlayClick zIndex={999}>

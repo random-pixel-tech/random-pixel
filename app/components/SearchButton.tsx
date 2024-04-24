@@ -14,7 +14,6 @@ const SearchButton: React.FC<SearchButtonProps> = ({ onPress }) => {
       <Button
         onPress={onPress}
         variant="outline"
-        borderColor="$pixPrimary"
         w="$8"
         flexDirection="column"
         alignContent="center"
