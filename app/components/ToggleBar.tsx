@@ -28,6 +28,7 @@ interface ToggleBarProps {
   handleSearchButtonClick: () => void;
   handleSearchInputChange: (value: string) => void;
   handleClearSearch: () => void;
+  isClassOptionSelected: boolean;
 }
 
 const ToggleBar: React.FC<ToggleBarProps> = ({
@@ -52,6 +53,7 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
   handleSearchButtonClick,
   handleSearchInputChange,
   handleClearSearch,
+  isClassOptionSelected
 }) => {
   return (
     <Box>
@@ -70,6 +72,7 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
           onApply={onApply}
           onShowActionsheet={onShowActionsheet}
           sortOption={sortOption}
+          isClassOptionSelected={isClassOptionSelected}
         />
         <ToggleButtons
           leftButtonLabel="Classes"

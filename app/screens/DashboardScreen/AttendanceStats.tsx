@@ -62,6 +62,7 @@ const AttendanceStats = () => {
     handleSearchButtonClick,
     handleSearchInputChange,
     handleClearSearch,
+    isClassOptionSelected,
   } = useAttendanceStats();
 
   return (
@@ -103,6 +104,7 @@ const AttendanceStats = () => {
         handleSearchButtonClick={handleSearchButtonClick}
         handleSearchInputChange={handleSearchInputChange}
         handleClearSearch={handleClearSearch}
+        isClassOptionSelected={isClassOptionSelected}
       />
       <AttendanceView
         selectedOption={selectedOption}

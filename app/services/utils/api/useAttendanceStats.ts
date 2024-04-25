@@ -30,6 +30,7 @@ export const useAttendanceStats = () => {
   const [endDate, setEndDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const [isClassOptionSelected, setIsClassOptionSelected] = useState(false);
   const [sortOption, setSortOption] = useState('');
   const [selectedFilterOption, setSelectedFilterOption] = useState('Attendance Percentage');
   const [showFilterActionsheet, setShowFilterActionsheet] = useState(false);
@@ -405,6 +406,10 @@ useEffect(() => {
     }
 
     setSelectedFilters(updatedFilters);
+
+    if (category === 'class') {
+      setIsClassOptionSelected(updatedFilters.class.length > 0);
+    }
   };
 
   const handleFilterTabSelect = (tab: string) => {
@@ -599,5 +604,6 @@ useEffect(() => {
     handleSearchButtonClick,
     handleSearchInputChange,
     handleClearSearch,
+    isClassOptionSelected
     };
 };

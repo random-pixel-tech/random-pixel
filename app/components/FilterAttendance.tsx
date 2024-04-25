@@ -18,6 +18,7 @@ interface FilterAttendanceProps {
     onClear: () => void;
     onApply: () => void;
     sortOption: string;
+    isClassOptionSelected: boolean;
 }
 
 interface FilterOption {
@@ -38,7 +39,8 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
     onClear,
     onApply,
     sortOption,
-    onCategorySelect
+    onCategorySelect,
+    isClassOptionSelected
 }) => {
     const renderTabBar = () => (
         <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor="$pixPrimaryLight100">
@@ -156,19 +158,22 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
 
     const renderFilterOptionsSidebar = () => {
         const options = [
-            { label: 'Attendance Percentage', value: 'Attendance Percentage' },
-            { label: 'Class', value: 'Class' },
-            { label: 'Section', value: 'Section' }
+          { label: 'Attendance Percentage', value: 'Attendance Percentage' },
+          { label: 'Class', value: 'Class' },
         ];
-
+      
+        if (isClassOptionSelected) {
+          options.push({ label: 'Section', value: 'Section' });
+        }
+      
         return options.map(option => (
-            <ActionsheetItem key={option.value} onPress={() => onCategorySelect(option.value)}>
-                <ActionsheetItemText color='$pixText100' fontWeight={selectedFilterOption === option.value ? 'bold' : 'normal'}>
-                    {option.label}
-                </ActionsheetItemText>
-            </ActionsheetItem>
+          <ActionsheetItem key={option.value} onPress={() => onCategorySelect(option.value)}>
+            <ActionsheetItemText color='$pixText100' fontWeight={selectedFilterOption === option.value ? 'bold' : 'normal'}>
+              {option.label}
+            </ActionsheetItemText>
+          </ActionsheetItem>
         ));
-    };
+      };
 
     return (
         <Box p="$4">
