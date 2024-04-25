@@ -16,7 +16,6 @@ export const useHandleNavigateToScreen = (
     if (screenName === RouteNames.CaptureAttendance) {
       // Calculate total students
       const totalStudents = studentAttendanceData.length;
-      console.log('Total Students:', totalStudents);
 
       // Calculate marked students
       const markedStudents = studentAttendanceData.filter(
@@ -24,19 +23,15 @@ export const useHandleNavigateToScreen = (
           item.attendanceRecord?.morningStatus !== null &&
           item.attendanceRecord?.morningStatus !== undefined
       ).length;
-      console.log('Marked Students:', markedStudents);
 
       // Check if all students' attendance is marked
       const isAllAttendanceMarked = markedStudents > 0 && markedStudents === totalStudents;
-      console.log('Is All Attendance Marked:', isAllAttendanceMarked);
 
       if (isAllAttendanceMarked) {
         // Navigate to AttendanceSummary screen if all attendance is marked
-        console.log('Navigating to AttendanceSummary');
         controlRoomNavigation.navigate(RouteNames.AttendanceSummary);
       } else {
         // Navigate to CaptureAttendance screen if attendance is not fully marked
-        console.log('Navigating to CaptureAttendance');
         controlRoomNavigation.navigate(RouteNames.CaptureAttendance);
       }
     } else {

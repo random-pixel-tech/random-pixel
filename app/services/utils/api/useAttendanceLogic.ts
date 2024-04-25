@@ -25,21 +25,17 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
 
   
   const handleOptionsMenuOpen = () => {
-    console.log('Opening options menu');
     setIsOptionsMenuOpen(true);
   };
 
   const handleOptionsMenuClose = () => {
-    console.log('Closing options menu');
     setIsOptionsMenuOpen(false);
   };
 
   const handleIconPress = async () => {
     if (isOptionsMenuOpen) {
-      console.log('Closing options menu');
       handleOptionsMenuClose();
     } else {
-      console.log('Opening options menu');
       handleOptionsMenuOpen();
     }
   };
