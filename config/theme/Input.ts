@@ -129,19 +129,19 @@ export const Input = createStyle({
         },
         ':invalid': {
           'borderBottomWidth': 2,
-          'borderBottomColor': '$error700',
+          'borderBottomColor': '$pixAccent',
           '_web': {
-            boxShadow: 'inset 0 -1px 0 0 $error700',
+            boxShadow: 'inset 0 -1px 0 0 $pixAccent',
           },
           ':hover': {
-            borderBottomColor: '$error700',
+            borderBottomColor: '$pixAccent',
           },
           ':focus': {
-            'borderBottomColor': '$error700',
+            'borderBottomColor': '$pixAccent',
             ':hover': {
-              borderBottomColor: '$error700',
+              borderBottomColor: '$pixAccent',
               _web: {
-                boxShadow: 'inset 0 -1px 0 0 $error700',
+                boxShadow: 'inset 0 -1px 0 0 $pixAccent',
               },
             },
           },

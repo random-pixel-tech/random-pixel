@@ -433,6 +433,7 @@ export const Button = createStyle({
       outline: {
         'bg': 'transparent',
         'borderWidth': '$1',
+        'borderColor': '$pixSecondary300',
         ':hover': {
           bg: '$backgroundLight50',
         },

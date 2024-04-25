@@ -2,7 +2,6 @@ import { AnimationResolver } from '@gluestack-style/animation-resolver';
 import { MotionAnimationDriver } from '@gluestack-style/legend-motion-animation-driver';
 import { createConfig, createComponents } from '@gluestack-style/react';
 import * as componentsTheme from './theme';
-import { Divi } from './theme/Divi';
 
 export const gluestackUIConfig = createConfig({
   aliases: {
@@ -34,10 +33,12 @@ export const gluestackUIConfig = createConfig({
       pixPrimary:'#5f31dd',
       pixPrimaryDark50: '#391D85',
       pixPrimaryLight50: '#9F83EB',
+      pixPrimaryLight100: '#DFD6F8',
       pixSecondary:'#dedcff',
       pixSecondary2: '#8C85FF',
       pixSecondary300: '#B0B0B0', 
       pixSecondaryLight50: '#EBEAFF',
+      pixSecondaryLight100: '#F8F8FF',
       pixBackground:'#fbfbfe',
       pixBackgroundLight700: '#525252',
       pixSecondaryDisabled: '#e6e6ed',
@@ -467,6 +468,7 @@ export const gluestackUIConfig = createConfig({
       '16': 64,
       '20': 80,
       '24': 96,
+      '28': 112,
       '32': 128,
       '40': 160,
       '48': 192,

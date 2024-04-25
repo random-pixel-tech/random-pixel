@@ -33,7 +33,7 @@ const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({
     >
       <Box>
         <Heading fontSize="$lg">
-          {className} {section}
+          Class: {className} {section}
         </Heading>
         <Text fontSize="$md">{today}</Text>
       </Box>

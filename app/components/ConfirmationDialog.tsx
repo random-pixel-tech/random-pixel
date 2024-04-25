@@ -39,8 +39,8 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
       <AlertDialogContent bg='$pixSecondaryLight50'>
         <AlertDialogHeader>
           <Heading size="md">{heading}</Heading>
-          <AlertDialogCloseButton>
-            <FontAwesomeIcon icon="xmark" size={20} />
+          <AlertDialogCloseButton p="$4">
+            <FontAwesomeIcon icon="xmark" size={18} />
           </AlertDialogCloseButton>
         </AlertDialogHeader>
         <AlertDialogBody pb="$4">

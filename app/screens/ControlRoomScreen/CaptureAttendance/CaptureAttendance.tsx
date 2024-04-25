@@ -38,7 +38,8 @@ const CaptureAttendance = () => {
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
-      <Header title="Attendance" icon="check" onIconPress={handleSaveAttendance} />
+      <Header title="Attendance" icon="check" onIconPress={handleSaveAttendance} showConfirmation={true} confirmationHeading="Are you sure you want to leave?"
+      confirmationText="You will lose the captured attendance if you leave without saving."/>
       <AttendanceHeader section={section} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
       />
       <AttendanceList

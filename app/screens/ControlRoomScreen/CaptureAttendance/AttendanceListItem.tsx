@@ -64,11 +64,11 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
   ];
 
   return (
-    <Box display="flex" py="$6" flexDirection="row" minHeight={40}>
-      <Box w="$1/6" px="$4">
+    <Box display="flex" py="$1" flexDirection="row" minHeight={36}>
+      <Box w="$1/6" px="$4" py="$6">
         <Text size='lg'>{student.rollNumber || '-'}</Text>
       </Box>
-      <Box w="$2/5" px="$4">
+      <Box w="$2/6" px="$4" py="$6">
         <Text numberOfLines={1} size='lg' >{student.name}</Text>
       </Box>
       <Box w="$1/6" px="$4" justifyContent="center">
@@ -79,6 +79,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
           rounded="$md"
           aria-label={`Mark present for ${student.name}`}
           size='lg'
+          p="$6"
         >
           <CheckboxIndicator
             borderColor="$pixPrimary"
@@ -98,6 +99,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
               aria-label={`Mark absent for ${student.name}`}
               rounded="$md"
               size='lg'
+              p="$6"
             >
               <CheckboxIndicator
                 borderColor="$pixOrange"

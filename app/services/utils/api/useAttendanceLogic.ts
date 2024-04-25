@@ -16,17 +16,21 @@ const useAttendanceLogic = () => {
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
 
   const handleOptionsMenuOpen = () => {
+    console.log('Opening options menu');
     setIsOptionsMenuOpen(true);
   };
 
   const handleOptionsMenuClose = () => {
+    console.log('Closing options menu');
     setIsOptionsMenuOpen(false);
   };
 
   const handleIconPress = async () => {
     if (isOptionsMenuOpen) {
+      console.log('Closing options menu');
       handleOptionsMenuClose();
     } else {
+      console.log('Opening options menu');
       handleOptionsMenuOpen();
     }
   };
@@ -47,7 +51,6 @@ const useAttendanceLogic = () => {
   };
 
   // Calculate students based on their status
-
   const presentCount = studentAttendanceData.filter(
     (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.Present
   ).length;

@@ -39,15 +39,15 @@ const SuccessAlert: React.FC<SuccessAlertProps> = ({
       <AlertDialogContent bg='$pixSecondaryLight50'>
         <AlertDialogHeader>
           <Heading size="md">{heading}</Heading>
-          <AlertDialogCloseButton>
-            <FontAwesomeIcon icon="xmark" size={20} />
+          <AlertDialogCloseButton p="$4">
+            <FontAwesomeIcon icon="xmark" size={18} />
           </AlertDialogCloseButton>
         </AlertDialogHeader>
         <AlertDialogBody pb="$4">
           <Text size="md">{message}</Text>
         </AlertDialogBody>
         <AlertDialogFooter alignSelf='flex-end'>
-          <Button onPress={onClose} mr="$4" variant="outline" borderColor='$pixSecondary300'>
+          <Button onPress={onClose} mr="$4" variant="outline">
             <ButtonText color='$pixBackgroundLight700'>{cancelButtonText}</ButtonText>
           </Button>
           <Button onPress={onConfirm}>

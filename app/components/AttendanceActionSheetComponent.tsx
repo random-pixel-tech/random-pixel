@@ -15,7 +15,7 @@ const AttendanceActionSheetComponent: React.FC<ActionSheetProps> = ({
   initialFocusRef,
   studentAttendanceData,
 }) => {
-  const handleNavigateToScreen = useHandleNavigateToScreen(studentAttendanceData, onClose);
+  const { handleControlRoomNavigation } = useHandleNavigateToScreen(studentAttendanceData, onClose);
 
   return (
     <Actionsheet isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocusRef}>
@@ -24,13 +24,13 @@ const AttendanceActionSheetComponent: React.FC<ActionSheetProps> = ({
         <ActionsheetDragIndicatorWrapper>
           <ActionsheetDragIndicator />
         </ActionsheetDragIndicatorWrapper>
-        <ActionsheetItem onPress={() => handleNavigateToScreen(RouteNames.CaptureAttendance)}>
+        <ActionsheetItem onPress={() => handleControlRoomNavigation(RouteNames.CaptureAttendance)}>
           <ActionsheetItemText>Capture Attendance</ActionsheetItemText>
         </ActionsheetItem>
-        <ActionsheetItem onPress={() => handleNavigateToScreen(RouteNames.ClassAttendance)}>
+        <ActionsheetItem onPress={() => handleControlRoomNavigation(RouteNames.ClassAttendance)}>
           <ActionsheetItemText>View Attendance for Class</ActionsheetItemText>
         </ActionsheetItem>
-        <ActionsheetItem onPress={() => handleNavigateToScreen(RouteNames.StudentAttendance)}>
+        <ActionsheetItem onPress={() => handleControlRoomNavigation(RouteNames.StudentAttendance)}>
           <ActionsheetItemText>View Attendance for Student</ActionsheetItemText>
         </ActionsheetItem>
         <ActionsheetItem onPress={onClose}>
