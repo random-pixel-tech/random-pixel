@@ -64,7 +64,7 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
         return (
             <ActionsheetScrollView>
                 {options.map(option => (
-                    <ActionsheetItem key={option.value} onPress={() => onFilterOptionSelect(category, option.value)}>
+                    <ActionsheetItem key={option.value} onPress={() => onFilterOptionSelect(category, option.value)} p="$0">
                         <Checkbox
                             value={option.value}
                             isChecked={selectedFilters[category].includes(option.value)}
@@ -185,7 +185,7 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
                             {renderTabBar()}
                         </Box>
                         {selectedTab === 'Filter' && (
-                            <Box flexDirection="row" style={{ flex: 1 }} p="$1" w="$full">
+                            <Box flexDirection="row" style={{ flex: 1 }} w="$full">
                                 <Box w="$1/3" borderRightWidth={1} borderRightColor='$pixPrimaryLight100' h="$full">
                                     {renderFilterOptionsSidebar()}
                                 </Box>
@@ -195,7 +195,7 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
                             </Box>
                         )}
                         {selectedTab === 'Sort' && (
-                            <Box flexDirection="row" style={{ flex: 1 }} p="$1" w="$full">
+                            <Box flexDirection="row" style={{ flex: 1 }} w="$full">
                                 <Box w="$full" borderRightWidth={1} borderRightColor='$pixPrimaryLight100' h="$full">
                                     {renderRightOptions()}
                                 </Box>
