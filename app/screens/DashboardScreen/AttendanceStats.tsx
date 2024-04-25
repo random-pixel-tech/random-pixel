@@ -13,8 +13,8 @@ const AttendanceStats = () => {
     handleNextDay,
     handleOptionSelect,
     isOptionsMenuOpen,
-    handleOptionsMenuOpen,
-    handleOptionsMenuClose,
+    handleRangeOptionsMenuOpen,
+    handleRangeOptionsMenuClose,
     currentDate,
     startDate,
     endDate,
@@ -74,8 +74,8 @@ const AttendanceStats = () => {
         handleNextDay={handleNextDay}
         handleOptionSelect={handleOptionSelect}
         isOptionsMenuOpen={isOptionsMenuOpen}
-        handleOptionsMenuOpen={handleOptionsMenuOpen}
-        handleOptionsMenuClose={handleOptionsMenuClose}
+        handleRangeOptionsMenuOpen={handleRangeOptionsMenuOpen}
+        handleRangeOptionsMenuClose={handleRangeOptionsMenuClose}
         currentDate={currentDate}
         startDate={startDate}
         endDate={endDate}

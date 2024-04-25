@@ -14,8 +14,8 @@ interface StatsHeaderProps {
   handleNextDay: () => void;
   handleOptionSelect: (optionId: string) => void;
   isOptionsMenuOpen: boolean;
-  handleOptionsMenuOpen: () => void;
-  handleOptionsMenuClose: () => void;
+  handleRangeOptionsMenuOpen: () => void;
+  handleRangeOptionsMenuClose: () => void;
   currentDate: any;
   startDate: string;
   endDate: string;
@@ -30,8 +30,8 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
   handleNextDay,
   handleOptionSelect,
   isOptionsMenuOpen,
-  handleOptionsMenuOpen,
-  handleOptionsMenuClose,
+  handleRangeOptionsMenuOpen,
+  handleRangeOptionsMenuClose,
   currentDate,
   startDate,
   endDate,
@@ -103,7 +103,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
         </Box>
 
       </Box>
-        <Pressable onPress={handleOptionsMenuOpen} p="$4" display="flex" flexDirection="column" alignItems="center" minWidth="$16">
+        <Pressable onPress={handleRangeOptionsMenuOpen} p="$4" display="flex" flexDirection="column" alignItems="center" minWidth="$16">
           <FontAwesomeIcon icon={faCalendarAlt} size={18} color={Colors.Primary} />
           <Text color={Colors.Text100} mt="$1">
           {selectedOption === 'customRange'
@@ -112,7 +112,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
         </Text>
         </Pressable>
         
-      <OptionsMenu options={options} isOpen={isOptionsMenuOpen} onClose={handleOptionsMenuClose} />
+      <OptionsMenu options={options} isOpen={isOptionsMenuOpen} onClose={handleRangeOptionsMenuClose} />
     </Box>
   );
 };

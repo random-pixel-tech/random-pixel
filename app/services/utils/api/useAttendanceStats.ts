@@ -316,11 +316,11 @@ useEffect(() => {
     setShowDatePicker(false);
   };
 
-  const handleOptionsMenuOpen = () => {
+  const handleRangeOptionsMenuOpen = () => {
     setIsOptionsMenuOpen(true);
   };
 
-  const handleOptionsMenuClose = () => {
+  const handleRangeOptionsMenuClose = () => {
     setIsOptionsMenuOpen(false);
   };
 
@@ -552,8 +552,8 @@ useEffect(() => {
     handleNextDay,
     handleOptionSelect,
     isOptionsMenuOpen,
-    handleOptionsMenuOpen,
-    handleOptionsMenuClose,
+    handleRangeOptionsMenuOpen,
+    handleRangeOptionsMenuClose,
     startDate,
     endDate,
     fetchAttendanceByTime,
