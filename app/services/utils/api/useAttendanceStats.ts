@@ -308,7 +308,6 @@ const isNextDisabled = useMemo(() => {
   
 
 const handleOptionSelect = (optionId: SelectedDuration) => {
-  console.log('Selected option:', optionId);
   setSelectedDuration(optionId);
   setIsOptionsMenuOpen(false);
   setCurrentDate(dayjs());

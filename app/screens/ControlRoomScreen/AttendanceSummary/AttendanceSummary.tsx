@@ -59,7 +59,7 @@ const AttendanceSummary = () => {
     {
       label: 'Export report',
       icon: 'file-export' as IconProp,
-      onPress: () => console.log('Option 1 pressed'),
+      onPress: () => console.log('Option 2 pressed'),
     },
     {
       label: 'Edit attendance',
