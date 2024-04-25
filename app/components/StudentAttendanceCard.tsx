@@ -9,7 +9,7 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   presentAttendance: number;
 }
 
-interface AttendanceCardProps {
+interface StudentAttendanceCardProps {
   studentAttendanceData: StudentAttendanceDataWithPercentage;
   className: string;
   section: string;
@@ -24,7 +24,7 @@ const toOrdinal = (n: number): string => {
   return n + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
 };
 
-const AttendanceCard: React.FC<AttendanceCardProps> = ({
+const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
   studentAttendanceData,
   className,
   section,
@@ -131,4 +131,4 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
   );
 };
 
-export default AttendanceCard;
+export default StudentAttendanceCard;
