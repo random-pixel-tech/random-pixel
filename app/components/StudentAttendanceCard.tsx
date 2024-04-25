@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Text } from '@gluestack-ui/themed';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
-import { SelectedDuration } from '../services/utils/enums';
+import { SelectedDuration, AttendanceStatus } from '../services/utils/enums';
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -16,6 +16,8 @@ interface StudentAttendanceCardProps {
   selectedDuration: SelectedDuration;
   totalAttendance: number;
   presentAttendance: number;
+  morningStatus?: AttendanceStatus;
+  afternoonStatus?: AttendanceStatus;
 }
 
 const toOrdinal = (n: number): string => {
@@ -31,6 +33,8 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
   selectedDuration,
   totalAttendance,
   presentAttendance,
+  morningStatus,
+  afternoonStatus,
 }) => {
   const { student } = studentAttendanceData;
   const { name, rollNumber } = student;
@@ -39,6 +43,19 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
 
   const classNameOrdinal = toOrdinal(parseInt(className));
 
+  const getStatusAbbreviation = (status?: AttendanceStatus) => {
+    switch (status) {
+      case AttendanceStatus.Present:
+        return 'P';
+      case AttendanceStatus.Absent:
+        return 'A';
+      case AttendanceStatus.OnLeave:
+        return 'OL';
+      default:
+        return 'No record';
+    }
+  };
+
   const renderAttendanceBox = () => {
     if (selectedDuration === SelectedDuration.Daily) {
       return (
@@ -46,9 +63,10 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
           <Box display="flex" flexDirection="column">
             <Box display="flex" flexDirection="row" alignSelf="center">
               <Text fontSize="$md" color="$pixSecondary2">S-1</Text>
-              <Text fontSize="$md" color="$pixText100" mr="$2">: A</Text>
+              <Text fontSize="$md" color="$pixText100" mr="$2">: {getStatusAbbreviation(morningStatus)}
+</Text>
               <Text fontSize="$md" color="$pixSecondary2">S-2</Text>
-              <Text fontSize="$md" color="$pixText100">: P</Text>
+              <Text fontSize="$md" color="$pixText100">: {getStatusAbbreviation(afternoonStatus)}</Text>
             </Box>
             <Text fontSize="$sm" color="$pixSecondary2" alignSelf="center">Attendance</Text>
           </Box>

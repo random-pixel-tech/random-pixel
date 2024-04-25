@@ -241,18 +241,25 @@ const useStudentAttendance = () => {
         }
   
         // Combine student data, attendance records, class, and section
-        const classStudentAttendanceData: AllStudentAttendanceData[] = studentsData.map((student) => {
-          const existingRecord = attendanceRecordsData.find(
-            (record) => record.studentId === student.id
-          );
-  
-          return {
-            student,
-            attendanceRecord: existingRecord || null,
-            className: classData.name,
-            section: classData.section,
-          };
-        });
+const classStudentAttendanceData: AllStudentAttendanceData[] = studentsData.map((student) => {
+  const existingRecord = attendanceRecordsData.find(
+    (record) => record.studentId === student.id
+  );
+
+  // Log the morningStatus and afternoonStatus for each student
+  console.log(`Date: ${today}`);
+  console.log(`Student: ${student.name}`);
+  console.log(`Morning Status: ${existingRecord?.morningStatus || 'No record'}`);
+  console.log(`Afternoon Status: ${existingRecord?.afternoonStatus || 'No record'}`);
+  console.log('---');
+
+  return {
+    student,
+    attendanceRecord: existingRecord || null,
+    className: classData.name,
+    section: classData.section,
+  };
+});
   
         // Add classStudentAttendanceData to the allStudentAttendanceData array
         allStudentAttendanceData.push(...classStudentAttendanceData);

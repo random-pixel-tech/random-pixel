@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { Box, Text } from '@gluestack-ui/themed';
-import AttendanceCard from './StudentAttendanceCard';
+import StudentAttendanceCard from './StudentAttendanceCard';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 import ClassAttendanceCard from './ClassAttendanceCard';
 import { ClassData } from '../services/utils/api/useAttendanceStats';
@@ -79,7 +79,7 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
         ))
       ) : (
         attendanceData.map((data) => (
-          <AttendanceCard
+          <StudentAttendanceCard
             key={data.student.id}
             studentAttendanceData={data}
             className={data.className}
@@ -87,6 +87,8 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
             selectedDuration={selectedDuration}
             totalAttendance={data.totalAttendance}
             presentAttendance={data.presentAttendance}
+            morningStatus={data.attendanceRecord?.morningStatus}
+            afternoonStatus={data.attendanceRecord?.afternoonStatus}
           />
         ))
       )}
