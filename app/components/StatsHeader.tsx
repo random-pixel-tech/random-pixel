@@ -7,6 +7,7 @@ import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import OptionsMenu from './OptionsMenu';
 import dayjs from 'dayjs';
 import { SelectedDuration } from '../services/utils/enums';
+import BackArrowButton from './BackArrowButton';
 
 interface StatsHeaderProps {
   title: string;
@@ -69,51 +70,49 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
       borderBottomWidth={2}
       borderBottomColor={Colors.SecondaryLight100}
     >
-      <Pressable onPress={() => navigation.goBack()} p="$4">
-        <FontAwesomeIcon icon="arrow-left" size={18} color={Colors.Text100} />
-      </Pressable>
+      <BackArrowButton onPress={() => navigation.goBack()} />
       <Box display="flex" flexDirection="column" alignItems="center" minWidth="$48">
         <Text color={Colors.Text100} fontSize="$md" fontWeight="$medium" mb="$2">
           {title}
         </Text>
         <Box display="flex" flexDirection="row" alignItems="center">
-        {selectedDuration !== SelectedDuration.CustomRange && (
+          {selectedDuration !== SelectedDuration.CustomRange && (
             <Pressable onPress={handlePrevDay} p="$4">
               <FontAwesomeIcon icon="arrow-left" size={16} color={Colors.Primary} />
             </Pressable>
           )}
           <Text px="$2">
-          {selectedDuration === SelectedDuration.CustomRange
+            {selectedDuration === SelectedDuration.CustomRange
               ? showDatePicker
-              ? "Start Date to End Date"
-              : `${formatDate(startDate)} to ${formatDate(endDate)}`
-            : selectedDuration === SelectedDuration.Monthly
-              ? currentDate.format('MMM - YYYY')
-              : selectedDuration === SelectedDuration.Yearly
-                ? currentDate.format('YYYY')
-                : selectedDuration === SelectedDuration.Weekly
-                  ? `Week ${currentDate.week() - currentDate.startOf('month').week() + 1}, ${currentDate.format('MMM - YYYY')}`
-                  : currentDate.format('DD, MMM - YYYY')}
+                ? "Start Date to End Date"
+                : `${formatDate(startDate)} to ${formatDate(endDate)}`
+              : selectedDuration === SelectedDuration.Monthly
+                ? currentDate.format('MMM - YYYY')
+                : selectedDuration === SelectedDuration.Yearly
+                  ? currentDate.format('YYYY')
+                  : selectedDuration === SelectedDuration.Weekly
+                    ? `Week ${currentDate.week() - currentDate.startOf('month').week() + 1}, ${currentDate.format('MMM - YYYY')}`
+                    : currentDate.format('DD, MMM - YYYY')}
           </Text>
           {selectedDuration !== SelectedDuration.CustomRange && (
             <Pressable onPress={handleNextDay} p="$4" disabled={isNextDisabled}
-            opacity={isNextDisabled ? 0.5 : 1}
-        >
+              opacity={isNextDisabled ? 0.5 : 1}
+            >
               <FontAwesomeIcon icon="arrow-right" size={16} color={Colors.Primary} />
             </Pressable>
           )}
         </Box>
 
       </Box>
-        <Pressable onPress={handleRangeOptionsMenuOpen} p="$4" display="flex" flexDirection="column" alignItems="center" minWidth="$16">
-          <FontAwesomeIcon icon={faCalendarAlt} size={18} color={Colors.Primary} />
-          <Text color={Colors.Text100} mt="$1">
+      <Pressable onPress={handleRangeOptionsMenuOpen} p="$4" display="flex" flexDirection="column" alignItems="center" minWidth="$16">
+        <FontAwesomeIcon icon={faCalendarAlt} size={18} color={Colors.Primary} />
+        <Text color={Colors.Text100} mt="$1">
           {selectedDuration === SelectedDuration.CustomRange
             ? 'Custom'
             : options.find((option) => option.id === selectedDuration)?.label || 'Daily'}
         </Text>
-        </Pressable>
-        
+      </Pressable>
+
       <OptionsMenu options={options} isOpen={isOptionsMenuOpen} onClose={handleRangeOptionsMenuClose} />
     </Box>
   );

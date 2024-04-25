@@ -6,6 +6,7 @@ import { Colors } from '../services/utils/colors';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import OptionsMenu from './OptionsMenu';
 import ConfirmationDialog from './ConfirmationDialog';
+import BackArrowButton from './BackArrowButton';
 
 interface Option {
   label: string;
@@ -78,32 +79,30 @@ const Header: React.FC<HeaderProps> = ({
       px="$4"
     >
       <Box display="flex" flexDirection="row">
-        <Pressable onPress={handleLeftArrowPress} p="$4">
-          <FontAwesomeIcon icon="arrow-left" size={18} color={Colors.Text100} />
-        </Pressable>
+        <BackArrowButton onPress={handleLeftArrowPress} />
         <Text color={Colors.Text100} fontSize="$lg" px="$8" py="$4" fontWeight="$medium">
           {title}
         </Text>
       </Box>
       <Box flexDirection='row'>
-      {icon && (
-        <Pressable onPress={onIconPress} p="$4">
-          <FontAwesomeIcon icon={icon} size={18} color={Colors.Text100} />
-        </Pressable>
-      )}
-      {options && (
-        <>
-          <Pressable onPress={handleIconPress} p="$4">
-            <FontAwesomeIcon icon="ellipsis-vertical" size={18} color={Colors.Text100} />
+        {icon && (
+          <Pressable onPress={onIconPress} p="$4">
+            <FontAwesomeIcon icon={icon} size={18} color={Colors.Text100} />
           </Pressable>
-          <OptionsMenu
-            isOpen={isOptionsMenuOpen}
-            onClose={handleOptionsMenuClose}
-            onOpen={handleOptionsMenuOpen}
-            options={options}
-          />
-        </>
-      )}
+        )}
+        {options && (
+          <>
+            <Pressable onPress={handleIconPress} p="$4">
+              <FontAwesomeIcon icon="ellipsis-vertical" size={18} color={Colors.Text100} />
+            </Pressable>
+            <OptionsMenu
+              isOpen={isOptionsMenuOpen}
+              onClose={handleOptionsMenuClose}
+              onOpen={handleOptionsMenuOpen}
+              options={options}
+            />
+          </>
+        )}
       </Box>
       <ConfirmationDialog
         isOpen={confirmVisible}
