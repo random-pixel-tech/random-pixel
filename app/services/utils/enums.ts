@@ -15,3 +15,12 @@ export enum AttendanceStatusLabel {
     Morning = 'morning',
     Afternoon = 'afternoon',
   }
+
+  export enum SelectedDuration {
+    Daily = 'daily',
+    Weekly = 'weekly',
+    Monthly = 'monthly',
+    Yearly = 'yearly',
+    CustomRange = 'customRange',
+  }
+  

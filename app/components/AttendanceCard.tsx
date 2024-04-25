@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text } from '@gluestack-ui/themed';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
+import { SelectedDuration } from '../services/utils/enums';
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -12,7 +13,7 @@ interface AttendanceCardProps {
   studentAttendanceData: StudentAttendanceDataWithPercentage;
   className: string;
   section: string;
-  selectedDuration: string;
+  selectedDuration: SelectedDuration;
   totalAttendance: number;
   presentAttendance: number;
 }
@@ -39,7 +40,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
   const classNameOrdinal = toOrdinal(parseInt(className));
 
   const renderAttendanceBox = () => {
-    if (selectedDuration === 'daily') {
+    if (selectedDuration === SelectedDuration.Daily) {
       return (
         <Box alignContent="center" display="flex" flexDirection="row">
           <Box display="flex" flexDirection="column">

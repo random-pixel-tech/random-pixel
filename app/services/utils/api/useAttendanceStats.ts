@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { supabase } from '../supabase';
-import { AttendanceStatus } from '../enums';
+import { AttendanceStatus, SelectedDuration } from '../enums';
 import useStudentAttendance, { AllStudentAttendanceData } from './useStudentAttendance';
 
 dayjs.extend(weekOfYear);
@@ -24,7 +24,7 @@ export interface ClassData {
 
 export const useAttendanceStats = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [selectedDuration, setSelectedDuration] = useState('daily');
+  const [selectedDuration, setSelectedDuration] = useState(SelectedDuration.Daily);
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [startDate, setStartDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(dayjs().format('YYYY-MM-DD'));
@@ -246,65 +246,77 @@ useEffect(() => {
 }, [currentDate, selectedDuration]);
 
 
-  const handlePrevDay = () => {
-    if (selectedDuration === 'daily') {
+const handlePrevDay = () => {
+  switch (selectedDuration) {
+    case SelectedDuration.Daily:
       setCurrentDate(currentDate.subtract(1, 'day'));
-    } else if (selectedDuration === 'weekly') {
+      break;
+    case SelectedDuration.Weekly:
       setCurrentDate(currentDate.subtract(1, 'week'));
-    } else if (selectedDuration === 'monthly') {
+      break;
+    case SelectedDuration.Monthly:
       setCurrentDate(currentDate.subtract(1, 'month'));
-    } else if (selectedDuration === 'yearly') {
+      break;
+    case SelectedDuration.Yearly:
       setCurrentDate(currentDate.subtract(1, 'year'));
-    }
-  };
+      break;
+    default:
+      break;
+  }
+};
 
-  
-
-  const handleNextDay = () => {
-    if (selectedDuration === 'daily') {
+const handleNextDay = () => {
+  switch (selectedDuration) {
+    case SelectedDuration.Daily:
       setCurrentDate(currentDate.add(1, 'day'));
-    } else if (selectedDuration === 'weekly') {
+      break;
+    case SelectedDuration.Weekly:
       setCurrentDate(currentDate.add(1, 'week'));
-    } else if (selectedDuration === 'monthly') {
+      break;
+    case SelectedDuration.Monthly:
       setCurrentDate(currentDate.add(1, 'month'));
-    } else if (selectedDuration === 'yearly') {
+      break;
+    case SelectedDuration.Yearly:
       setCurrentDate(currentDate.add(1, 'year'));
-    }
-  };
+      break;
+    default:
+      break;
+  }
+};
 
-  const isNextDisabled = useMemo(() => {
-    if (selectedDuration === 'customRange') {
+const isNextDisabled = useMemo(() => {
+  if (selectedDuration === SelectedDuration.CustomRange) {
+    return false;
+  }
+
+  const today = dayjs();
+
+  switch (selectedDuration) {
+    case SelectedDuration.Daily:
+      return currentDate.isSame(today, 'day');
+    case SelectedDuration.Weekly:
+      return currentDate.endOf('week').isAfter(today, 'day');
+    case SelectedDuration.Monthly:
+      return currentDate.endOf('month').isAfter(today, 'day');
+    case SelectedDuration.Yearly:
+      return currentDate.endOf('year').isAfter(today, 'day');
+    default:
       return false;
-    }
-  
-    const today = dayjs();
-  
-    switch (selectedDuration) {
-      case 'daily':
-        return currentDate.isSame(today, 'day');
-        case 'weekly':
-        return currentDate.endOf('week').isAfter(today, 'day');
-      case 'monthly':
-        return currentDate.endOf('month').isAfter(today, 'day');
-      case 'yearly':
-        return currentDate.endOf('year').isAfter(today, 'day');
-      default:
-        return false;
-    }
-  }, [currentDate, selectedDuration]);
+  }
+}, [currentDate, selectedDuration]);
   
   
 
-  const handleOptionSelect = (optionId: string) => {
-    console.log('Selected option:', optionId);
-    setSelectedDuration(optionId);
-    setIsOptionsMenuOpen(false);
-    setCurrentDate(dayjs());
+const handleOptionSelect = (optionId: SelectedDuration) => {
+  console.log('Selected option:', optionId);
+  setSelectedDuration(optionId);
+  setIsOptionsMenuOpen(false);
+  setCurrentDate(dayjs());
 
-    if (optionId === 'customRange') {
-      setShowDatePicker(true);
-    }
-  };
+  if (optionId === SelectedDuration.CustomRange) {
+    setShowDatePicker(true);
+  }
+};
 
   const handleDatePickerCancel = () => {
     setShowDatePicker(false);
