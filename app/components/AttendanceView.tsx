@@ -5,6 +5,7 @@ import AttendanceCard from './AttendanceCard';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 import ClassAttendanceCard from './ClassAttendanceCard';
 import { ClassData } from '../services/utils/api/useAttendanceStats';
+import { SelectedDuration } from '../services/utils/enums';
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -13,7 +14,7 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
 }
 
 interface AttendanceViewProps {
-  selectedDuration: string;
+  selectedDuration: SelectedDuration;
   startDate: string;
   endDate: string;
   attendanceDataWithPercentage: StudentAttendanceDataWithPercentage[];
@@ -55,7 +56,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
 
 interface AttendanceDataRendererProps {
   attendanceData: StudentAttendanceDataWithPercentage[];
-  selectedDuration: string;
+  selectedDuration: SelectedDuration;
   startDate: string;
   endDate: string;
   selectedButton: 'left' | 'right';
