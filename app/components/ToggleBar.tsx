@@ -89,7 +89,7 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
             <InputField
               value={searchQuery}
               onChangeText={handleSearchInputChange}
-              placeholder="Search..."
+              placeholder="Search for student name"
             />
           </Input>
           <Box ml="$2" onTouchEnd={handleClearSearch}>
