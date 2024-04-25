@@ -12,7 +12,7 @@ interface AttendanceCardProps {
   studentAttendanceData: StudentAttendanceDataWithPercentage;
   className: string;
   section: string;
-  selectedOption: string;
+  selectedDuration: string;
   totalAttendance: number;
   presentAttendance: number;
 }
@@ -27,7 +27,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
   studentAttendanceData,
   className,
   section,
-  selectedOption,
+  selectedDuration,
   totalAttendance,
   presentAttendance,
 }) => {
@@ -39,7 +39,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
   const classNameOrdinal = toOrdinal(parseInt(className));
 
   const renderAttendanceBox = () => {
-    if (selectedOption === 'daily') {
+    if (selectedDuration === 'daily') {
       return (
         <Box alignContent="center" display="flex" flexDirection="row">
           <Box display="flex" flexDirection="column">

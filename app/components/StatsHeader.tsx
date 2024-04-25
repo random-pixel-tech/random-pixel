@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 
 interface StatsHeaderProps {
   title: string;
-  selectedOption: string;
+  selectedDuration: string;
   handlePrevDay: () => void;
   handleNextDay: () => void;
   handleOptionSelect: (optionId: string) => void;
@@ -25,7 +25,7 @@ interface StatsHeaderProps {
 
 const StatsHeader: React.FC<StatsHeaderProps> = ({
   title,
-  selectedOption,
+  selectedDuration,
   handlePrevDay,
   handleNextDay,
   handleOptionSelect,
@@ -75,25 +75,25 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
           {title}
         </Text>
         <Box display="flex" flexDirection="row" alignItems="center">
-          {selectedOption !== 'customRange' && (
+          {selectedDuration !== 'customRange' && (
             <Pressable onPress={handlePrevDay} p="$4">
               <FontAwesomeIcon icon="arrow-left" size={16} color={Colors.Primary} />
             </Pressable>
           )}
           <Text px="$2">
-            {selectedOption === 'customRange'
+            {selectedDuration === 'customRange'
               ? showDatePicker
                 ? "Start Date to End Date"
                 : `${formatDate(startDate)} to ${formatDate(endDate)}`
-              : selectedOption === 'monthly'
+              : selectedDuration === 'monthly'
                 ? currentDate.format('MMM - YYYY')
-                : selectedOption === 'yearly'
+                : selectedDuration === 'yearly'
                   ? currentDate.format('YYYY')
-                  : selectedOption === 'weekly'
+                  : selectedDuration === 'weekly'
                     ? `Week ${currentDate.week() - currentDate.startOf('month').week() + 1}, ${currentDate.format('MMM - YYYY')}`
                     : currentDate.format('DD, MMM - YYYY')}
           </Text>
-          {selectedOption !== 'customRange' && (
+          {selectedDuration !== 'customRange' && (
             <Pressable onPress={handleNextDay} p="$4" disabled={isNextDisabled}
             opacity={isNextDisabled ? 0.5 : 1}
         >
@@ -106,9 +106,9 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
         <Pressable onPress={handleRangeOptionsMenuOpen} p="$4" display="flex" flexDirection="column" alignItems="center" minWidth="$16">
           <FontAwesomeIcon icon={faCalendarAlt} size={18} color={Colors.Primary} />
           <Text color={Colors.Text100} mt="$1">
-          {selectedOption === 'customRange'
+          {selectedDuration === 'customRange'
             ? 'Custom'
-            : options.find((option) => option.id === selectedOption)?.label || 'Daily'}
+            : options.find((option) => option.id === selectedDuration)?.label || 'Daily'}
         </Text>
         </Pressable>
         

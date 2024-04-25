@@ -13,7 +13,7 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
 }
 
 interface AttendanceViewProps {
-  selectedOption: string;
+  selectedDuration: string;
   startDate: string;
   endDate: string;
   attendanceDataWithPercentage: StudentAttendanceDataWithPercentage[];
@@ -23,7 +23,7 @@ interface AttendanceViewProps {
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
-  selectedOption,
+  selectedDuration,
   startDate,
   endDate,
   attendanceDataWithPercentage,
@@ -41,7 +41,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
         ) : (
           <AttendanceDataRenderer
             attendanceData={attendanceDataWithPercentage}
-            selectedOption={selectedOption}
+            selectedDuration={selectedDuration}
             startDate={startDate}
             endDate={endDate}
             selectedButton={selectedButton}
@@ -55,7 +55,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
 
 interface AttendanceDataRendererProps {
   attendanceData: StudentAttendanceDataWithPercentage[];
-  selectedOption: string;
+  selectedDuration: string;
   startDate: string;
   endDate: string;
   selectedButton: 'left' | 'right';
@@ -64,7 +64,7 @@ interface AttendanceDataRendererProps {
 
 const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
   attendanceData,
-  selectedOption,
+  selectedDuration,
   startDate,
   endDate,
   selectedButton,
@@ -83,7 +83,7 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
             studentAttendanceData={data}
             className={data.className}
             section={data.section}
-            selectedOption={selectedOption}
+            selectedDuration={selectedDuration}
             totalAttendance={data.totalAttendance}
             presentAttendance={data.presentAttendance}
           />

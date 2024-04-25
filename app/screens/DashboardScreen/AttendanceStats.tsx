@@ -8,7 +8,7 @@ import ToggleBar from '../../components/ToggleBar';
 
 const AttendanceStats = () => {
   const {
-    selectedOption,
+    selectedDuration,
     handlePrevDay,
     handleNextDay,
     handleOptionSelect,
@@ -69,7 +69,7 @@ const AttendanceStats = () => {
     <Box bg="$pixWhite" w="$full" h="$full">
       <StatsHeader
         title="Attendance"
-        selectedOption={selectedOption}
+        selectedDuration={selectedDuration}
         handlePrevDay={handlePrevDay}
         handleNextDay={handleNextDay}
         handleOptionSelect={handleOptionSelect}
@@ -107,7 +107,7 @@ const AttendanceStats = () => {
         isClassOptionSelected={isClassOptionSelected}
       />
       <AttendanceView
-        selectedOption={selectedOption}
+        selectedDuration={selectedDuration}
         startDate={startDate}
         endDate={endDate}
         attendanceDataWithPercentage={filteredAttendanceData}

@@ -24,7 +24,7 @@ export interface ClassData {
 
 export const useAttendanceStats = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [selectedOption, setSelectedOption] = useState('daily');
+  const [selectedDuration, setSelectedDuration] = useState('daily');
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [startDate, setStartDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(dayjs().format('YYYY-MM-DD'));
@@ -240,20 +240,20 @@ useEffect(() => {
     yearly: [currentDate.startOf('year').format('YYYY-MM-DD'), currentDate.endOf('year').format('YYYY-MM-DD')],
   };
 
-  const [startDate, endDate] = dateRanges[selectedOption] || [currentDate.format('YYYY-MM-DD'), currentDate.format('YYYY-MM-DD')];
+  const [startDate, endDate] = dateRanges[selectedDuration] || [currentDate.format('YYYY-MM-DD'), currentDate.format('YYYY-MM-DD')];
   setStartDate(startDate);
   setEndDate(endDate);
-}, [currentDate, selectedOption]);
+}, [currentDate, selectedDuration]);
 
 
   const handlePrevDay = () => {
-    if (selectedOption === 'daily') {
+    if (selectedDuration === 'daily') {
       setCurrentDate(currentDate.subtract(1, 'day'));
-    } else if (selectedOption === 'weekly') {
+    } else if (selectedDuration === 'weekly') {
       setCurrentDate(currentDate.subtract(1, 'week'));
-    } else if (selectedOption === 'monthly') {
+    } else if (selectedDuration === 'monthly') {
       setCurrentDate(currentDate.subtract(1, 'month'));
-    } else if (selectedOption === 'yearly') {
+    } else if (selectedDuration === 'yearly') {
       setCurrentDate(currentDate.subtract(1, 'year'));
     }
   };
@@ -261,25 +261,25 @@ useEffect(() => {
   
 
   const handleNextDay = () => {
-    if (selectedOption === 'daily') {
+    if (selectedDuration === 'daily') {
       setCurrentDate(currentDate.add(1, 'day'));
-    } else if (selectedOption === 'weekly') {
+    } else if (selectedDuration === 'weekly') {
       setCurrentDate(currentDate.add(1, 'week'));
-    } else if (selectedOption === 'monthly') {
+    } else if (selectedDuration === 'monthly') {
       setCurrentDate(currentDate.add(1, 'month'));
-    } else if (selectedOption === 'yearly') {
+    } else if (selectedDuration === 'yearly') {
       setCurrentDate(currentDate.add(1, 'year'));
     }
   };
 
   const isNextDisabled = useMemo(() => {
-    if (selectedOption === 'customRange') {
+    if (selectedDuration === 'customRange') {
       return false;
     }
   
     const today = dayjs();
   
-    switch (selectedOption) {
+    switch (selectedDuration) {
       case 'daily':
         return currentDate.isSame(today, 'day');
         case 'weekly':
@@ -291,13 +291,13 @@ useEffect(() => {
       default:
         return false;
     }
-  }, [currentDate, selectedOption]);
+  }, [currentDate, selectedDuration]);
   
   
 
   const handleOptionSelect = (optionId: string) => {
     console.log('Selected option:', optionId);
-    setSelectedOption(optionId);
+    setSelectedDuration(optionId);
     setIsOptionsMenuOpen(false);
     setCurrentDate(dayjs());
 
@@ -547,7 +547,7 @@ useEffect(() => {
 
   return {
     currentDate,
-    selectedOption,
+    selectedDuration,
     handlePrevDay,
     handleNextDay,
     handleOptionSelect,
