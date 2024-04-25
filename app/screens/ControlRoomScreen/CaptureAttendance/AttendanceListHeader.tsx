@@ -41,7 +41,7 @@ const AttendanceListHeader: React.FC<AttendanceListHeaderProps> = ({
         </Text>
       </Box>
       {icon && (
-        <Box justifyContent="center" w="$1/6">
+        <Box justifyContent="center" w="$1/6" p="$1">
           <FontAwesomeIcon icon={icon} size={24} />
         </Box>
       )}
