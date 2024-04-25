@@ -44,10 +44,10 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
         <Box alignContent="center" display="flex" flexDirection="row">
           <Box display="flex" flexDirection="column">
             <Box display="flex" flexDirection="row" alignSelf="center">
-              <Text fontSize="$md" color="$pixText100">S-1</Text>
-              <Text fontSize="$md" color="$pixSecondary2" mr="$2">: A</Text>
-              <Text fontSize="$md" color="$pixText100">S-2</Text>
-              <Text fontSize="$md" color="$pixSecondary2">: P</Text>
+              <Text fontSize="$md" color="$pixSecondary2">S-1</Text>
+              <Text fontSize="$md" color="$pixText100" mr="$2">: A</Text>
+              <Text fontSize="$md" color="$pixSecondary2">S-2</Text>
+              <Text fontSize="$md" color="$pixText100">: P</Text>
             </Box>
             <Text fontSize="$sm" color="$pixSecondary2" alignSelf="center">Attendance</Text>
           </Box>
