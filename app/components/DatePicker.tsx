@@ -4,7 +4,7 @@ import { Button, ButtonText, AlertDialog, AlertDialogBackdrop, AlertDialogConten
 interface DatePickerProps {
   isOpen: boolean;
   handleDatePickerCancel: () => void;
-  handleOk: () => void;
+  handleCustomDateChange: () => void;
   startDay: string;
   startMonth: string;
   startYear: string;
@@ -25,7 +25,7 @@ interface DatePickerProps {
 const DatePicker: React.FC<DatePickerProps> = ({
   isOpen,
   handleDatePickerCancel,
-  handleOk,
+  handleCustomDateChange,
   startDay,
   startMonth,
   startYear,
@@ -94,7 +94,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
           <Button variant="outline" mr="$4" onPress={handleDatePickerCancel}>
             <ButtonText>Cancel</ButtonText>
           </Button>
-          <Button onPress={handleOk}>
+          <Button onPress={handleCustomDateChange}>
             <ButtonText>Ok</ButtonText>
           </Button>
         </AlertDialogFooter>

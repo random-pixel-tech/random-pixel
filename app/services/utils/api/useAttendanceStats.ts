@@ -102,7 +102,7 @@ const isEndDateValid = (startDate: string, endDate: string) => {
 };
 
 
-const handleOk = () => {
+const handleCustomDateChange = () => {
   const startDate = `${startYear}-${startMonth}-${startDay}`;
   const endDate = `${endYear}-${endMonth}-${endDay}`;
 
@@ -591,7 +591,7 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
     attendanceDataByTime,
     attendanceDataWithPercentage,
     isNextDisabled,
-    handleOk,
+    handleCustomDateChange,
     startDay,
     startMonth,
     startYear,

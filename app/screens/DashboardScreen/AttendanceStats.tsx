@@ -37,7 +37,7 @@ const AttendanceStats = () => {
     filteredAttendanceData,
     isLoading,
     isNextDisabled,
-    handleOk,
+    handleCustomDateChange,
     startDay,
     startMonth,
     startYear,
@@ -118,7 +118,7 @@ const AttendanceStats = () => {
       <DatePicker
         isOpen={showDatePicker}
         handleDatePickerCancel={handleDatePickerCancel}
-        handleOk={handleOk}
+        handleCustomDateChange={handleCustomDateChange}
         startDay={startDay}
         startMonth={startMonth}
         startYear={startYear}
