@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { Box, Text } from '@gluestack-ui/themed';
-import AttendanceCard from './AttendanceCard';
+import AttendanceCard from './StudentAttendanceCard';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 import ClassAttendanceCard from './ClassAttendanceCard';
 import { ClassData } from '../services/utils/api/useAttendanceStats';

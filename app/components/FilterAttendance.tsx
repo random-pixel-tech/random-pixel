@@ -126,7 +126,7 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
     };
 
 
-    const renderRightOptions = () => {
+    const renderAvailableOptions = () => {
         if (selectedTab === 'Filter') {
             switch (selectedFilterOption) {
                 case 'Attendance Percentage':
@@ -195,14 +195,14 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
                                     {renderFilterOptionsSidebar()}
                                 </Box>
                                 <Box w="$2/3" borderRightWidth={1} borderRightColor='$pixPrimaryLight100' h="$full">
-                                    {renderRightOptions()}
+                                    {renderAvailableOptions()}
                                 </Box>
                             </Box>
                         )}
                         {selectedTab === 'Sort' && (
                             <Box flexDirection="row" style={{ flex: 1 }} w="$full">
                                 <Box w="$full" borderRightWidth={1} borderRightColor='$pixPrimaryLight100' h="$full">
-                                    {renderRightOptions()}
+                                    {renderAvailableOptions()}
                                 </Box>
                             </Box>
                         )}
