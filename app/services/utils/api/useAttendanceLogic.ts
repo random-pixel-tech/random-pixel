@@ -8,6 +8,8 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
 
+  const [initialAttendanceStatus, setInitialAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
+
   const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today, section } = useStudentAttendance();
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
@@ -78,8 +80,14 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
   useEffect(() => {
     const initialAttendanceState = getInitialAttendanceState(studentAttendanceData, session);
     setAttendanceStatus(initialAttendanceState);
+    setInitialAttendanceStatus(initialAttendanceState);
   }, [studentAttendanceData, session]);
 
+  const checkAttendanceChanges = () => {
+    return Object.keys(attendanceStatus).some((studentId) => {
+      return attendanceStatus[studentId] !== initialAttendanceStatus[studentId];
+    });
+  };
 
   const handlePopoverOpen = (studentId: string) => {
     setIsPopoverOpen((prevState) => ({ ...prevState, [studentId]: true }));
@@ -175,6 +183,7 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
     handleIconPress,
     session,
     handleSessionToggle,
+    checkAttendanceChanges
   };
 };
 

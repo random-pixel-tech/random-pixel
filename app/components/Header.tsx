@@ -29,6 +29,7 @@ interface HeaderProps {
   handleOptionsMenuOpen?: () => void;
   handleOptionsMenuClose?: () => void;
   handleIconPress?: () => void;
+  checkChanges?: () => boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -46,12 +47,13 @@ const Header: React.FC<HeaderProps> = ({
   handleOptionsMenuOpen,
   handleOptionsMenuClose,
   handleIconPress,
+  checkChanges,
 }) => {
   const navigation = useNavigation();
   const [confirmVisible, setConfirmVisible] = useState(false);
 
   const handleLeftArrowPress = () => {
-    if (showConfirmation) {
+    if (checkChanges && checkChanges()) {
       setConfirmVisible(true);
     } else {
       navigation.goBack();

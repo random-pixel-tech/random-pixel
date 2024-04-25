@@ -39,7 +39,10 @@ const CaptureAttendance = () => {
     handleIconPress,
     session,
     handleSessionToggle,
+    checkAttendanceChanges
   } = useAttendanceLogic();
+
+
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -68,7 +71,10 @@ const CaptureAttendance = () => {
       confirmationText="You will lose the captured attendance if you leave without saving." options={options} isOptionsMenuOpen={isOptionsMenuOpen}
       handleOptionsMenuOpen={handleOptionsMenuOpen}
       handleOptionsMenuClose={handleOptionsMenuClose}
-      handleIconPress={handleIconPress}/>
+      handleIconPress={handleIconPress}
+      checkChanges={checkAttendanceChanges}
+
+      />
       <AttendanceHeader section={section} session={session} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
       />
       <AttendanceList
