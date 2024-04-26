@@ -526,27 +526,32 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
       });
   
         // Calculate class data
-        const classDataResults = classes.map((classItem) => {
-          const classId = classItem.id;
-          const studentIds = classStudentsMap.get(classId) || [];
-          const totalStudents = studentIds.length;
-  
-          const presentStudents = studentIds.filter((studentId) => {
-            const attendance = studentAttendanceMap.get(studentId);
-            return attendance && (attendance.morning || attendance.afternoon);
-          }).length;
-  
-          const presentPercentage = totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0;
-  
-          return {
-            classId,
-            className: classItem.name,
-            section: classItem.section,
-            totalStudents,
-            presentStudents,
-            presentPercentage,
-          };
-        });
+const classDataResults = sortedClasses.map((classItem) => {
+  const classId = classItem.id;
+  const studentIds = classStudentsMap.get(classId) || [];
+  const totalStudents = studentIds.length;
+
+  let presentStudents = 0;
+
+  studentIds.forEach((studentId) => {
+    const attendance = studentAttendanceMap.get(studentId);
+    if (attendance) {
+      if (attendance.morning) presentStudents += 0.5;
+      if (attendance.afternoon) presentStudents += 0.5;
+    }
+  });
+
+  const presentPercentage = totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0;
+
+  return {
+    classId,
+    className: classItem.name,
+    section: classItem.section,
+    totalStudents,
+    presentStudents,
+    presentPercentage,
+  };
+});
   
         setClassData(classDataResults);
       } catch (error) {
