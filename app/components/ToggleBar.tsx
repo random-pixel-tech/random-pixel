@@ -5,6 +5,7 @@ import ToggleButtons from './ToggleButtons';
 import SearchButton from './SearchButton';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Colors } from '../services/utils/colors';
+import { Pressable } from '@gluestack-ui/themed';
 
 interface ToggleBarProps {
   showActionsheet: boolean;
@@ -18,7 +19,7 @@ interface ToggleBarProps {
   onClear: () => void;
   onApply: () => void;
   sortOption: string;
-  onShowActionsheet: (show: boolean) => void;
+  handleOpenFilterActionsheet: () => void;
   onClose: () => void;
   selectedButton: 'left' | 'right';
   onLeftButtonClick: () => void;
@@ -29,6 +30,8 @@ interface ToggleBarProps {
   handleSearchInputChange: (value: string) => void;
   handleClearSearch: () => void;
   isClassOptionSelected: boolean;
+  searchButtonPress: boolean;
+  filterButtonPress: boolean;
 }
 
 const ToggleBar: React.FC<ToggleBarProps> = ({
@@ -43,7 +46,7 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
   onClear,
   onApply,
   sortOption,
-  onShowActionsheet,
+  handleOpenFilterActionsheet,
   onClose,
   selectedButton,
   onLeftButtonClick,
@@ -53,7 +56,9 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
   handleSearchButtonClick,
   handleSearchInputChange,
   handleClearSearch,
-  isClassOptionSelected
+  isClassOptionSelected,
+  searchButtonPress,
+  filterButtonPress
 }) => {
   return (
     <Box>
@@ -70,9 +75,10 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
           onSortOptionSelect={onSortOptionSelect}
           onClear={onClear}
           onApply={onApply}
-          onShowActionsheet={onShowActionsheet}
+          handleOpenFilterActionsheet={handleOpenFilterActionsheet}
           sortOption={sortOption}
           isClassOptionSelected={isClassOptionSelected}
+          filterButtonPress={filterButtonPress}
         />
         <ToggleButtons
           leftButtonLabel="Classes"
@@ -81,7 +87,9 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
           onLeftButtonClick={onLeftButtonClick}
           onRightButtonClick={onRightButtonClick}
         />
-        <SearchButton onPress={handleSearchButtonClick} />
+        <SearchButton onPress={handleSearchButtonClick} 
+        searchButtonPress={searchButtonPress}
+        />
       </Box>
       {showSearchInput && (
         <Box mt="$2" display="flex" flexDirection="row" alignItems="center" px="$4">
@@ -92,9 +100,9 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
               placeholder="Search for student name"
             />
           </Input>
-          <Box ml="$2" onTouchEnd={handleClearSearch}>
+          <Pressable ml="$2" onPress={handleClearSearch}>
             <FontAwesomeIcon icon="xmark" size={18} color={Colors.Primary} />
-          </Box>
+          </Pressable>
         </Box>
       )}
     </Box>

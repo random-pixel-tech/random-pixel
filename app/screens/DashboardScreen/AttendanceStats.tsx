@@ -22,7 +22,7 @@ const AttendanceStats = () => {
     handleDatePickerCancel,
     handleDatePickerOk,
     showFilterActionsheet,
-    setShowFilterActionsheet,
+    handleOpenFilterActionsheet,
     selectedFilterTab,
     selectedFilterOption,
     selectedFilters,
@@ -63,6 +63,8 @@ const AttendanceStats = () => {
     handleSearchInputChange,
     handleClearSearch,
     isClassOptionSelected,
+    searchButtonPress,
+    filterButtonPress,
   } = useAttendanceStats();
 
   return (
@@ -94,7 +96,7 @@ const AttendanceStats = () => {
         onSortOptionSelect={handleFilterSortOptionSelect}
         onClear={handleFilterClear}
         onApply={handleFilterApply}
-        onShowActionsheet={setShowFilterActionsheet}
+        handleOpenFilterActionsheet={handleOpenFilterActionsheet}
         sortOption={sortOption}
         selectedButton={selectedButton}
         onLeftButtonClick={handleLeftButtonClick}
@@ -105,6 +107,8 @@ const AttendanceStats = () => {
         handleSearchInputChange={handleSearchInputChange}
         handleClearSearch={handleClearSearch}
         isClassOptionSelected={isClassOptionSelected}
+        searchButtonPress={searchButtonPress}
+        filterButtonPress={filterButtonPress}
       />
       <AttendanceView
         selectedDuration={selectedDuration}

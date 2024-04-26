@@ -55,13 +55,17 @@ export const useAttendanceStats = () => {
   const [endYear, setEndYear] = useState('');
 
   const [classData, setClassData] = useState<ClassData[]>([]);
-  const [selectedButton, setSelectedButton] = useState<'left' | 'right'>('left'); // Add selectedButton state
+  const [selectedButton, setSelectedButton] = useState<'left' | 'right'>('left');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchInput, setShowSearchInput] = useState(false);
 
+  const [searchButtonPress, setSearchButtonPress] = useState(false);
+  const [filterButtonPress, setFilterButtonPress] = useState(false);
+
   const handleSearchButtonClick = () => {
     setShowSearchInput(true);
+    setSearchButtonPress(true);
   };
 
   const handleSearchInputChange = (value: string) => {
@@ -71,6 +75,7 @@ export const useAttendanceStats = () => {
   const handleClearSearch = () => {
     setSearchQuery('');
     setShowSearchInput(false);
+    setSearchButtonPress(false);
   };
 
   const isValidDay = (day: string, month: string, year: string) => {
@@ -396,6 +401,11 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
     setSelectedFilterOption(option);
   };
 
+  const handleOpenFilterActionsheet = () => {
+    setShowFilterActionsheet(true);
+    setFilterButtonPress(true)
+  }
+
   const handleCloseFilterActionsheet = () => {
     setShowFilterActionsheet(false);
     setSelectedFilters({
@@ -404,6 +414,7 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
       section: [],
     });
     setSortOption('');
+    setFilterButtonPress(false);
   };
 
   const handleFilterOptionSelect = (category: string, option: string) => {
@@ -615,6 +626,9 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
     handleSearchButtonClick,
     handleSearchInputChange,
     handleClearSearch,
-    isClassOptionSelected
+    isClassOptionSelected,
+    searchButtonPress,
+    filterButtonPress,
+    handleOpenFilterActionsheet
     };
 };

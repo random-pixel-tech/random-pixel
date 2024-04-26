@@ -12,13 +12,14 @@ interface FilterAttendanceProps {
     onClose: () => void;
     onTabSelect: (option: string) => void;
     onCategorySelect: (option: string) => void;
-    onShowActionsheet: (show: boolean) => void;
+    handleOpenFilterActionsheet: () => void;
     onFilterOptionSelect: (category: string, option: string) => void;
     onSortOptionSelect: (option: string) => void;
     onClear: () => void;
     onApply: () => void;
     sortOption: string;
     isClassOptionSelected: boolean;
+    filterButtonPress: boolean;
 }
 
 interface FilterOption {
@@ -33,14 +34,15 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
     selectedFilterOption,
     onClose,
     onTabSelect,
-    onShowActionsheet,
+    handleOpenFilterActionsheet,
     onFilterOptionSelect,
     onSortOptionSelect,
     onClear,
     onApply,
     sortOption,
     onCategorySelect,
-    isClassOptionSelected
+    isClassOptionSelected,
+    filterButtonPress
 }) => {
     const renderTabBar = () => (
         <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor="$pixPrimaryLight100">
@@ -177,9 +179,11 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
 
     return (
         <Box p="$4">
-            <Button onPress={() => onShowActionsheet(true)} variant="outline" w="$8" flexDirection='column' alignContent='center' justifyContent='center'>
-                <FontAwesomeIcon icon="filter" size={18} color={Colors.Primary} />
-                {/* <ButtonText>{selectedFilterOption}</ButtonText> */}
+            <Button onPress={() => handleOpenFilterActionsheet()} variant="outline" w="$8" flexDirection='column' alignContent='center' justifyContent='center'
+            bg={filterButtonPress ? "$pixSecondary2" : "transparent"}
+            borderColor={filterButtonPress ? "$pixSecondary2" : "$pixPrimary"}
+            >
+                <FontAwesomeIcon icon="filter" size={18} color={filterButtonPress ? "white" : Colors.Primary} />
                 <Actionsheet isOpen={showActionsheet} onClose={onClose} closeOnOverlayClick zIndex={999}>
                     <ActionsheetBackdrop />
                     <ActionsheetContent h="$5/6" zIndex={999}>
