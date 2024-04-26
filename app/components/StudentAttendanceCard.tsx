@@ -52,7 +52,7 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
       case AttendanceStatus.OnLeave:
         return 'OL';
       default:
-        return 'No record';
+        return 'N/A';
     }
   };
 
