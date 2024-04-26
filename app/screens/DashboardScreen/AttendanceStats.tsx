@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box } from '@gluestack-ui/themed';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
@@ -7,6 +7,11 @@ import DatePicker from '../../components/DatePicker';
 import ToggleBar from '../../components/ToggleBar';
 
 const AttendanceStats = () => {
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  const handleScroll = (position: number) => {
+    setScrollPosition(position);
+  };
   const {
     selectedDuration,
     handlePrevDay,
@@ -68,6 +73,7 @@ const AttendanceStats = () => {
   } = useAttendanceStats();
 
   return (
+    
     <Box bg="$pixWhite" w="$full" h="$full">
       <StatsHeader
         title="Attendance"
@@ -84,32 +90,34 @@ const AttendanceStats = () => {
         showDatePicker={showDatePicker}
         isNextDisabled={isNextDisabled}
       />
-      <ToggleBar
-        showActionsheet={showFilterActionsheet}
-        selectedTab={selectedFilterTab}
-        selectedFilters={selectedFilters}
-        selectedFilterOption={selectedFilterOption}
-        onClose={handleCloseFilterActionsheet}
-        onTabSelect={handleFilterTabSelect}
-        onCategorySelect={handleCategoryOptionSelect}
-        onFilterOptionSelect={handleFilterOptionSelect}
-        onSortOptionSelect={handleFilterSortOptionSelect}
-        onClear={handleFilterClear}
-        onApply={handleFilterApply}
-        handleOpenFilterActionsheet={handleOpenFilterActionsheet}
-        sortOption={sortOption}
-        selectedButton={selectedButton}
-        onLeftButtonClick={handleLeftButtonClick}
-        onRightButtonClick={handleRightButtonClick}
-        searchQuery={searchQuery}
-        showSearchInput={showSearchInput}
-        handleSearchButtonClick={handleSearchButtonClick}
-        handleSearchInputChange={handleSearchInputChange}
-        handleClearSearch={handleClearSearch}
-        isClassOptionSelected={isClassOptionSelected}
-        searchButtonPress={searchButtonPress}
-        filterButtonPress={filterButtonPress}
-      />
+      {scrollPosition === 0 && (
+    <ToggleBar
+      showActionsheet={showFilterActionsheet}
+      selectedTab={selectedFilterTab}
+      selectedFilters={selectedFilters}
+      selectedFilterOption={selectedFilterOption}
+      onClose={handleCloseFilterActionsheet}
+      onTabSelect={handleFilterTabSelect}
+      onCategorySelect={handleCategoryOptionSelect}
+      onFilterOptionSelect={handleFilterOptionSelect}
+      onSortOptionSelect={handleFilterSortOptionSelect}
+      onClear={handleFilterClear}
+      onApply={handleFilterApply}
+      handleOpenFilterActionsheet={handleOpenFilterActionsheet}
+      sortOption={sortOption}
+      selectedButton={selectedButton}
+      onLeftButtonClick={handleLeftButtonClick}
+      onRightButtonClick={handleRightButtonClick}
+      searchQuery={searchQuery}
+      showSearchInput={showSearchInput}
+      handleSearchButtonClick={handleSearchButtonClick}
+      handleSearchInputChange={handleSearchInputChange}
+      handleClearSearch={handleClearSearch}
+      isClassOptionSelected={isClassOptionSelected}
+      searchButtonPress={searchButtonPress}
+      filterButtonPress={filterButtonPress}
+    />
+  )}
       <AttendanceView
         selectedDuration={selectedDuration}
         startDate={startDate}
@@ -118,6 +126,8 @@ const AttendanceStats = () => {
         isLoading={isLoading}
         selectedButton={selectedButton}
         classData={classData}
+        onScroll={handleScroll}
+
       />
       <DatePicker
         isOpen={showDatePicker}

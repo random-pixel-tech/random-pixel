@@ -21,6 +21,8 @@ interface AttendanceViewProps {
   isLoading: boolean;
   selectedButton: 'left' | 'right';
   classData: ClassData[];
+  onScroll: (position: number) => void;
+
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
@@ -31,9 +33,16 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   isLoading,
   selectedButton,
   classData,
+  onScroll
 }) => {
   return (
-    <ScrollView>
+    <ScrollView
+    onScroll={({ nativeEvent }) => {
+      const { contentOffset } = nativeEvent;
+      onScroll(contentOffset.y);
+    }}
+    scrollEventThrottle={16}
+    >
       <Box p="$4">
         {isLoading ? (
           <Box>
