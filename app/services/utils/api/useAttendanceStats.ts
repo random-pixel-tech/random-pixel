@@ -482,11 +482,12 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
           return;
         }
   
-        // Fetch attendance records for the current date
-        const { data: attendanceRecords, error: attendanceError } = await supabase
-          .from('attendance_records')
-          .select('morningStatus, afternoonStatus, studentId')
-          .eq('date', currentDate.format('YYYY-MM-DD'));
+        // Fetch attendance records for the selected date range
+const { data: attendanceRecords, error: attendanceError } = await supabase
+.from('attendance_records')
+.select('morningStatus, afternoonStatus, studentId')
+.gte('date', startDate)
+.lte('date', endDate);
   
         if (attendanceError) {
           console.error('Error fetching attendance records:', attendanceError);
@@ -534,11 +535,14 @@ const classDataResults = sortedClasses.map((classItem) => {
   let presentStudents = 0;
 
   studentIds.forEach((studentId) => {
-    const attendance = studentAttendanceMap.get(studentId);
-    if (attendance) {
-      if (attendance.morning) presentStudents += 0.5;
-      if (attendance.afternoon) presentStudents += 0.5;
-    }
+    const studentAttendanceRecords = attendanceRecords.filter(
+      (record) => record.studentId === studentId
+    );
+
+    studentAttendanceRecords.forEach((record) => {
+      if (record.morningStatus === AttendanceStatus.Present) presentStudents += 0.5;
+      if (record.afternoonStatus === AttendanceStatus.Present) presentStudents += 0.5;
+    });
   });
 
   const presentPercentage = totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0;
@@ -560,7 +564,7 @@ const classDataResults = sortedClasses.map((classItem) => {
     };
   
     fetchClassData();
-  }, [currentDate]);
+  }, [currentDate, startDate, endDate]);
 
   const handleLeftButtonClick = () => {
     setSelectedButton('left');

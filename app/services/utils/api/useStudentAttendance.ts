@@ -246,13 +246,6 @@ const classStudentAttendanceData: AllStudentAttendanceData[] = studentsData.map(
     (record) => record.studentId === student.id
   );
 
-  // Log the morningStatus and afternoonStatus for each student
-  console.log(`Date: ${today}`);
-  console.log(`Student: ${student.name}`);
-  console.log(`Morning Status: ${existingRecord?.morningStatus || 'No record'}`);
-  console.log(`Afternoon Status: ${existingRecord?.afternoonStatus || 'No record'}`);
-  console.log('---');
-
   return {
     student,
     attendanceRecord: existingRecord || null,
