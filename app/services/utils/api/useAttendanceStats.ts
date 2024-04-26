@@ -526,45 +526,48 @@ const { data: attendanceRecords, error: attendanceError } = await supabase
         return classNameA - classNameB;
       });
   
-        // Calculate class data
-const classDataResults = sortedClasses.map((classItem) => {
-  const classId = classItem.id;
-  const studentIds = classStudentsMap.get(classId) || [];
-  const totalStudents = studentIds.length;
+        // Calculate the number of days in the selected date range
+      const numberOfDays = dayjs(endDate).diff(startDate, 'day') + 1;
 
-  let presentStudents = 0;
+      // Calculate class data
+      const classDataResults = sortedClasses.map((classItem) => {
+        const classId = classItem.id;
+        const studentIds = classStudentsMap.get(classId) || [];
+        const totalStudents = studentIds.length * numberOfDays;
 
-  studentIds.forEach((studentId) => {
-    const studentAttendanceRecords = attendanceRecords.filter(
-      (record) => record.studentId === studentId
-    );
+        let presentStudents = 0;
 
-    studentAttendanceRecords.forEach((record) => {
-      if (record.morningStatus === AttendanceStatus.Present) presentStudents += 0.5;
-      if (record.afternoonStatus === AttendanceStatus.Present) presentStudents += 0.5;
-    });
-  });
+        studentIds.forEach((studentId) => {
+          const studentAttendanceRecords = attendanceRecords.filter(
+            (record) => record.studentId === studentId
+          );
 
-  const presentPercentage = totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0;
+          studentAttendanceRecords.forEach((record) => {
+            if (record.morningStatus === AttendanceStatus.Present) presentStudents += 0.5;
+            if (record.afternoonStatus === AttendanceStatus.Present) presentStudents += 0.5;
+          });
+        });
 
-  return {
-    classId,
-    className: classItem.name,
-    section: classItem.section,
-    totalStudents,
-    presentStudents,
-    presentPercentage,
+        const presentPercentage = totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0;
+
+        return {
+          classId,
+          className: classItem.name,
+          section: classItem.section,
+          totalStudents,
+          presentStudents,
+          presentPercentage,
+        };
+      });
+
+      setClassData(classDataResults);
+    } catch (error) {
+      console.error('Error fetching class data:', error);
+    }
   };
-});
-  
-        setClassData(classDataResults);
-      } catch (error) {
-        console.error('Error fetching class data:', error);
-      }
-    };
-  
-    fetchClassData();
-  }, [currentDate, startDate, endDate]);
+
+  fetchClassData();
+}, [currentDate, startDate, endDate]);
 
   const handleLeftButtonClick = () => {
     setSelectedButton('left');
