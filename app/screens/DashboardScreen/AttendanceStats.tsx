@@ -8,8 +8,10 @@ import ToggleBar from '../../components/ToggleBar';
 
 const AttendanceStats = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
+  // const [prevScrollPosition, setPrevScrollPosition] = useState(0);
 
   const handleScroll = (position: number) => {
+    // setPrevScrollPosition(scrollPosition);
     setScrollPosition(position);
   };
   const {
@@ -73,7 +75,7 @@ const AttendanceStats = () => {
   } = useAttendanceStats();
 
   return (
-    
+
     <Box bg="$pixWhite" w="$full" h="$full">
       <StatsHeader
         title="Attendance"
@@ -90,34 +92,35 @@ const AttendanceStats = () => {
         showDatePicker={showDatePicker}
         isNextDisabled={isNextDisabled}
       />
+      {/* {scrollPosition <= prevScrollPosition && ( */}
       {scrollPosition === 0 && (
-    <ToggleBar
-      showActionsheet={showFilterActionsheet}
-      selectedTab={selectedFilterTab}
-      selectedFilters={selectedFilters}
-      selectedFilterOption={selectedFilterOption}
-      onClose={handleCloseFilterActionsheet}
-      onTabSelect={handleFilterTabSelect}
-      onCategorySelect={handleCategoryOptionSelect}
-      onFilterOptionSelect={handleFilterOptionSelect}
-      onSortOptionSelect={handleFilterSortOptionSelect}
-      onClear={handleFilterClear}
-      onApply={handleFilterApply}
-      handleOpenFilterActionsheet={handleOpenFilterActionsheet}
-      sortOption={sortOption}
-      selectedButton={selectedButton}
-      onLeftButtonClick={handleLeftButtonClick}
-      onRightButtonClick={handleRightButtonClick}
-      searchQuery={searchQuery}
-      showSearchInput={showSearchInput}
-      handleSearchButtonClick={handleSearchButtonClick}
-      handleSearchInputChange={handleSearchInputChange}
-      handleClearSearch={handleClearSearch}
-      isClassOptionSelected={isClassOptionSelected}
-      searchButtonPress={searchButtonPress}
-      filterButtonPress={filterButtonPress}
-    />
-  )}
+        <ToggleBar
+          showActionsheet={showFilterActionsheet}
+          selectedTab={selectedFilterTab}
+          selectedFilters={selectedFilters}
+          selectedFilterOption={selectedFilterOption}
+          onClose={handleCloseFilterActionsheet}
+          onTabSelect={handleFilterTabSelect}
+          onCategorySelect={handleCategoryOptionSelect}
+          onFilterOptionSelect={handleFilterOptionSelect}
+          onSortOptionSelect={handleFilterSortOptionSelect}
+          onClear={handleFilterClear}
+          onApply={handleFilterApply}
+          handleOpenFilterActionsheet={handleOpenFilterActionsheet}
+          sortOption={sortOption}
+          selectedButton={selectedButton}
+          onLeftButtonClick={handleLeftButtonClick}
+          onRightButtonClick={handleRightButtonClick}
+          searchQuery={searchQuery}
+          showSearchInput={showSearchInput}
+          handleSearchButtonClick={handleSearchButtonClick}
+          handleSearchInputChange={handleSearchInputChange}
+          handleClearSearch={handleClearSearch}
+          isClassOptionSelected={isClassOptionSelected}
+          searchButtonPress={searchButtonPress}
+          filterButtonPress={filterButtonPress}
+        />
+      )}
       <AttendanceView
         selectedDuration={selectedDuration}
         startDate={startDate}
