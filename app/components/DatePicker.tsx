@@ -1,5 +1,21 @@
-import React from 'react';
-import { Button, ButtonText, AlertDialog, AlertDialogBackdrop, AlertDialogContent, AlertDialogHeader, AlertDialogBody, AlertDialogFooter, Heading, Divider, Text, Input, InputField, VStack, Box } from '@gluestack-ui/themed';
+import React, { useState } from 'react';
+import {
+  Button,
+  ButtonText,
+  AlertDialog,
+  AlertDialogBackdrop,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  Heading,
+  Divider,
+  Text,
+  Input,
+  InputField,
+  VStack,
+  Box,
+} from '@gluestack-ui/themed';
 
 interface DatePickerProps {
   isOpen: boolean;
@@ -42,6 +58,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
   isValidMonth,
   isValidYear,
 }) => {
+  const [showError, setShowError] = useState(false);
+
   const renderDateInput = (
     day: string,
     month: string,
@@ -72,8 +90,35 @@ const DatePicker: React.FC<DatePickerProps> = ({
     </Box>
   );
 
+  const handleOkClick = () => {
+    const isInvalid =
+      !isValidDay(startDay, startMonth, startYear) ||
+      !isValidMonth(startMonth) ||
+      !isValidYear(startYear) ||
+      !isValidDay(endDay, endMonth, endYear) ||
+      !isValidMonth(endMonth) ||
+      !isValidYear(endYear);
+
+    if (isInvalid) {
+      setShowError(true);
+    } else {
+      handleCustomDateChange();
+    }
+  };
+
+  const handleCancel = () => {
+    setShowError(false);
+    handleDatePickerCancel();
+  };
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setShowError(false);
+    }
+  }, [isOpen]);
+
   return (
-    <AlertDialog isOpen={isOpen} onClose={handleDatePickerCancel}>
+    <AlertDialog isOpen={isOpen} onClose={handleCancel}>
       <AlertDialogBackdrop />
       <AlertDialogContent bg="$pixSecondaryLight50">
         <AlertDialogHeader>
@@ -85,16 +130,21 @@ const DatePicker: React.FC<DatePickerProps> = ({
             Start Date
           </Text>
           {renderDateInput(startDay, startMonth, startYear, setStartDay, setStartMonth, setStartYear)}
-          <Text mb="$4" color="$pixText100">
+          <Text my="$4" color="$pixText100">
             End Date
           </Text>
           {renderDateInput(endDay, endMonth, endYear, setEndDay, setEndMonth, setEndYear)}
+          {showError && (
+            <Text color="$red500" mt="$4">
+              Invalid selected range. Please check it again.
+            </Text>
+          )}
         </AlertDialogBody>
         <AlertDialogFooter>
-          <Button variant="outline" mr="$4" onPress={handleDatePickerCancel}>
+          <Button variant="outline" mr="$4" onPress={handleCancel}>
             <ButtonText>Cancel</ButtonText>
           </Button>
-          <Button onPress={handleCustomDateChange}>
+          <Button onPress={handleOkClick}>
             <ButtonText>Ok</ButtonText>
           </Button>
         </AlertDialogFooter>
