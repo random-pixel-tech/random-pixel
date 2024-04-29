@@ -37,10 +37,10 @@ const AttendanceSummaryListItem: React.FC<AttendanceSummaryListItemProps> = ({
 
   return (
     <Box display="flex" py="$1" flexDirection="row" minHeight={36}>
-      <Box w="$1/6" px="$4" py="$6">
+      <Box w="$1/6" px="$4" py="$3">
         <Text size='lg'>{student.rollNumber || '-'}</Text>
       </Box>
-      <Box w="$4/6" px="$4" py="$6">
+      <Box w="$4/6" px="$4" py="$3">
         <Text numberOfLines={1} size='lg'>{student.name}</Text>
       </Box>
       <Box w="$1/6" justifyContent="center" alignItems="center">

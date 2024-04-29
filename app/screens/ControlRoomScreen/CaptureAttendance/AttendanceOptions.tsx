@@ -44,7 +44,7 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
 }) => {
   return (
     <>
-      <Pressable justifyContent="center" w="$1/6" onPress={onOpen} aria-label="Open Options" p="$6">
+      <Pressable justifyContent="center" w="$1/6" onPress={onOpen} aria-label="Open Options" py="$3" px="$6">
         <FontAwesomeIcon icon="ellipsis-vertical" size={18} />
       </Pressable>
       <Modal isOpen={isOpen} onClose={onClose}>

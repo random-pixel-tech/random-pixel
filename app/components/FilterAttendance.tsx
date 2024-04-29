@@ -78,7 +78,7 @@ interface FilterOption {
                             rounded="$md"
                             aria-label={option.label}
                             size='lg'
-                            p="$6"
+                            p="$3"
                         >
                             <CheckboxIndicator
                                 borderColor="$pixPrimary"
