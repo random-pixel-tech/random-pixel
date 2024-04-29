@@ -151,22 +151,33 @@ interface FilterOption {
             }
           }
         } else if (selectedTab === 'Sort') {
-            const sortOptions: {
-                label: string;
-                icon: IconProp;
-            }[] = [
-                    { label: 'Attendance Percentage: Low to High', icon: 'person-arrow-down-to-line' },
-                    { label: 'Attendance Percentage: High to Low', icon: 'person-arrow-up-from-line' },
-                    { label: 'Name: A to Z', icon: 'arrow-up-a-z' },
-                    { label: 'Name: Z to A', icon: 'arrow-up-z-a' },
-                    { label: 'Class: Low to High', icon: 'arrow-up-1-9' },
-                    { label: 'Class: High to Low', icon: 'arrow-up-9-1' }
-                ];
-
-            return renderSortOptions(sortOptions);
+          let sortOptions: {
+            label: string;
+            icon: IconProp;
+          }[] = [];
+      
+          if (selectedButton === 'left') {
+            sortOptions = [
+              { label: 'Attendance Percentage: Low to High', icon: 'person-arrow-down-to-line' },
+              { label: 'Attendance Percentage: High to Low', icon: 'person-arrow-up-from-line' },
+              { label: 'Class: Low to High', icon: 'arrow-up-1-9' },
+              { label: 'Class: High to Low', icon: 'arrow-up-9-1' },
+            ];
+          } else {
+            sortOptions = [
+              { label: 'Attendance Percentage: Low to High', icon: 'person-arrow-down-to-line' },
+              { label: 'Attendance Percentage: High to Low', icon: 'person-arrow-up-from-line' },
+              { label: 'Name: A to Z', icon: 'arrow-up-a-z' },
+              { label: 'Name: Z to A', icon: 'arrow-up-z-a' },
+              { label: 'Class: Low to High', icon: 'arrow-up-1-9' },
+              { label: 'Class: High to Low', icon: 'arrow-up-9-1' },
+            ];
+          }
+      
+          return renderSortOptions(sortOptions);
         }
         return null;
-    };
+      };
 
     const renderFilterOptionsSidebar = () => {
         let options: FilterOption[] = [

@@ -166,32 +166,50 @@ const attendanceDataWithPercentage: StudentAttendanceDataWithPercentage[] = useM
 // Sort attendance data based on the selected sort option and class
 const sortedAttendanceData = useMemo(() => {
   // Check if the sort option is not changed
-  if (!sortOption) return attendanceDataWithPercentage;
+  if (!sortOption) {
+    return selectedButton === 'right' ? attendanceDataWithPercentage : classData;
+  }
 
   // Sort function based on the selected option
-  const sortFunction = (a: StudentAttendanceDataWithPercentage, b: StudentAttendanceDataWithPercentage) => {
-    switch (sortOption) {
-      case 'Name: A to Z':
-        return a.student.name.localeCompare(b.student.name);
-      case 'Name: Z to A':
-        return b.student.name.localeCompare(a.student.name);
-      case 'Attendance Percentage: Low to High':
-        return a.attendancePercentage - b.attendancePercentage;
-      case 'Attendance Percentage: High to Low':
-        return b.attendancePercentage - a.attendancePercentage;
-      case 'Class: Low to High':
-        return a.className.localeCompare(b.className);
-      case 'Class: High to Low':
-        return b.className.localeCompare(a.className);
-      default:
-        return 0;
+  const sortFunction = (a: StudentAttendanceDataWithPercentage | ClassData, b: StudentAttendanceDataWithPercentage | ClassData) => {
+    if (selectedButton === 'right') {
+      switch (sortOption) {
+        case 'Name: A to Z':
+          return (a as StudentAttendanceDataWithPercentage).student.name.localeCompare((b as StudentAttendanceDataWithPercentage).student.name);
+        case 'Name: Z to A':
+          return (b as StudentAttendanceDataWithPercentage).student.name.localeCompare((a as StudentAttendanceDataWithPercentage).student.name);
+        case 'Attendance Percentage: Low to High':
+          return (a as StudentAttendanceDataWithPercentage).attendancePercentage - (b as StudentAttendanceDataWithPercentage).attendancePercentage;
+        case 'Attendance Percentage: High to Low':
+          return (b as StudentAttendanceDataWithPercentage).attendancePercentage - (a as StudentAttendanceDataWithPercentage).attendancePercentage;
+        case 'Class: Low to High':
+          return (a as StudentAttendanceDataWithPercentage).className.localeCompare((b as StudentAttendanceDataWithPercentage).className);
+        case 'Class: High to Low':
+          return (b as StudentAttendanceDataWithPercentage).className.localeCompare((a as StudentAttendanceDataWithPercentage).className);
+        default:
+          return 0;
+      }
+    } else {
+      switch (sortOption) {
+        case 'Attendance Percentage: Low to High':
+          return (a as ClassData).presentPercentage - (b as ClassData).presentPercentage;
+        case 'Attendance Percentage: High to Low':
+          return (b as ClassData).presentPercentage - (a as ClassData).presentPercentage;
+        case 'Class: Low to High':
+          return (a as ClassData).className.localeCompare((b as ClassData).className);
+        case 'Class: High to Low':
+          return (b as ClassData).className.localeCompare((a as ClassData).className);
+        default:
+          return 0;
+      }
     }
   };
 
-  // Sort only if the sort option has changed
-  return [...attendanceDataWithPercentage].sort(sortFunction);
-}, [attendanceDataWithPercentage, sortOption]);
-
+  // Sort based on the selected button
+  return selectedButton === 'right'
+    ? [...attendanceDataWithPercentage].sort(sortFunction)
+    : [...classData].sort(sortFunction);
+}, [attendanceDataWithPercentage, classData, sortOption, selectedButton]);
 
 // Filter attendance data based on the selected filters
 const filteredAttendanceData = useMemo(() => {
@@ -222,8 +240,20 @@ const filteredAttendanceData = useMemo(() => {
 
       return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter && matchesSearchQuery;
     } else {
+      const percentage = (data as ClassData).presentPercentage;
       const className = (data as ClassData).className;
       const section = (data as ClassData).section;
+
+      const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
+        if (filter === '50% or below') {
+          return percentage <= 50;
+        } else if (filter === '50% to 70%') {
+          return percentage > 50 && percentage <= 70;
+        } else if (filter === 'Above 70%') {
+          return percentage > 70;
+        }
+        return false;
+      });
 
       const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
 
@@ -231,7 +261,7 @@ const filteredAttendanceData = useMemo(() => {
 
       const matchesSearchQuery = className.toLowerCase().includes(searchQuery.toLowerCase());
 
-      return matchesClassFilter && matchesSectionFilter && matchesSearchQuery;
+      return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter && matchesSearchQuery;
     }
   };
 
@@ -242,14 +272,13 @@ const filteredAttendanceData = useMemo(() => {
     (!selectedFilters.section || selectedFilters.section.length === 0) &&
     !searchQuery
   ) {
-    return selectedButton === 'right' ? sortedAttendanceData : classData;
+    return sortedAttendanceData;
   } else {
     return selectedButton === 'right'
-      ? sortedAttendanceData.filter(filterFunction)
-      : classData.filter(filterFunction);
+      ? (sortedAttendanceData as StudentAttendanceDataWithPercentage[]).filter(filterFunction)
+      : (sortedAttendanceData as ClassData[]).filter(filterFunction);
   }
-}, [sortedAttendanceData, classData, selectedFilters, searchQuery, selectedButton]);
-
+}, [sortedAttendanceData, selectedFilters, searchQuery, selectedButton]);
 
 useEffect(() => {
   const dateRanges: Record<string, [string, string]> = {
@@ -655,6 +684,6 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
     isClassOptionSelected,
     searchButtonPress,
     filterButtonPress,
-    handleOpenFilterActionsheet
+    handleOpenFilterActionsheet,
     };
 };
