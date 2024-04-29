@@ -18,6 +18,7 @@ export interface ClassData {
   className: string;
   section: string;
   totalStudents: number;
+  totalStudentsSum: number;
   presentStudents: number;
   presentPercentage: number;
 }
@@ -576,7 +577,8 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
       const classDataResults = sortedClasses.map((classItem) => {
         const classId = classItem.id;
         const studentIds = classStudentsMap.get(classId) || [];
-        const totalStudents = studentIds.length * numberOfDays;
+        const totalStudents = studentIds.length
+        const totalStudentsSum = studentIds.length * numberOfDays;
 
         let presentStudents = 0;
 
@@ -591,13 +593,14 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
           });
         });
 
-        const presentPercentage = totalStudents > 0 ? (presentStudents / totalStudents) * 100 : 0;
+        const presentPercentage = totalStudentsSum > 0 ? (presentStudents / totalStudentsSum) * 100 : 0;
 
         return {
           classId,
           className: classItem.name,
           section: classItem.section,
           totalStudents,
+          totalStudentsSum,
           presentStudents,
           presentPercentage,
         };

@@ -13,13 +13,14 @@ interface ClassAttendanceCardProps {
     className: string;
     section: string;
     totalStudents: number;
+    totalStudentsSum: number;
     presentStudents: number;
     presentPercentage: number;
   };
 }
 
 const ClassAttendanceCard: React.FC<ClassAttendanceCardProps> = ({ classData }) => {
-  const { className, totalStudents, presentStudents, presentPercentage, section } = classData;
+  const { className, totalStudents, totalStudentsSum, presentStudents, presentPercentage, section } = classData;
   const classNameOrdinal = toOrdinal(parseInt(className));
 
   return (
@@ -71,7 +72,7 @@ const ClassAttendanceCard: React.FC<ClassAttendanceCardProps> = ({ classData }) 
           </Box>
           <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
             <Text fontSize="$md" color="$pixText" pr="$1">
-              {presentStudents}/{totalStudents}
+              {presentStudents}/{totalStudentsSum}
             </Text>
             <Text fontSize="$sm" color="$pixSecondary2">
               Attendance
