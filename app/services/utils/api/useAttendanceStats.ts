@@ -63,11 +63,12 @@ export const useAttendanceStats = () => {
   const [searchButtonPress, setSearchButtonPress] = useState(false);
   const [filterButtonPress, setFilterButtonPress] = useState(false);
 
-  const handleSearchButtonClick = () => {
+  const handleSearchButtonClick = (selectedButton: 'left' | 'right') => {
     setShowSearchInput(true);
     setSearchButtonPress(true);
+    setSelectedButton(selectedButton);
   };
-
+  
   const handleSearchInputChange = (value: string) => {
     setSearchQuery(value);
   };
@@ -195,32 +196,43 @@ const sortedAttendanceData = useMemo(() => {
 // Filter attendance data based on the selected filters
 const filteredAttendanceData = useMemo(() => {
   // Filter function to check if a data point matches the selected filters and search query
-  const filterFunction = (data: StudentAttendanceDataWithPercentage) => {
-    const percentage = data.attendancePercentage;
-    const className = data.className;
-    const section = data.section;
-    const studentName = data.student.name.toLowerCase();
+  const filterFunction = (data: StudentAttendanceDataWithPercentage | ClassData) => {
+    if (selectedButton === 'right') {
+      const percentage = (data as StudentAttendanceDataWithPercentage).attendancePercentage;
+      const className = (data as StudentAttendanceDataWithPercentage).className;
+      const section = (data as StudentAttendanceDataWithPercentage).section;
+      const studentName = (data as StudentAttendanceDataWithPercentage).student.name.toLowerCase();
 
-    const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
-      if (filter === '70% or below') {
-        return percentage <= 70;
-      } else if (filter === '70% to 90%') {
-        return percentage > 70 && percentage <= 90;
-      } else if (filter === 'Above 90%') {
-        return percentage > 90;
-      }
-      return false;
-    });
+      const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
+        if (filter === '70% or below') {
+          return percentage <= 70;
+        } else if (filter === '70% to 90%') {
+          return percentage > 70 && percentage <= 90;
+        } else if (filter === 'Above 90%') {
+          return percentage > 90;
+        }
+        return false;
+      });
 
-    const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
+      const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
 
-    const matchesSectionFilter = selectedFilters.section.length === 0 || selectedFilters.section.includes(section);
+      const matchesSectionFilter = selectedFilters.section.length === 0 || selectedFilters.section.includes(section);
 
-    const matchesSearchQuery = selectedButton === 'left'
-      ? className.toLowerCase().includes(searchQuery.toLowerCase())
-      : studentName.includes(searchQuery.toLowerCase());
+      const matchesSearchQuery = studentName.includes(searchQuery.toLowerCase());
 
-    return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter && matchesSearchQuery;
+      return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter && matchesSearchQuery;
+    } else {
+      const className = (data as ClassData).className;
+      const section = (data as ClassData).section;
+
+      const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
+
+      const matchesSectionFilter = selectedFilters.section.length === 0 || selectedFilters.section.includes(section);
+
+      const matchesSearchQuery = className.toLowerCase().includes(searchQuery.toLowerCase());
+
+      return matchesClassFilter && matchesSectionFilter && matchesSearchQuery;
+    }
   };
 
   // Apply filters and search query only if any filters are selected or search query is entered
@@ -230,11 +242,13 @@ const filteredAttendanceData = useMemo(() => {
     (!selectedFilters.section || selectedFilters.section.length === 0) &&
     !searchQuery
   ) {
-    return sortedAttendanceData; // No filters or search query, return sorted data directly
+    return selectedButton === 'right' ? sortedAttendanceData : classData;
   } else {
-    return sortedAttendanceData.filter(filterFunction);
+    return selectedButton === 'right'
+      ? sortedAttendanceData.filter(filterFunction)
+      : classData.filter(filterFunction);
   }
-}, [sortedAttendanceData, selectedFilters, searchQuery, selectedButton]);
+}, [sortedAttendanceData, classData, selectedFilters, searchQuery, selectedButton]);
 
 
 useEffect(() => {
@@ -483,11 +497,11 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
         }
   
         // Fetch attendance records for the selected date range
-const { data: attendanceRecords, error: attendanceError } = await supabase
-.from('attendance_records')
-.select('morningStatus, afternoonStatus, studentId')
-.gte('date', startDate)
-.lte('date', endDate);
+        const { data: attendanceRecords, error: attendanceError } = await supabase
+        .from('attendance_records')
+        .select('morningStatus, afternoonStatus, studentId')
+        .gte('date', startDate)
+        .lte('date', endDate);
   
         if (attendanceError) {
           console.error('Error fetching attendance records:', attendanceError);

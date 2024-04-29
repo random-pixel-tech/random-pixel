@@ -135,7 +135,7 @@ const AttendanceStats = () => {
         selectedDuration={selectedDuration}
         startDate={startDate}
         endDate={endDate}
-        attendanceDataWithPercentage={filteredAttendanceData}
+        attendanceData={filteredAttendanceData}
         isLoading={isLoading}
         selectedButton={selectedButton}
         classData={classData}

@@ -13,35 +13,36 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   presentAttendance: number;
 }
 
+type AttendanceData = StudentAttendanceDataWithPercentage | ClassData;
+
 interface AttendanceViewProps {
   selectedDuration: SelectedDuration;
   startDate: string;
   endDate: string;
-  attendanceDataWithPercentage: StudentAttendanceDataWithPercentage[];
+  attendanceData: AttendanceData[];
   isLoading: boolean;
   selectedButton: 'left' | 'right';
   classData: ClassData[];
   onScroll: (position: number) => void;
-
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
   selectedDuration,
   startDate,
   endDate,
-  attendanceDataWithPercentage,
+  attendanceData,
   isLoading,
   selectedButton,
   classData,
-  onScroll
+  onScroll,
 }) => {
   return (
     <ScrollView
-    onScroll={({ nativeEvent }) => {
-      const { contentOffset } = nativeEvent;
-      onScroll(contentOffset.y);
-    }}
-    scrollEventThrottle={16}
+      onScroll={({ nativeEvent }) => {
+        const { contentOffset } = nativeEvent;
+        onScroll(contentOffset.y);
+      }}
+      scrollEventThrottle={16}
     >
       <Box p="$4">
         {isLoading ? (
@@ -50,7 +51,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
           </Box>
         ) : (
           <AttendanceDataRenderer
-            attendanceData={attendanceDataWithPercentage}
+            attendanceData={attendanceData}
             selectedDuration={selectedDuration}
             startDate={startDate}
             endDate={endDate}
@@ -64,7 +65,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
 };
 
 interface AttendanceDataRendererProps {
-  attendanceData: StudentAttendanceDataWithPercentage[];
+  attendanceData: AttendanceData[];
   selectedDuration: SelectedDuration;
   startDate: string;
   endDate: string;
@@ -78,29 +79,29 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
   startDate,
   endDate,
   selectedButton,
-  classData,
 }) => {
   return (
     <>
-      {selectedButton === 'left' ? (
-        classData.map((data) => (
-          <ClassAttendanceCard key={data.classId} classData={data} />
-        ))
-      ) : (
-        attendanceData.map((data) => (
-          <StudentAttendanceCard
-            key={data.student.id}
-            studentAttendanceData={data}
-            className={data.className}
-            section={data.section}
-            selectedDuration={selectedDuration}
-            totalAttendance={data.totalAttendance}
-            presentAttendance={data.presentAttendance}
-            morningStatus={data.attendanceRecord?.morningStatus}
-            afternoonStatus={data.attendanceRecord?.afternoonStatus}
-          />
-        ))
-      )}
+      {attendanceData.map((data) => {
+        if (selectedButton === 'left' && 'classId' in data) {
+          return <ClassAttendanceCard key={data.classId} classData={data} />;
+        } else if (selectedButton === 'right' && 'student' in data && 'totalAttendance' in data && 'presentAttendance' in data) {
+          return (
+            <StudentAttendanceCard
+              key={data.student.id}
+              studentAttendanceData={data}
+              className={data.className}
+              section={data.section}
+              selectedDuration={selectedDuration}
+              totalAttendance={data.totalAttendance}
+              presentAttendance={data.presentAttendance}
+              morningStatus={data.attendanceRecord?.morningStatus}
+              afternoonStatus={data.attendanceRecord?.afternoonStatus}
+            />
+          );
+        }
+        return null;
+      })}
     </>
   );
 };

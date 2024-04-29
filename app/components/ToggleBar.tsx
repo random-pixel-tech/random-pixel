@@ -26,7 +26,7 @@ interface ToggleBarProps {
   onRightButtonClick: () => void;
   searchQuery: string;
   showSearchInput: boolean;
-  handleSearchButtonClick: () => void;
+  handleSearchButtonClick: (selectedButton: 'left' | 'right') => void;
   handleSearchInputChange: (value: string) => void;
   handleClearSearch: () => void;
   isClassOptionSelected: boolean;
@@ -87,9 +87,11 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
           onLeftButtonClick={onLeftButtonClick}
           onRightButtonClick={onRightButtonClick}
         />
-        <SearchButton onPress={handleSearchButtonClick} 
-        searchButtonPress={searchButtonPress}
-        />
+<SearchButton
+  onPress={handleSearchButtonClick}
+  searchButtonPress={searchButtonPress}
+  selectedButton={selectedButton}
+/>
       </Box>
       {showSearchInput && (
         <Box mt="$2" display="flex" flexDirection="row" alignItems="center" px="$4">
@@ -97,8 +99,8 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
             <InputField
               value={searchQuery}
               onChangeText={handleSearchInputChange}
-              placeholder="Search for student name"
-            />
+              placeholder={selectedButton === 'left' ? 'Search for class name' : 'Search for student name'}
+              />
           </Input>
           <Pressable ml="$2" onPress={handleClearSearch}>
             <FontAwesomeIcon icon="xmark" size={18} color={Colors.Primary} />

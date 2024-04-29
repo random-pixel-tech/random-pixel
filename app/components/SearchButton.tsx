@@ -5,15 +5,16 @@ import { Colors } from '../services/utils/colors';
 import { Box } from '@gluestack-ui/themed';
 
 interface SearchButtonProps {
-  onPress: () => void;
+  onPress: (selectedButton: 'left' | 'right') => void;
   searchButtonPress: boolean;
+  selectedButton: 'left' | 'right';
 }
 
-const SearchButton: React.FC<SearchButtonProps> = ({ onPress, searchButtonPress }) => {
+const SearchButton: React.FC<SearchButtonProps> = ({ onPress, searchButtonPress, selectedButton }) => {
   return (
     <Box p="$4">
       <Button
-        onPress={onPress}
+        onPress={() => onPress(selectedButton)}
         variant="outline"
         w="$8"
         flexDirection="column"
@@ -22,9 +23,7 @@ const SearchButton: React.FC<SearchButtonProps> = ({ onPress, searchButtonPress 
         bg={searchButtonPress ? "$pixSecondary2" : "transparent"}
         borderColor={searchButtonPress ? "$pixSecondary2" : "$pixPrimary"}
       >
-        <FontAwesomeIcon icon="magnifying-glass" size={18} 
-        color={searchButtonPress ? "white" : Colors.Primary}
-         />
+        <FontAwesomeIcon icon="magnifying-glass" size={18} color={searchButtonPress ? "white" : Colors.Primary} />
       </Button>
     </Box>
   );
