@@ -8,12 +8,23 @@ import ToggleBar from '../../components/ToggleBar';
 
 const AttendanceStats = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
-  // const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+  const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+  const [isToggleBarVisible, setIsToggleBarVisible] = useState(true);
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
 
   const handleScroll = (position: number) => {
-    // setPrevScrollPosition(scrollPosition);
+    setPrevScrollPosition(scrollPosition);
     setScrollPosition(position);
+
+    if (position > prevScrollPosition) {
+      setIsScrollingDown(true);
+      setIsToggleBarVisible(false);
+    } else if (position < prevScrollPosition) {
+      setIsScrollingDown(false);
+      setIsToggleBarVisible(true);
+    }
   };
+
   const {
     selectedDuration,
     handlePrevDay,
@@ -92,8 +103,7 @@ const AttendanceStats = () => {
         showDatePicker={showDatePicker}
         isNextDisabled={isNextDisabled}
       />
-      {/* {scrollPosition <= prevScrollPosition && ( */}
-      {scrollPosition === 0 && (
+      {isToggleBarVisible && !isScrollingDown && (
         <ToggleBar
           showActionsheet={showFilterActionsheet}
           selectedTab={selectedFilterTab}
