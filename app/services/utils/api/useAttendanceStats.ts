@@ -172,39 +172,52 @@ const sortedAttendanceData = useMemo(() => {
   }
 
   // Sort function based on the selected option
-  const sortFunction = (a: StudentAttendanceDataWithPercentage | ClassData, b: StudentAttendanceDataWithPercentage | ClassData) => {
-    if (selectedButton === 'right') {
-      switch (sortOption) {
-        case 'Name: A to Z':
-          return (a as StudentAttendanceDataWithPercentage).student.name.localeCompare((b as StudentAttendanceDataWithPercentage).student.name);
-        case 'Name: Z to A':
-          return (b as StudentAttendanceDataWithPercentage).student.name.localeCompare((a as StudentAttendanceDataWithPercentage).student.name);
-        case 'Attendance Percentage: Low to High':
-          return (a as StudentAttendanceDataWithPercentage).attendancePercentage - (b as StudentAttendanceDataWithPercentage).attendancePercentage;
-        case 'Attendance Percentage: High to Low':
-          return (b as StudentAttendanceDataWithPercentage).attendancePercentage - (a as StudentAttendanceDataWithPercentage).attendancePercentage;
-        case 'Class: Low to High':
-          return (a as StudentAttendanceDataWithPercentage).className.localeCompare((b as StudentAttendanceDataWithPercentage).className);
-        case 'Class: High to Low':
-          return (b as StudentAttendanceDataWithPercentage).className.localeCompare((a as StudentAttendanceDataWithPercentage).className);
-        default:
-          return 0;
-      }
-    } else {
-      switch (sortOption) {
-        case 'Attendance Percentage: Low to High':
-          return (a as ClassData).presentPercentage - (b as ClassData).presentPercentage;
-        case 'Attendance Percentage: High to Low':
-          return (b as ClassData).presentPercentage - (a as ClassData).presentPercentage;
-        case 'Class: Low to High':
-          return (a as ClassData).className.localeCompare((b as ClassData).className);
-        case 'Class: High to Low':
-          return (b as ClassData).className.localeCompare((a as ClassData).className);
-        default:
-          return 0;
-      }
+const sortFunction = (a: StudentAttendanceDataWithPercentage | ClassData, b: StudentAttendanceDataWithPercentage | ClassData) => {
+  if (selectedButton === 'right') {
+    switch (sortOption) {
+      case 'Name: A to Z':
+        return (a as StudentAttendanceDataWithPercentage).student.name.localeCompare((b as StudentAttendanceDataWithPercentage).student.name);
+      case 'Name: Z to A':
+        return (b as StudentAttendanceDataWithPercentage).student.name.localeCompare((a as StudentAttendanceDataWithPercentage).student.name);
+      case 'Attendance Percentage: Low to High':
+        return (a as StudentAttendanceDataWithPercentage).attendancePercentage - (b as StudentAttendanceDataWithPercentage).attendancePercentage;
+      case 'Attendance Percentage: High to Low':
+        return (b as StudentAttendanceDataWithPercentage).attendancePercentage - (a as StudentAttendanceDataWithPercentage).attendancePercentage;
+      case 'Class: Low to High':
+        return compareClasses((a as StudentAttendanceDataWithPercentage).className, (b as StudentAttendanceDataWithPercentage).className);
+      case 'Class: High to Low':
+        return compareClasses((b as StudentAttendanceDataWithPercentage).className, (a as StudentAttendanceDataWithPercentage).className);
+      default:
+        return 0;
     }
-  };
+  } else {
+    switch (sortOption) {
+      case 'Attendance Percentage: Low to High':
+        return (a as ClassData).presentPercentage - (b as ClassData).presentPercentage;
+      case 'Attendance Percentage: High to Low':
+        return (b as ClassData).presentPercentage - (a as ClassData).presentPercentage;
+      case 'Class: Low to High':
+        return compareClasses((a as ClassData).className, (b as ClassData).className);
+      case 'Class: High to Low':
+        return compareClasses((b as ClassData).className, (a as ClassData).className);
+      default:
+        return 0;
+    }
+  }
+};
+
+// Helper function to compare class names and sections
+const compareClasses = (classA: string, classB: string) => {
+  const classNameA = parseInt(classA, 10);
+  const classNameB = parseInt(classB, 10);
+
+  if (classNameA === classNameB) {
+    return classA.localeCompare(classB);
+  }
+
+  return classNameA - classNameB;
+};
+
 
   // Sort based on the selected button
   return selectedButton === 'right'
