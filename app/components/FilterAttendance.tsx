@@ -20,14 +20,15 @@ interface FilterAttendanceProps {
     sortOption: string;
     isClassOptionSelected: boolean;
     filterButtonPress: boolean;
-}
+    selectedButton: 'left' | 'right';
+  }
 
 interface FilterOption {
     label: string;
     value: string;
-}
+  }
 
-const FilterAttendance: React.FC<FilterAttendanceProps> = ({
+  const FilterAttendance: React.FC<FilterAttendanceProps> = ({
     showActionsheet,
     selectedTab,
     selectedFilters,
@@ -42,8 +43,9 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
     sortOption,
     onCategorySelect,
     isClassOptionSelected,
-    filterButtonPress
-}) => {
+    filterButtonPress,
+    selectedButton,
+  }) => {
     const renderTabBar = () => (
         <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor="$pixPrimaryLight100">
             {['Filter', 'Sort'].map(tab => (
@@ -92,20 +94,24 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
         );
     };
 
-    const renderAttendanceOptions = () => renderFilterOptions([
-        { label: '70% or below', value: '70% or below' },
-        { label: '70% to 90%', value: '70% to 90%' },
-        { label: 'Above 90%', value: 'Above 90%' }
-    ], 'attendance');
+    const renderAttendanceOptions = () => {
+        const options: FilterOption[] = [
+          { label: '50% or below', value: '50% or below' },
+          { label: '50% to 70%', value: '50% to 70%' },
+          { label: 'Above 70%', value: 'Above 70%' },
+        ];
+    
+        return renderFilterOptions(options, 'attendance');
+      };
 
 
-    const renderClassOptions = () => renderFilterOptions(
+      const renderClassOptions = () => renderFilterOptions(
         Array.from({ length: 10 }, (_, index) => ({
-            label: `Class ${index + 1}`,
-            value: `${index + 1}`
+          label: `Class ${index + 1}`,
+          value: `${index + 1}`
         })),
         'class'
-    );
+      );
 
     const renderSectionsOptions = () => renderFilterOptions([
         { label: 'A', value: 'A' },
@@ -130,16 +136,20 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
 
     const renderAvailableOptions = () => {
         if (selectedTab === 'Filter') {
+          if (selectedButton === 'left') {
+            return renderAttendanceOptions();
+          } else {
             switch (selectedFilterOption) {
-                case 'Attendance Percentage':
-                    return renderAttendanceOptions();
-                case 'Class':
-                    return renderClassOptions();
-                case 'Section':
-                    return renderSectionsOptions();
-                default:
-                    return null;
+              case 'Attendance Percentage':
+                return renderAttendanceOptions();
+              case 'Class':
+                return renderClassOptions();
+              case 'Section':
+                return renderSectionsOptions();
+              default:
+                return null;
             }
+          }
         } else if (selectedTab === 'Sort') {
             const sortOptions: {
                 label: string;
@@ -159,23 +169,29 @@ const FilterAttendance: React.FC<FilterAttendanceProps> = ({
     };
 
     const renderFilterOptionsSidebar = () => {
-        const options = [
+        let options: FilterOption[] = [
           { label: 'Attendance Percentage', value: 'Attendance Percentage' },
-          { label: 'Class', value: 'Class' },
         ];
-      
-        if (isClassOptionSelected) {
-          options.push({ label: 'Section', value: 'Section' });
+    
+        if (selectedButton === 'right') {
+          options = [
+            { label: 'Attendance Percentage', value: 'Attendance Percentage' },
+            { label: 'Class', value: 'Class' },
+          ];
+    
+          if (isClassOptionSelected) {
+            options.push({ label: 'Section', value: 'Section' });
+          }
         }
-      
+
         return options.map(option => (
-          <ActionsheetItem key={option.value} onPress={() => onCategorySelect(option.value)}>
-            <ActionsheetItemText color='$pixText100' fontWeight={selectedFilterOption === option.value ? 'bold' : 'normal'}>
-              {option.label}
-            </ActionsheetItemText>
-          </ActionsheetItem>
-        ));
-      };
+            <ActionsheetItem key={option.value} onPress={() => onCategorySelect(option.value)}>
+              <ActionsheetItemText color='$pixText100' fontWeight={selectedFilterOption === option.value ? 'bold' : 'normal'}>
+                {option.label}
+              </ActionsheetItemText>
+            </ActionsheetItem>
+          ));
+        };
 
     return (
         <Box p="$4">

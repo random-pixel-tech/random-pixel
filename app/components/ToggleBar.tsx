@@ -79,6 +79,7 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
           sortOption={sortOption}
           isClassOptionSelected={isClassOptionSelected}
           filterButtonPress={filterButtonPress}
+          selectedButton={selectedButton}
         />
         <ToggleButtons
           leftButtonLabel="Classes"
