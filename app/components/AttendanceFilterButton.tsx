@@ -190,7 +190,7 @@ interface FilterOption {
             { label: 'Class', value: 'Class' },
           ];
     
-          if (isClassOptionSelected) {
+          if (isClassOptionSelected && selectedFilterOption === 'Class') {
             options.push({ label: 'Section', value: 'Section' });
           }
         }
