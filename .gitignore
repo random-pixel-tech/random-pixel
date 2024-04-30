@@ -33,4 +33,4 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
-app/services/utils/supabase.ts
+# app/services/utils/supabase.ts
