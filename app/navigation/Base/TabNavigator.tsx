@@ -5,7 +5,7 @@ import HomePage from '../../screens/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
 import Profile from '../../screens/Profile';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import AttendanceActionSheetNav from '../ControlRoomNav';
+import ControlRoomNav from '../ControlRoomNav';
 import DashNav from '../DashNav';
 import { useNavigation } from '@react-navigation/native';
 import { RouteNames } from '../../services/utils/RouteNames';
@@ -50,7 +50,7 @@ const TabNavigator: React.FC = () => {
             />
             <Tab.Screen
                 name="Control Room"
-                component={AttendanceActionSheetNav}
+                component={ControlRoomNav}
                 options={{
                     tabBarIcon: ({ color, focused }) => (
                         <FontAwesomeIcon icon="book-open" size={focused ? 24 : 20} color={color} />

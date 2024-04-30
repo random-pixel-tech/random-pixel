@@ -8,7 +8,7 @@ import { RouteNames } from '../services/utils/RouteNames';
 
 const Stack = createNativeStackNavigator();
 
-const AttendanceActionSheetNav = () => {
+const ControlRoomNav = () => {
   return (
     <Stack.Navigator initialRouteName={RouteNames.ControlRoom}>
       <Stack.Screen name={RouteNames.ControlRoom} component={ControlRoom} options={{ headerShown: true }} />
@@ -20,4 +20,4 @@ const AttendanceActionSheetNav = () => {
   );
 };
 
-export default AttendanceActionSheetNav;
+export default ControlRoomNav;
