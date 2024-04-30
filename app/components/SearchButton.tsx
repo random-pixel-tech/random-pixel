@@ -23,7 +23,7 @@ const SearchButton: React.FC<SearchButtonProps> = ({ onPress, searchButtonPress,
         bg={searchButtonPress ? "$pixSecondary2" : "transparent"}
         borderColor={searchButtonPress ? "$pixSecondary2" : "$pixPrimary"}
       >
-        <FontAwesomeIcon icon="magnifying-glass" size={18} color={searchButtonPress ? "white" : Colors.Primary} />
+        <FontAwesomeIcon icon="magnifying-glass" size={18} color={searchButtonPress ? Colors.White : Colors.Primary} />
       </Button>
     </Box>
   );

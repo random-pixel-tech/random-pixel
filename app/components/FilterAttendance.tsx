@@ -210,7 +210,7 @@ interface FilterOption {
             bg={filterButtonPress ? "$pixSecondary2" : "transparent"}
             borderColor={filterButtonPress ? "$pixSecondary2" : "$pixPrimary"}
             >
-                <FontAwesomeIcon icon="filter" size={18} color={filterButtonPress ? "white" : Colors.Primary} />
+                <FontAwesomeIcon icon="filter" size={18} color={filterButtonPress ? Colors.White : Colors.Primary} />
                 <Actionsheet isOpen={showActionsheet} onClose={onClose} closeOnOverlayClick zIndex={999}>
                     <ActionsheetBackdrop />
                     <ActionsheetContent h="$5/6" zIndex={999}>
