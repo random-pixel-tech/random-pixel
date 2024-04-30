@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Input, InputField } from '@gluestack-ui/themed';
 import FilterAttendance from './FilterAttendance';
-import ToggleButtons from './ToggleButtons';
+import SegmentedControl from './SegmentedControl';
 import SearchButton from './SearchButton';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Colors } from '../services/utils/colors';
@@ -81,7 +81,7 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
           filterButtonPress={filterButtonPress}
           selectedButton={selectedButton}
         />
-        <ToggleButtons
+        <SegmentedControl
           leftButtonLabel="Classes"
           rightButtonLabel="Students"
           selectedButton={selectedButton}

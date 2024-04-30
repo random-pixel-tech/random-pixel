@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Button, ButtonText } from '@gluestack-ui/themed';
 
-interface ToggleButtonsProps {
+interface SecgmentedControlProps {
   leftButtonLabel: string;
   rightButtonLabel: string;
   selectedButton: 'left' | 'right';
@@ -9,7 +9,7 @@ interface ToggleButtonsProps {
   onRightButtonClick: () => void;
 }
 
-const ToggleButtons: React.FC<ToggleButtonsProps> = ({
+const SecgmentedControl: React.FC<SecgmentedControlProps> = ({
   leftButtonLabel,
   rightButtonLabel,
   selectedButton,
@@ -46,4 +46,4 @@ const ToggleButtons: React.FC<ToggleButtonsProps> = ({
   );
 };
 
-export default ToggleButtons;
+export default SecgmentedControl;

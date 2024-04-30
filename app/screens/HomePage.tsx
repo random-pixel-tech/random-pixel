@@ -3,7 +3,6 @@ import { Box, ScrollView, Text } from '@gluestack-ui/themed';
 import { supabase } from '../services/utils/supabase';
 import ClassAttendanceCard from '../components/ClassAttendanceCard';
 import { useAttendanceStats } from '../services/utils/api/useAttendanceStats';
-import ToggleButtons from '../components/ToggleButtons';
 
 const Home: React.FC = () => {
   // const { classData } = useAttendanceStats();
