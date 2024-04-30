@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Colors } from '../services/utils/colors';
 import { Pressable } from '@gluestack-ui/themed';
 
-interface ToggleBarProps {
+interface StatsSearchAndFilterBarProps {
   showActionsheet: boolean;
   selectedTab: string;
   selectedFilters: Record<string, string[]>;
@@ -34,7 +34,7 @@ interface ToggleBarProps {
   filterButtonPress: boolean;
 }
 
-const ToggleBar: React.FC<ToggleBarProps> = ({
+const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
   showActionsheet,
   selectedTab,
   selectedFilters,
@@ -112,4 +112,4 @@ const ToggleBar: React.FC<ToggleBarProps> = ({
   );
 };
 
-export default ToggleBar;
+export default StatsSearchAndFilterBar;

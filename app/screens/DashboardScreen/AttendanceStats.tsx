@@ -4,12 +4,12 @@ import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
 import { useAttendanceStats } from '../../services/utils/api/useAttendanceStats';
 import DatePicker from '../../components/DatePicker';
-import ToggleBar from '../../components/ToggleBar';
+import StatsSearchAndFilterBar from '../../components/StatsSearchAndFilterBar';
 
 const AttendanceStats = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [prevScrollPosition, setPrevScrollPosition] = useState(0);
-  const [isToggleBarVisible, setIsToggleBarVisible] = useState(true);
+  const [isStatsSearchAndFilterBarVisible, setIsStatsSearchAndFilterBarVisible] = useState(true);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
 
   const handleScroll = (position: number) => {
@@ -18,10 +18,10 @@ const AttendanceStats = () => {
 
     if (position > prevScrollPosition) {
       setIsScrollingDown(true);
-      setIsToggleBarVisible(false);
+      setIsStatsSearchAndFilterBarVisible(false);
     } else if (position < prevScrollPosition) {
       setIsScrollingDown(false);
-      setIsToggleBarVisible(true);
+      setIsStatsSearchAndFilterBarVisible(true);
     }
   };
 
@@ -103,8 +103,8 @@ const AttendanceStats = () => {
         showDatePicker={showDatePicker}
         isNextDisabled={isNextDisabled}
       />
-      {isToggleBarVisible && !isScrollingDown && (
-        <ToggleBar
+      {isStatsSearchAndFilterBarVisible && !isScrollingDown && (
+        <StatsSearchAndFilterBar
           showActionsheet={showFilterActionsheet}
           selectedTab={selectedFilterTab}
           selectedFilters={selectedFilters}
