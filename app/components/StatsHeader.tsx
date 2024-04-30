@@ -42,18 +42,33 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
 }) => {
   const navigation = useNavigation();
 
-  const options = [
+  const renderDate = React.useCallback(() => {
+    switch (selectedDuration) {
+      case SelectedDuration.CustomRange:
+        return showDatePicker ? "Start Date to End Date" : `${formattedStartDate} to ${formattedEndDate}`;
+      case SelectedDuration.Monthly:
+        return currentDate.format('MMM - YYYY');
+      case SelectedDuration.Yearly:
+        return currentDate.format('YYYY');
+      case SelectedDuration.Weekly:
+        return `Week ${currentDate.week() - currentDate.startOf('month').week() + 1}, ${currentDate.format('MMM - YYYY')}`;
+      default:
+        return currentDate.format('DD, MMM - YYYY');
+    }
+  }, [selectedDuration, currentDate, showDatePicker]);
+
+  const options = React.useMemo(() => [
     { id: SelectedDuration.Daily, label: 'Daily', onPress: () => handleOptionSelect(SelectedDuration.Daily) },
     { id: SelectedDuration.Weekly, label: 'Weekly', onPress: () => handleOptionSelect(SelectedDuration.Weekly) },
     { id: SelectedDuration.Monthly, label: 'Monthly', onPress: () => handleOptionSelect(SelectedDuration.Monthly) },
     { id: SelectedDuration.Yearly, label: 'Yearly', onPress: () => handleOptionSelect(SelectedDuration.Yearly) },
     { id: SelectedDuration.CustomRange, label: 'Custom Date Range', onPress: () => handleOptionSelect(SelectedDuration.CustomRange) },
-  ];
+  ], [handleOptionSelect]);
 
+  const formattedStartDate = React.useMemo(() => dayjs(startDate).format('DD, MMM - YYYY'), [startDate]);
+  const formattedEndDate = React.useMemo(() => dayjs(endDate).format('DD, MMM - YYYY'), [endDate]);
 
-  const formatDate = (date: string) => {
-    return dayjs(date).format('DD, MMM - YYYY');
-  };
+  const handleBackPress = React.useCallback(() => navigation.goBack(), [navigation]);
 
   return (
     <Box
@@ -70,7 +85,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
       borderBottomWidth={2}
       borderBottomColor={Colors.SecondaryLight100}
     >
-      <BackArrowButton onPress={() => navigation.goBack()} />
+      <BackArrowButton onPress={handleBackPress} />
       <Box display="flex" flexDirection="column" alignItems="center" minWidth="$48">
         <Text color={Colors.Text100} fontSize="$md" fontWeight="$medium" mb="$2">
           {title}
@@ -82,40 +97,24 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
             </Pressable>
           )}
           <Text px="$2">
-            {selectedDuration === SelectedDuration.CustomRange
-              ? showDatePicker
-                ? "Start Date to End Date"
-                : `${formatDate(startDate)} to ${formatDate(endDate)}`
-              : selectedDuration === SelectedDuration.Monthly
-                ? currentDate.format('MMM - YYYY')
-                : selectedDuration === SelectedDuration.Yearly
-                  ? currentDate.format('YYYY')
-                  : selectedDuration === SelectedDuration.Weekly
-                    ? `Week ${currentDate.week() - currentDate.startOf('month').week() + 1}, ${currentDate.format('MMM - YYYY')}`
-                    : currentDate.format('DD, MMM - YYYY')}
+            {renderDate()}
           </Text>
           {selectedDuration !== SelectedDuration.CustomRange && (
-            <Pressable onPress={handleNextDay} p="$4" disabled={isNextDisabled}
-              opacity={isNextDisabled ? 0.5 : 1}
-            >
+            <Pressable onPress={handleNextDay} p="$4" disabled={isNextDisabled} opacity={isNextDisabled ? 0.5 : 1}>
               <FontAwesomeIcon icon="arrow-right" size={16} color={Colors.Primary} />
             </Pressable>
           )}
         </Box>
-
       </Box>
       <Pressable onPress={handleRangeOptionsMenuOpen} p="$4" display="flex" flexDirection="column" alignItems="center" minWidth="$16">
         <FontAwesomeIcon icon={faCalendarAlt} size={18} color={Colors.Primary} />
         <Text color={Colors.Text100} mt="$1">
-          {selectedDuration === SelectedDuration.CustomRange
-            ? 'Custom'
-            : options.find((option) => option.id === selectedDuration)?.label || 'Daily'}
+          {selectedDuration === SelectedDuration.CustomRange ? 'Custom' : options.find((option) => option.id === selectedDuration)?.label || 'Daily'}
         </Text>
       </Pressable>
-
       <OptionsMenu options={options} isOpen={isOptionsMenuOpen} onClose={handleRangeOptionsMenuClose} />
     </Box>
   );
 };
 
-export default StatsHeader;
+export default React.memo(StatsHeader);
