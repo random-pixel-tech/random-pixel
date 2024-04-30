@@ -511,6 +511,13 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
     }
   };
 
+  const handleClearCategoryFilters = (category: string) => {
+    setSelectedFilters(prevFilters => ({
+      ...prevFilters,
+      [category]: [],
+    }));
+  };
+
   const handleFilterApply = () => {
     // Apply selected filters and sorting
     setShowFilterActionsheet(false);
@@ -701,5 +708,6 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
     searchButtonPress,
     filterButtonPress,
     handleOpenFilterActionsheet,
+    handleClearCategoryFilters
     };
 };

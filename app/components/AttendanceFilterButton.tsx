@@ -239,7 +239,7 @@ interface FilterOption {
                         )}
                         <Box w="$full" flexDirection="row" justifyContent="space-between" p="$4" px="$8" borderTopWidth={1} borderTopColor='$pixPrimaryLight100' mt="$1">
                             <Button variant="outline" onPress={onClear} w="$1/2" mr="$1" rounded="$xl" borderWidth={0}>
-                                <ButtonText>Clear</ButtonText>
+                                <ButtonText>Clear All</ButtonText>
                             </Button>
                             <Button onPress={onApply} w="$1/2" m="$1" rounded="$xl">
                                 <ButtonText>Apply</ButtonText>

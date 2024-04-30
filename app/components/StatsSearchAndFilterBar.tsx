@@ -32,7 +32,7 @@ interface StatsSearchAndFilterBarProps {
   isClassOptionSelected: boolean;
   searchButtonPress: boolean;
   filterButtonPress: boolean;
-}
+  handleClearCategoryFilters: (category: string) => void;}
 
 const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
   showActionsheet,
@@ -58,7 +58,8 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
   handleClearSearch,
   isClassOptionSelected,
   searchButtonPress,
-  filterButtonPress
+  filterButtonPress,
+  handleClearCategoryFilters
 }) => {
   return (
     <Box>
@@ -80,6 +81,7 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
           isClassOptionSelected={isClassOptionSelected}
           filterButtonPress={filterButtonPress}
           selectedButton={selectedButton}
+          handleClearCategoryFilters={handleClearCategoryFilters}
         />
         <SegmentedControl
           leftButtonLabel="Classes"

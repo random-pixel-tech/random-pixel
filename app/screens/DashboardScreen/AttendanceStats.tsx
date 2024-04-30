@@ -83,6 +83,7 @@ const AttendanceStats = () => {
     isClassOptionSelected,
     searchButtonPress,
     filterButtonPress,
+    handleClearCategoryFilters
   } = useAttendanceStats();
 
   return (
@@ -129,6 +130,7 @@ const AttendanceStats = () => {
           isClassOptionSelected={isClassOptionSelected}
           searchButtonPress={searchButtonPress}
           filterButtonPress={filterButtonPress}
+          handleClearCategoryFilters={handleClearCategoryFilters}
         />
       )}
       <AttendanceView
