@@ -71,19 +71,19 @@ const DatePicker: React.FC<DatePickerProps> = ({
     <Box display="flex" flexDirection="row" justifyContent="space-between" mb="$4">
       <Box display="flex" flexDirection="column" w="$1/5">
         <Input variant="underlined" isInvalid={!isValidDay(day, month, year)}>
-          <InputField w="$0.5" placeholder="DD" value={day} onChangeText={setDay} />
+          <InputField w="$0.5" placeholder="DD" value={day} onChangeText={setDay} textAlign='center'/>
         </Input>
         <Text alignSelf="center">Day</Text>
       </Box>
       <Box display="flex" flexDirection="column" w="$1/5">
         <Input variant="underlined" isInvalid={!isValidMonth(month)}>
-          <InputField w="$0.5" placeholder="MM" value={month} onChangeText={setMonth} />
+          <InputField w="$0.5" placeholder="MM" value={month} onChangeText={setMonth} textAlign='center'/>
         </Input>
         <Text alignSelf="center">Month</Text>
       </Box>
       <Box display="flex" flexDirection="column" w="$1/5">
         <Input variant="underlined" isInvalid={!isValidYear(year)}>
-          <InputField w="$0.5" placeholder="YYYY" value={year} onChangeText={setYear} />
+          <InputField w="$0.5" placeholder="YYYY" value={year} onChangeText={setYear} textAlign='center'/>
         </Input>
         <Text alignSelf="center">Year</Text>
       </Box>
