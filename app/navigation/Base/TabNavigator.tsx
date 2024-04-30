@@ -5,7 +5,7 @@ import HomePage from '../../screens/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
 import Profile from '../../screens/Profile';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import AttendanceActionSheetNav from '../ControlRoomNav/AttendanceActionSheetNav';
+import AttendanceActionSheetNav from '../ControlRoomNav';
 import DashNav from '../DashNav';
 import { useNavigation } from '@react-navigation/native';
 import { RouteNames } from '../../services/utils/RouteNames';
@@ -57,6 +57,12 @@ const TabNavigator: React.FC = () => {
                     ),
                     headerShown: false
                 }}
+                listeners={({ navigation }) => ({
+                    tabPress: (e) => {
+                        e.preventDefault();
+                        navigation.navigate('Control Room', { screen: RouteNames.ControlRoom });
+                    },
+                })}
             />
             <Tab.Screen
                 name="Dashboard"
