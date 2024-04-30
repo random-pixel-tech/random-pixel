@@ -80,7 +80,6 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({
       alignItems="center"
       justifyContent="space-between"
       px="$4"
-      pt="$8"
       pb="$2"
       borderBottomWidth={2}
       borderBottomColor={Colors.SecondaryLight100}

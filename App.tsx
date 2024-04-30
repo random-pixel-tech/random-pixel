@@ -7,6 +7,8 @@ import { Session } from '@supabase/supabase-js';
 import AppNavigation from './app/navigation/Base/AppNavigation';
 import { config } from "./config/gluestack-ui.config"
 import { initializeIconLibrary } from './app/iconLibrary';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 initializeIconLibrary()
 
@@ -24,16 +26,19 @@ export default function App() {
   }, [])
 
   return (
+    <SafeAreaProvider>
     <GluestackUIProvider config={config}>
-    {/* {session && session.user ? (
+      <SafeAreaView style={{ flex: 1 }}>
+        {/* {session && session.user ? (
       <AppNavigation />
     ) : (
       <Center w="100%" h="100%">
         <Auth />
       </Center>
     )} */}
-          <AppNavigation />
-
-  </GluestackUIProvider>
+        <AppNavigation />
+      </SafeAreaView>
+    </GluestackUIProvider>
+    </SafeAreaProvider>
   );
 }
