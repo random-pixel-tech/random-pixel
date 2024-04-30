@@ -10,7 +10,7 @@ export enum RouteNames {
     AttendanceSummary = 'AttendanceSummary',
 
     // Dashboard
-    Dashboard = 'Dashboard',
+    Dashboard = 'DashboardHome',
     AttendanceStats = 'AttendanceStats',
   }
   
