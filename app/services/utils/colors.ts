@@ -5,5 +5,5 @@ export const Colors = {
     PrimaryDark50: '#391D85',
     SecondaryLight100: '#DFD6F8',
     Secondary2: '#8C85FF',
-    
+    White: '#FFFFFF',
   };

@@ -23,10 +23,10 @@ const ToggleButtons: React.FC<ToggleButtonsProps> = ({
         onPress={onLeftButtonClick}
         borderTopLeftRadius="$full"
         borderBottomLeftRadius="$full"
-        bg={selectedButton === 'left' ? '$pixSecondary2' : 'white'}
+        bg={selectedButton === 'left' ? '$pixSecondary2' : '$white'}
         variant={selectedButton === 'left' ? 'solid' : 'outline'}
       >
-        <ButtonText color={selectedButton === 'left' ? 'white' : '$pixPrimaryDark50'} fontSize={12}>
+        <ButtonText color={selectedButton === 'left' ? '$white' : '$pixPrimaryDark50'} fontSize={12}>
           {leftButtonLabel}
         </ButtonText>
       </Button>
@@ -35,10 +35,10 @@ const ToggleButtons: React.FC<ToggleButtonsProps> = ({
         onPress={onRightButtonClick}
         borderTopRightRadius="$full"
         borderBottomRightRadius="$full"
-        bg={selectedButton === 'right' ? '$pixSecondary2' : 'white'}
+        bg={selectedButton === 'right' ? '$pixSecondary2' : '$white'}
         variant={selectedButton === 'right' ? 'solid' : 'outline'}
       >
-        <ButtonText color={selectedButton === 'right' ? 'white' : '$pixPrimaryDark50'} fontSize={12}>
+        <ButtonText color={selectedButton === 'right' ? '$white' : '$pixPrimaryDark50'} fontSize={12}>
           {rightButtonLabel}
         </ButtonText>
       </Button>
