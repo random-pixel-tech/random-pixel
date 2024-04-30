@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Colors } from '../services/utils/colors';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-interface FilterAttendanceProps {
+interface AttendanceFilterButtonProps {
     showActionsheet: boolean;
     selectedTab: string;
     selectedFilters: Record<string, string[]>;
@@ -28,7 +28,7 @@ interface FilterOption {
     value: string;
   }
 
-  const FilterAttendance: React.FC<FilterAttendanceProps> = ({
+  const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
     showActionsheet,
     selectedTab,
     selectedFilters,
@@ -252,4 +252,4 @@ interface FilterOption {
     );
 };
 
-export default FilterAttendance;
+export default AttendanceFilterButton;

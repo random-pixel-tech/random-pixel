@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Input, InputField } from '@gluestack-ui/themed';
-import FilterAttendance from './FilterAttendance';
+import AttendanceFilterButton from './AttendanceFilterButton';
 import SegmentedControl from './SegmentedControl';
 import SearchButton from './SearchButton';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -63,7 +63,7 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
   return (
     <Box>
       <Box display="flex" flexDirection="row" alignItems="center">
-        <FilterAttendance
+        <AttendanceFilterButton
           showActionsheet={showActionsheet}
           selectedTab={selectedTab}
           selectedFilters={selectedFilters}
@@ -88,11 +88,11 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
           onLeftButtonClick={onLeftButtonClick}
           onRightButtonClick={onRightButtonClick}
         />
-<SearchButton
-  onPress={handleSearchButtonClick}
-  searchButtonPress={searchButtonPress}
-  selectedButton={selectedButton}
-/>
+        <SearchButton
+          onPress={handleSearchButtonClick}
+          searchButtonPress={searchButtonPress}
+          selectedButton={selectedButton}
+        />
       </Box>
       {showSearchInput && (
         <Box mt="$2" display="flex" flexDirection="row" alignItems="center" px="$4">
@@ -101,7 +101,7 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
               value={searchQuery}
               onChangeText={handleSearchInputChange}
               placeholder={selectedButton === 'left' ? 'Search for class name' : 'Search for student name'}
-              />
+            />
           </Input>
           <Pressable ml="$2" onPress={handleClearSearch}>
             <FontAwesomeIcon icon="xmark" size={18} color={Colors.Primary} />
