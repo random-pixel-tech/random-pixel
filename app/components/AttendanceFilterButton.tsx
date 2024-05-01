@@ -107,12 +107,18 @@ const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
   };
 
   const renderAttendanceOptions = () => {
-    const options: FilterOption[] = [
-      { label: '50% or below', value: '50% or below' },
-      { label: '50% to 70%', value: '50% to 70%' },
-      { label: 'Above 70%', value: 'Above 70%' },
-    ];
-
+    const options: FilterOption[] = selectedButton === 'right'
+      ? [
+          { label: '70% or below', value: '70% or below' },
+          { label: '70% to 90%', value: '70% to 90%' },
+          { label: 'Above 90%', value: 'Above 90%' },
+        ]
+      : [
+          { label: '50% or below', value: '50% or below' },
+          { label: '50% to 70%', value: '50% to 70%' },
+          { label: 'Above 70%', value: 'Above 70%' },
+        ];
+  
     return renderFilterOptions(options, 'attendance');
   };
 
