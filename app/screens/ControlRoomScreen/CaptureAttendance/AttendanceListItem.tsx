@@ -64,7 +64,7 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
   ];
 
   return (
-    <Box display="flex" py="$1" flexDirection="row" minHeight={36}>
+    <Box display="flex" py="$2" my="$0.25" flexDirection="row" minHeight={36}>
       <Box w="$1/6" px="$4" py="$3">
         <Text size='lg'>{student.rollNumber || '-'}</Text>
       </Box>
