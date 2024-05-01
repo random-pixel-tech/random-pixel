@@ -70,55 +70,55 @@ const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
 
   const renderFilterOptions = (options: FilterOption[], category: string) => {
     return (
-        
-        <ActionsheetScrollView>
-          <HStack alignContent='center' justifyContent='space-between' px="$2" mb="$2">
+
+      <ActionsheetScrollView>
+        <HStack alignContent='center' justifyContent='space-between' px="$2" mb="$2">
           <Box alignContent='center' h="$5" justifyContent='center'>
-          <Text color='$pixText' fontSize="$xs">Filter by {category}</Text>
+            <Text color='$pixText' fontSize="$xs">Filter by {category}</Text>
           </Box>
           <Button onPress={() => handleClearCategoryFilters(category)} variant="outline" borderWidth={0} h="$5" p="$0">
             <ButtonText color="$pixTextLight50" fontSize="$xs">Clear Filters</ButtonText>
           </Button>
         </HStack>
-          {options.map(option => (
-            <ActionsheetItem key={option.value} onPress={() => onFilterOptionSelect(category, option.value)} p="$0">
-              <Checkbox
-                value={option.value}
-                isChecked={selectedFilters[category].includes(option.value)}
-                onChange={() => onFilterOptionSelect(category, option.value)}
-                rounded="$md"
-                aria-label={option.label}
-                size='lg'
-                p="$3"
+        {options.map(option => (
+          <ActionsheetItem key={option.value} onPress={() => onFilterOptionSelect(category, option.value)} p="$0">
+            <Checkbox
+              value={option.value}
+              isChecked={selectedFilters[category].includes(option.value)}
+              onChange={() => onFilterOptionSelect(category, option.value)}
+              rounded="$md"
+              aria-label={option.label}
+              size='lg'
+              p="$3"
+            >
+              <CheckboxIndicator
+                borderColor="$pixPrimary"
+                bg={selectedFilters[category].includes(option.value) ? '$pixPrimary' : 'transparent'}
               >
-                <CheckboxIndicator
-                  borderColor="$pixPrimary"
-                  bg={selectedFilters[category].includes(option.value) ? '$pixPrimary' : 'transparent'}
-                >
-                  <CheckboxIcon as={CheckIcon} />
-                </CheckboxIndicator>
-              </Checkbox>
-              <ActionsheetItemText color='$pixText100'>{option.label}</ActionsheetItemText>
-            </ActionsheetItem>
-          ))}
+                <CheckboxIcon as={CheckIcon} />
+              </CheckboxIndicator>
+            </Checkbox>
+            <ActionsheetItemText color='$pixText100'>{option.label}</ActionsheetItemText>
+          </ActionsheetItem>
+        ))}
 
-        </ActionsheetScrollView>
+      </ActionsheetScrollView>
     );
   };
 
   const renderAttendanceOptions = () => {
     const options: FilterOption[] = selectedButton === 'right'
       ? [
-          { label: '70% or below', value: '70% or below' },
-          { label: '70% to 90%', value: '70% to 90%' },
-          { label: 'Above 90%', value: 'Above 90%' },
-        ]
+        { label: '70% or below', value: '70% or below' },
+        { label: '70% to 90%', value: '70% to 90%' },
+        { label: 'Above 90%', value: 'Above 90%' },
+      ]
       : [
-          { label: '50% or below', value: '50% or below' },
-          { label: '50% to 70%', value: '50% to 70%' },
-          { label: 'Above 70%', value: 'Above 70%' },
-        ];
-  
+        { label: '50% or below', value: '50% or below' },
+        { label: '50% to 70%', value: '50% to 70%' },
+        { label: 'Above 70%', value: 'Above 70%' },
+      ];
+
     return renderFilterOptions(options, 'attendance');
   };
 
@@ -208,7 +208,7 @@ const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
         { label: 'Class', value: 'Class' },
       ];
 
-      if (isClassOptionSelected && selectedFilterOption === 'Class') {
+      if (isClassOptionSelected && selectedFilters.class.length > 0) {
         options.push({ label: 'Section', value: 'Section' });
       }
     }
