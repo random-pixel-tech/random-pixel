@@ -465,13 +465,13 @@ const handleOptionSelect = (optionId: SelectedDuration) => {
 
   const handleCloseFilterActionsheet = () => {
     setShowFilterActionsheet(false);
-    setSelectedFilters({
-      attendance: [],
-      class: [],
-      section: [],
-    });
-    setSortOption('');
+    // Check if both setSelectedFilters and setSortOption are empty
+  if (
+    Object.keys(selectedFilters).every(key => selectedFilters[key].length === 0) &&
+    sortOption === ''
+  ) {
     setFilterButtonPress(false);
+  }
   };
 
   const handleFilterOptionSelect = (category: string, option: string) => {
