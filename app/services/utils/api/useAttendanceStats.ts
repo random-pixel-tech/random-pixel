@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { supabase } from '../supabase';
-import { AttendanceStatus } from '../enums';
+import { AttendanceStatus, SelectedDuration } from '../enums';
 import useStudentAttendance, { AllStudentAttendanceData } from './useStudentAttendance';
 
 dayjs.extend(weekOfYear);
@@ -13,14 +13,25 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   presentAttendance: number;
 }
 
+export interface ClassData {
+  classId: string;
+  className: string;
+  section: string;
+  totalStudents: number;
+  totalStudentsSum: number;
+  presentStudents: number;
+  presentPercentage: number;
+}
+
 export const useAttendanceStats = () => {
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [selectedOption, setSelectedOption] = useState('daily');
+  const [selectedDuration, setSelectedDuration] = useState(SelectedDuration.Daily);
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [startDate, setStartDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [endDate, setEndDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const [isClassOptionSelected, setIsClassOptionSelected] = useState(false);
   const [sortOption, setSortOption] = useState('');
   const [selectedFilterOption, setSelectedFilterOption] = useState('Attendance Percentage');
   const [showFilterActionsheet, setShowFilterActionsheet] = useState(false);
@@ -43,6 +54,31 @@ export const useAttendanceStats = () => {
   const [endDay, setEndDay] = useState('');
   const [endMonth, setEndMonth] = useState('');
   const [endYear, setEndYear] = useState('');
+
+  const [classData, setClassData] = useState<ClassData[]>([]);
+  const [selectedButton, setSelectedButton] = useState<'left' | 'right'>('left');
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchInput, setShowSearchInput] = useState(false);
+
+  const [searchButtonPress, setSearchButtonPress] = useState(false);
+  const [filterButtonPress, setFilterButtonPress] = useState(false);
+
+  const handleSearchButtonClick = (selectedButton: 'left' | 'right') => {
+    setShowSearchInput(true);
+    setSearchButtonPress(true);
+    setSelectedButton(selectedButton);
+  };
+  
+  const handleSearchInputChange = (value: string) => {
+    setSearchQuery(value);
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setShowSearchInput(false);
+    setSearchButtonPress(false);
+  };
 
   const isValidDay = (day: string, month: string, year: string) => {
     const parsedDay = parseInt(day, 10);
@@ -73,7 +109,7 @@ const isEndDateValid = (startDate: string, endDate: string) => {
 };
 
 
-const handleOk = () => {
+const handleCustomDateChange = () => {
   const startDate = `${startYear}-${startMonth}-${startDay}`;
   const endDate = `${endYear}-${endMonth}-${endDay}`;
 
@@ -131,70 +167,132 @@ const attendanceDataWithPercentage: StudentAttendanceDataWithPercentage[] = useM
 // Sort attendance data based on the selected sort option and class
 const sortedAttendanceData = useMemo(() => {
   // Check if the sort option is not changed
-  if (!sortOption) return attendanceDataWithPercentage;
+  if (!sortOption) {
+    return selectedButton === 'right' ? attendanceDataWithPercentage : classData;
+  }
 
   // Sort function based on the selected option
-  const sortFunction = (a: StudentAttendanceDataWithPercentage, b: StudentAttendanceDataWithPercentage) => {
+const sortFunction = (a: StudentAttendanceDataWithPercentage | ClassData, b: StudentAttendanceDataWithPercentage | ClassData) => {
+  if (selectedButton === 'right') {
     switch (sortOption) {
       case 'Name: A to Z':
-        return a.student.name.localeCompare(b.student.name);
+        return (a as StudentAttendanceDataWithPercentage).student.name.localeCompare((b as StudentAttendanceDataWithPercentage).student.name);
       case 'Name: Z to A':
-        return b.student.name.localeCompare(a.student.name);
+        return (b as StudentAttendanceDataWithPercentage).student.name.localeCompare((a as StudentAttendanceDataWithPercentage).student.name);
       case 'Attendance Percentage: Low to High':
-        return a.attendancePercentage - b.attendancePercentage;
+        return (a as StudentAttendanceDataWithPercentage).attendancePercentage - (b as StudentAttendanceDataWithPercentage).attendancePercentage;
       case 'Attendance Percentage: High to Low':
-        return b.attendancePercentage - a.attendancePercentage;
+        return (b as StudentAttendanceDataWithPercentage).attendancePercentage - (a as StudentAttendanceDataWithPercentage).attendancePercentage;
       case 'Class: Low to High':
-        return a.className.localeCompare(b.className);
+        return compareClasses((a as StudentAttendanceDataWithPercentage).className, (b as StudentAttendanceDataWithPercentage).className);
       case 'Class: High to Low':
-        return b.className.localeCompare(a.className);
+        return compareClasses((b as StudentAttendanceDataWithPercentage).className, (a as StudentAttendanceDataWithPercentage).className);
       default:
         return 0;
     }
-  };
+  } else {
+    switch (sortOption) {
+      case 'Attendance Percentage: Low to High':
+        return (a as ClassData).presentPercentage - (b as ClassData).presentPercentage;
+      case 'Attendance Percentage: High to Low':
+        return (b as ClassData).presentPercentage - (a as ClassData).presentPercentage;
+      case 'Class: Low to High':
+        return compareClasses((a as ClassData).className, (b as ClassData).className);
+      case 'Class: High to Low':
+        return compareClasses((b as ClassData).className, (a as ClassData).className);
+      default:
+        return 0;
+    }
+  }
+};
 
-  // Sort only if the sort option has changed
-  return [...attendanceDataWithPercentage].sort(sortFunction);
-}, [attendanceDataWithPercentage, sortOption]);
+// Helper function to compare class names and sections
+const compareClasses = (classA: string, classB: string) => {
+  const classNameA = parseInt(classA, 10);
+  const classNameB = parseInt(classB, 10);
 
+  if (classNameA === classNameB) {
+    return classA.localeCompare(classB);
+  }
+
+  return classNameA - classNameB;
+};
+
+
+  // Sort based on the selected button
+  return selectedButton === 'right'
+    ? [...attendanceDataWithPercentage].sort(sortFunction)
+    : [...classData].sort(sortFunction);
+}, [attendanceDataWithPercentage, classData, sortOption, selectedButton]);
 
 // Filter attendance data based on the selected filters
 const filteredAttendanceData = useMemo(() => {
-  // Filter function to check if a data point matches the selected filters
-  const filterFunction = (data: StudentAttendanceDataWithPercentage) => {
-    const percentage = data.attendancePercentage;
-    const className = data.className;
-    const section = data.section;
+  // Filter function to check if a data point matches the selected filters and search query
+  const filterFunction = (data: StudentAttendanceDataWithPercentage | ClassData) => {
+    if (selectedButton === 'right') {
+      const percentage = (data as StudentAttendanceDataWithPercentage).attendancePercentage;
+      const className = (data as StudentAttendanceDataWithPercentage).className;
+      const section = (data as StudentAttendanceDataWithPercentage).section;
+      const studentName = (data as StudentAttendanceDataWithPercentage).student.name.toLowerCase();
 
-    const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
-      if (filter === '70% or below') {
-        return percentage <= 70;
-      } else if (filter === '70% to 90%') {
-        return percentage > 70 && percentage <= 90;
-      } else if (filter === 'Above 90%') {
-        return percentage > 90;
-      }
-      return false;
-    });
+      const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
+        if (filter === '70% or below') {
+          return percentage <= 70;
+        } else if (filter === '70% to 90%') {
+          return percentage > 70 && percentage <= 90;
+        } else if (filter === 'Above 90%') {
+          return percentage > 90;
+        }
+        return false;
+      });
 
-    const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
+      const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
 
-    const matchesSectionFilter = selectedFilters.section.length === 0 || selectedFilters.section.includes(section);
+      const matchesSectionFilter = selectedFilters.section.length === 0 || selectedFilters.section.includes(section);
 
-    return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter;
+      const matchesSearchQuery = studentName.includes(searchQuery.toLowerCase());
+
+      return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter && matchesSearchQuery;
+    } else {
+      const percentage = (data as ClassData).presentPercentage;
+      const className = (data as ClassData).className;
+      const section = (data as ClassData).section;
+
+      const matchesAttendanceFilter = selectedFilters.attendance.length === 0 || selectedFilters.attendance.some((filter) => {
+        if (filter === '50% or below') {
+          return percentage <= 50;
+        } else if (filter === '50% to 70%') {
+          return percentage > 50 && percentage <= 70;
+        } else if (filter === 'Above 70%') {
+          return percentage > 70;
+        }
+        return false;
+      });
+
+      const matchesClassFilter = selectedFilters.class.length === 0 || selectedFilters.class.includes(className);
+
+      const matchesSectionFilter = selectedFilters.section.length === 0 || selectedFilters.section.includes(section);
+
+      const matchesSearchQuery = className.toLowerCase().includes(searchQuery.toLowerCase());
+
+      return matchesAttendanceFilter && matchesClassFilter && matchesSectionFilter && matchesSearchQuery;
+    }
   };
 
-  // Apply filters only if any filters are selected
+  // Apply filters and search query only if any filters are selected or search query is entered
   if (
     (!selectedFilters.attendance || selectedFilters.attendance.length === 0) &&
     (!selectedFilters.class || selectedFilters.class.length === 0) &&
-    (!selectedFilters.section || selectedFilters.section.length === 0) // Check if there's any section selected
+    (!selectedFilters.section || selectedFilters.section.length === 0) &&
+    !searchQuery
   ) {
-    return sortedAttendanceData; // No filters selected, return sorted data directly
+    return sortedAttendanceData;
   } else {
-    return sortedAttendanceData.filter(filterFunction);
+    return selectedButton === 'right'
+      ? (sortedAttendanceData as StudentAttendanceDataWithPercentage[]).filter(filterFunction)
+      : (sortedAttendanceData as ClassData[]).filter(filterFunction);
   }
-}, [sortedAttendanceData, selectedFilters]);
+}, [sortedAttendanceData, selectedFilters, searchQuery, selectedButton]);
 
 useEffect(() => {
   const dateRanges: Record<string, [string, string]> = {
@@ -204,71 +302,82 @@ useEffect(() => {
     yearly: [currentDate.startOf('year').format('YYYY-MM-DD'), currentDate.endOf('year').format('YYYY-MM-DD')],
   };
 
-  const [startDate, endDate] = dateRanges[selectedOption] || [currentDate.format('YYYY-MM-DD'), currentDate.format('YYYY-MM-DD')];
+  const [startDate, endDate] = dateRanges[selectedDuration] || [currentDate.format('YYYY-MM-DD'), currentDate.format('YYYY-MM-DD')];
   setStartDate(startDate);
   setEndDate(endDate);
-}, [currentDate, selectedOption]);
+}, [currentDate, selectedDuration]);
 
 
-  const handlePrevDay = () => {
-    if (selectedOption === 'daily') {
+const handlePrevDay = () => {
+  switch (selectedDuration) {
+    case SelectedDuration.Daily:
       setCurrentDate(currentDate.subtract(1, 'day'));
-    } else if (selectedOption === 'weekly') {
+      break;
+    case SelectedDuration.Weekly:
       setCurrentDate(currentDate.subtract(1, 'week'));
-    } else if (selectedOption === 'monthly') {
+      break;
+    case SelectedDuration.Monthly:
       setCurrentDate(currentDate.subtract(1, 'month'));
-    } else if (selectedOption === 'yearly') {
+      break;
+    case SelectedDuration.Yearly:
       setCurrentDate(currentDate.subtract(1, 'year'));
-    }
-  };
+      break;
+    default:
+      break;
+  }
+};
 
-  
-
-  const handleNextDay = () => {
-    if (selectedOption === 'daily') {
+const handleNextDay = () => {
+  switch (selectedDuration) {
+    case SelectedDuration.Daily:
       setCurrentDate(currentDate.add(1, 'day'));
-    } else if (selectedOption === 'weekly') {
+      break;
+    case SelectedDuration.Weekly:
       setCurrentDate(currentDate.add(1, 'week'));
-    } else if (selectedOption === 'monthly') {
+      break;
+    case SelectedDuration.Monthly:
       setCurrentDate(currentDate.add(1, 'month'));
-    } else if (selectedOption === 'yearly') {
+      break;
+    case SelectedDuration.Yearly:
       setCurrentDate(currentDate.add(1, 'year'));
-    }
-  };
+      break;
+    default:
+      break;
+  }
+};
 
-  const isNextDisabled = useMemo(() => {
-    if (selectedOption === 'customRange') {
+const isNextDisabled = useMemo(() => {
+  if (selectedDuration === SelectedDuration.CustomRange) {
+    return false;
+  }
+
+  const today = dayjs();
+
+  switch (selectedDuration) {
+    case SelectedDuration.Daily:
+      return currentDate.isSame(today, 'day');
+    case SelectedDuration.Weekly:
+      return currentDate.endOf('week').isAfter(today, 'day');
+    case SelectedDuration.Monthly:
+      return currentDate.endOf('month').isAfter(today, 'day');
+    case SelectedDuration.Yearly:
+      return currentDate.endOf('year').isAfter(today, 'day');
+    default:
       return false;
-    }
-  
-    const today = dayjs();
-  
-    switch (selectedOption) {
-      case 'daily':
-        return currentDate.isSame(today, 'day');
-        case 'weekly':
-        return currentDate.endOf('week').isAfter(today, 'day');
-      case 'monthly':
-        return currentDate.endOf('month').isAfter(today, 'day');
-      case 'yearly':
-        return currentDate.endOf('year').isAfter(today, 'day');
-      default:
-        return false;
-    }
-  }, [currentDate, selectedOption]);
+  }
+}, [currentDate, selectedDuration]);
   
   
 
-  const handleOptionSelect = (optionId: string) => {
-    console.log('Selected option:', optionId);
-    setSelectedOption(optionId);
-    setIsOptionsMenuOpen(false);
-    setCurrentDate(dayjs());
+const handleOptionSelect = (optionId: SelectedDuration) => {
+  setSelectedDuration(optionId);
+  setIsOptionsMenuOpen(false);
+  setCurrentDate(dayjs());
 
-    if (optionId === 'customRange') {
-      setShowDatePicker(true);
-    }
-  };
+  if (optionId === SelectedDuration.CustomRange) {
+    setShowDatePicker(true);
+  }
+};
 
   const handleDatePickerCancel = () => {
     setShowDatePicker(false);
@@ -280,11 +389,11 @@ useEffect(() => {
     setShowDatePicker(false);
   };
 
-  const handleOptionsMenuOpen = () => {
+  const handleRangeOptionsMenuOpen = () => {
     setIsOptionsMenuOpen(true);
   };
 
-  const handleOptionsMenuClose = () => {
+  const handleRangeOptionsMenuClose = () => {
     setIsOptionsMenuOpen(false);
   };
 
@@ -349,6 +458,11 @@ useEffect(() => {
     setSelectedFilterOption(option);
   };
 
+  const handleOpenFilterActionsheet = () => {
+    setShowFilterActionsheet(true);
+    setFilterButtonPress(true)
+  }
+
   const handleCloseFilterActionsheet = () => {
     setShowFilterActionsheet(false);
     setSelectedFilters({
@@ -357,6 +471,7 @@ useEffect(() => {
       section: [],
     });
     setSortOption('');
+    setFilterButtonPress(false);
   };
 
   const handleFilterOptionSelect = (category: string, option: string) => {
@@ -370,6 +485,10 @@ useEffect(() => {
     }
 
     setSelectedFilters(updatedFilters);
+
+    if (category === 'class') {
+      setIsClassOptionSelected(updatedFilters.class.length > 0);
+    }
   };
 
   const handleFilterTabSelect = (tab: string) => {
@@ -392,20 +511,149 @@ useEffect(() => {
     }
   };
 
+  const handleClearCategoryFilters = (category: string) => {
+    setSelectedFilters(prevFilters => ({
+      ...prevFilters,
+      [category]: [],
+    }));
+  };
+
   const handleFilterApply = () => {
     // Apply selected filters and sorting
     setShowFilterActionsheet(false);
   };
 
+  useEffect(() => {
+    const fetchClassData = async () => {
+      try {
+        // Fetch all classes
+        const { data: classes, error: classesError } = await supabase
+          .from('classes')
+          .select('id, name, section');
+  
+        if (classesError) {
+          console.error('Error fetching classes:', classesError);
+          return;
+        }
+  
+        // Fetch all students and their class IDs
+        const { data: students, error: studentsError } = await supabase
+          .from('students')
+          .select('id, classId');
+  
+        if (studentsError) {
+          console.error('Error fetching students:', studentsError);
+          return;
+        }
+  
+        // Fetch attendance records for the selected date range
+        const { data: attendanceRecords, error: attendanceError } = await supabase
+        .from('attendance_records')
+        .select('morningStatus, afternoonStatus, studentId')
+        .gte('date', startDate)
+        .lte('date', endDate);
+  
+        if (attendanceError) {
+          console.error('Error fetching attendance records:', attendanceError);
+          return;
+        }
+  
+        // Create a map of class IDs to student IDs
+        const classStudentsMap = new Map<string, string[]>();
+        students.forEach((student) => {
+          const classId = student.classId;
+          if (!classStudentsMap.has(classId)) {
+            classStudentsMap.set(classId, []);
+          }
+          classStudentsMap.get(classId)!.push(student.id);
+        });
+  
+        // Create a map of student IDs to attendance status
+        const studentAttendanceMap = new Map<string, { morning: boolean; afternoon: boolean }>();
+        attendanceRecords.forEach((record) => {
+          const studentId = record.studentId;
+          studentAttendanceMap.set(studentId, {
+            morning: record.morningStatus === AttendanceStatus.Present,
+            afternoon: record.afternoonStatus === AttendanceStatus.Present,
+          });
+        });
+
+        // Sort classes based on numeric order and section
+        const sortedClasses = classes.sort((a, b) => {
+        const classNameA = parseInt(a.name, 10);
+        const classNameB = parseInt(b.name, 10);
+
+        if (classNameA === classNameB) {
+          return a.section.localeCompare(b.section);
+        }
+
+        return classNameA - classNameB;
+      });
+  
+        // Calculate the number of days in the selected date range
+      const numberOfDays = dayjs(endDate).diff(startDate, 'day') + 1;
+
+      // Calculate class data
+      const classDataResults = sortedClasses.map((classItem) => {
+        const classId = classItem.id;
+        const studentIds = classStudentsMap.get(classId) || [];
+        const totalStudents = studentIds.length
+        const totalStudentsSum = studentIds.length * numberOfDays;
+
+        let presentStudents = 0;
+
+        studentIds.forEach((studentId) => {
+          const studentAttendanceRecords = attendanceRecords.filter(
+            (record) => record.studentId === studentId
+          );
+
+          studentAttendanceRecords.forEach((record) => {
+            if (record.morningStatus === AttendanceStatus.Present) presentStudents += 0.5;
+            if (record.afternoonStatus === AttendanceStatus.Present) presentStudents += 0.5;
+          });
+        });
+
+        const presentPercentage = totalStudentsSum > 0 ? (presentStudents / totalStudentsSum) * 100 : 0;
+
+        return {
+          classId,
+          className: classItem.name,
+          section: classItem.section,
+          totalStudents,
+          totalStudentsSum,
+          presentStudents,
+          presentPercentage,
+        };
+      });
+
+      setClassData(classDataResults);
+    } catch (error) {
+      console.error('Error fetching class data:', error);
+    }
+  };
+
+  fetchClassData();
+}, [currentDate, startDate, endDate]);
+
+  const handleLeftButtonClick = () => {
+    setSelectedButton('left');
+    // Perform any additional actions when the left button is clicked
+  };
+
+  const handleRightButtonClick = () => {
+    setSelectedButton('right');
+    // Perform any additional actions when the right button is clicked
+  };
+
   return {
     currentDate,
-    selectedOption,
+    selectedDuration,
     handlePrevDay,
     handleNextDay,
     handleOptionSelect,
     isOptionsMenuOpen,
-    handleOptionsMenuOpen,
-    handleOptionsMenuClose,
+    handleRangeOptionsMenuOpen,
+    handleRangeOptionsMenuClose,
     startDate,
     endDate,
     fetchAttendanceByTime,
@@ -431,7 +679,7 @@ useEffect(() => {
     attendanceDataByTime,
     attendanceDataWithPercentage,
     isNextDisabled,
-    handleOk,
+    handleCustomDateChange,
     startDay,
     startMonth,
     startYear,
@@ -446,6 +694,20 @@ useEffect(() => {
     setEndYear,
     isValidDay,
     isValidMonth,
-    isValidYear
+    isValidYear,
+    classData,
+    selectedButton,
+    handleLeftButtonClick,
+    handleRightButtonClick,
+    searchQuery,
+    showSearchInput,
+    handleSearchButtonClick,
+    handleSearchInputChange,
+    handleClearSearch,
+    isClassOptionSelected,
+    searchButtonPress,
+    filterButtonPress,
+    handleOpenFilterActionsheet,
+    handleClearCategoryFilters
     };
 };

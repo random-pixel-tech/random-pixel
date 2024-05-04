@@ -25,6 +25,7 @@ export interface AttendanceRecord {
   afternoonAttendanceTakenAt: string | null;
   createdAt: string;
   updatedAt: string;
+  [key: string]: AttendanceStatus | string | number | null;
 }
 
 // Interface for combining student data and attendance record
@@ -240,18 +241,18 @@ const useStudentAttendance = () => {
         }
   
         // Combine student data, attendance records, class, and section
-        const classStudentAttendanceData: AllStudentAttendanceData[] = studentsData.map((student) => {
-          const existingRecord = attendanceRecordsData.find(
-            (record) => record.studentId === student.id
-          );
-  
-          return {
-            student,
-            attendanceRecord: existingRecord || null,
-            className: classData.name,
-            section: classData.section,
-          };
-        });
+const classStudentAttendanceData: AllStudentAttendanceData[] = studentsData.map((student) => {
+  const existingRecord = attendanceRecordsData.find(
+    (record) => record.studentId === student.id
+  );
+
+  return {
+    student,
+    attendanceRecord: existingRecord || null,
+    className: classData.name,
+    section: classData.section,
+  };
+});
   
         // Add classStudentAttendanceData to the allStudentAttendanceData array
         allStudentAttendanceData.push(...classStudentAttendanceData);

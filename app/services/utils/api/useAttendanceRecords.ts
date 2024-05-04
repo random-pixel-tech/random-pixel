@@ -41,7 +41,6 @@ export const useAttendanceRecords = () => {
   };
 
   useEffect(() => {
-    console.log('Fetched attendance records:', attendanceRecords);
   }, [attendanceRecords]);
 
   return { attendanceRecords, fetchAttendanceRecordsByClassName };

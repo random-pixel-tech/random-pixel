@@ -3,10 +3,12 @@ import useStudentAttendance, { TeacherId } from './useStudentAttendance';
 import { getInitialAttendanceState, getUpdatedRecords } from '../attendanceUtils';
 import { AttendanceStatus, AttendanceSession } from '../enums';
 
-const useAttendanceLogic = () => {
+const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSession.Morning) => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
   const [alertMessage, setAlertMessage] = useState('');
+
+  const [initialAttendanceStatus, setInitialAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
 
   const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today, section } = useStudentAttendance();
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
@@ -15,22 +17,27 @@ const useAttendanceLogic = () => {
   const [selectedStatus, setSelectedStatus] = useState<AttendanceStatus | null>(null);
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
 
+  const [session, setSession] = useState<AttendanceSession>(initialSession);
+
+  const handleSessionToggle = () => {
+    setSession((prevSession) =>
+      prevSession === AttendanceSession.Morning ? AttendanceSession.Afternoon : AttendanceSession.Morning
+    );
+  };
+
+  
   const handleOptionsMenuOpen = () => {
-    console.log('Opening options menu');
     setIsOptionsMenuOpen(true);
   };
 
   const handleOptionsMenuClose = () => {
-    console.log('Closing options menu');
     setIsOptionsMenuOpen(false);
   };
 
   const handleIconPress = async () => {
     if (isOptionsMenuOpen) {
-      console.log('Closing options menu');
       handleOptionsMenuClose();
     } else {
-      console.log('Opening options menu');
       handleOptionsMenuOpen();
     }
   };
@@ -44,22 +51,24 @@ const useAttendanceLogic = () => {
     if (selectedStatus === null) {
       return studentAttendanceData;
     }
-  
+
     return studentAttendanceData.filter(({ attendanceRecord }) => {
-      return attendanceRecord?.morningStatus === selectedStatus;
+      return attendanceRecord?.[`${session.toLowerCase()}Status`] === selectedStatus;
     });
   };
 
+
   // Calculate students based on their status
   const presentCount = studentAttendanceData.filter(
-    (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.Present
+    (item) => item.attendanceRecord?.[`${session.toLowerCase()}Status`] === AttendanceStatus.Present
   ).length;
   const absentCount = studentAttendanceData.filter(
-    (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.Absent
+    (item) => item.attendanceRecord?.[`${session.toLowerCase()}Status`] === AttendanceStatus.Absent
   ).length;
   const onLeaveCount = studentAttendanceData.filter(
-    (item) => item.attendanceRecord?.morningStatus === AttendanceStatus.OnLeave
+    (item) => item.attendanceRecord?.[`${session.toLowerCase()}Status`] === AttendanceStatus.OnLeave
   ).length;
+
 
   // Calculate marked students and total students
   const totalStudents = studentAttendanceData.length;
@@ -69,9 +78,16 @@ const useAttendanceLogic = () => {
 
   // Set initial attendance status when studentAttendanceData changes
   useEffect(() => {
-    const initialAttendanceState = getInitialAttendanceState(studentAttendanceData);
+    const initialAttendanceState = getInitialAttendanceState(studentAttendanceData, session);
     setAttendanceStatus(initialAttendanceState);
-  }, [studentAttendanceData]);
+    setInitialAttendanceStatus(initialAttendanceState);
+  }, [studentAttendanceData, session]);
+
+  const checkAttendanceChanges = () => {
+    return Object.keys(attendanceStatus).some((studentId) => {
+      return attendanceStatus[studentId] !== initialAttendanceStatus[studentId];
+    });
+  };
 
   const handlePopoverOpen = (studentId: string) => {
     setIsPopoverOpen((prevState) => ({ ...prevState, [studentId]: true }));
@@ -110,12 +126,12 @@ const useAttendanceLogic = () => {
 
   // Function for saving attendance records
   const saveAttendance = async () => {
-    const updatedRecords = getUpdatedRecords(studentAttendanceData, attendanceStatus);
+    const updatedRecords = getUpdatedRecords(studentAttendanceData, attendanceStatus, session);
     await Promise.all(
       updatedRecords.map(async ({ student }) => {
         const selectedStatus = attendanceStatus[student.id];
         if (selectedStatus !== null) {
-          await updateAttendanceRecord(student.id, AttendanceSession.Morning, selectedStatus);
+          await updateAttendanceRecord(student.id, session, selectedStatus);
         }
       })
     );
@@ -164,7 +180,10 @@ const useAttendanceLogic = () => {
     isOptionsMenuOpen,
     handleOptionsMenuOpen,
     handleOptionsMenuClose,
-    handleIconPress
+    handleIconPress,
+    session,
+    handleSessionToggle,
+    checkAttendanceChanges
   };
 };
 

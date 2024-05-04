@@ -5,7 +5,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../services/utils/colors';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import OptionsMenu from './OptionsMenu';
-import ConfirmationDialog from './ConfirmationDialog'; // Import ConfirmationDialog component
+import ConfirmationDialog from './ConfirmationDialog';
+import BackArrowButton from './BackArrowButton';
 
 interface Option {
   label: string;
@@ -24,6 +25,11 @@ interface HeaderProps {
   showConfirmation?: boolean;
   confirmationHeading?: string;
   confirmationText?: string;
+  isOptionsMenuOpen?: boolean;
+  handleOptionsMenuOpen?: () => void;
+  handleOptionsMenuClose?: () => void;
+  handleIconPress?: () => void;
+  checkChanges?: () => boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -37,12 +43,17 @@ const Header: React.FC<HeaderProps> = ({
   showConfirmation = false,
   confirmationHeading = "",
   confirmationText = "",
+  isOptionsMenuOpen,
+  handleOptionsMenuOpen,
+  handleOptionsMenuClose,
+  handleIconPress,
+  checkChanges,
 }) => {
   const navigation = useNavigation();
   const [confirmVisible, setConfirmVisible] = useState(false);
 
   const handleLeftArrowPress = () => {
-    if (showConfirmation) {
+    if (checkChanges && checkChanges()) {
       setConfirmVisible(true);
     } else {
       navigation.goBack();
@@ -57,30 +68,44 @@ const Header: React.FC<HeaderProps> = ({
   const handleCancel = () => {
     setConfirmVisible(false);
   };
-
   return (
-    <Box bg="$pixWhite" w="$full" h="$20" pt="$4" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" px="$4">
+    <Box
+      bg="$pixWhite"
+      w="$full"
+      h="$20"
+      pt="$4"
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="space-between"
+      px="$4"
+    >
       <Box display="flex" flexDirection="row">
-        <Pressable onPress={handleLeftArrowPress} p="$4">
-          <FontAwesomeIcon icon="arrow-left" size={18} color={Colors.Text100} />
-        </Pressable>
+        <BackArrowButton onPress={handleLeftArrowPress} />
         <Text color={Colors.Text100} fontSize="$lg" px="$8" py="$4" fontWeight="$medium">
           {title}
         </Text>
       </Box>
-      {icon && (
-        <Pressable onPress={onIconPress} p="$4">
-          <FontAwesomeIcon icon={icon} size={18} color={Colors.Text100} />
-        </Pressable>
-      )}
-      {options && (
-        <OptionsMenu
-          isOpen={isPopoverOpen}
-          onClose={onPopoverClose}
-          onOpen={onPopoverOpen}
-          options={options}
-        />
-      )}
+      <Box flexDirection='row'>
+        {icon && (
+          <Pressable onPress={onIconPress} p="$4">
+            <FontAwesomeIcon icon={icon} size={18} color={Colors.Text100} />
+          </Pressable>
+        )}
+        {options && (
+          <>
+            <Pressable onPress={handleIconPress} p="$4">
+              <FontAwesomeIcon icon="ellipsis-vertical" size={18} color={Colors.Text100} />
+            </Pressable>
+            <OptionsMenu
+              isOpen={isOptionsMenuOpen}
+              onClose={handleOptionsMenuClose}
+              onOpen={handleOptionsMenuOpen}
+              options={options}
+            />
+          </>
+        )}
+      </Box>
       <ConfirmationDialog
         isOpen={confirmVisible}
         onClose={handleCancel}

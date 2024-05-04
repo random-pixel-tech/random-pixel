@@ -1,8 +1,11 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { Box, Text } from '@gluestack-ui/themed';
-import AttendanceCard from './AttendanceCard';
+import StudentAttendanceCard from './StudentAttendanceCard';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
+import ClassAttendanceCard from './ClassAttendanceCard';
+import { ClassData } from '../services/utils/api/useAttendanceStats';
+import { SelectedDuration } from '../services/utils/enums';
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -10,23 +13,37 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   presentAttendance: number;
 }
 
+type AttendanceData = StudentAttendanceDataWithPercentage | ClassData;
+
 interface AttendanceViewProps {
-  selectedOption: string;
+  selectedDuration: SelectedDuration;
   startDate: string;
   endDate: string;
-  attendanceDataWithPercentage: StudentAttendanceDataWithPercentage[];
+  attendanceData: AttendanceData[];
   isLoading: boolean;
+  selectedButton: 'left' | 'right';
+  classData: ClassData[];
+  onScroll: (position: number) => void;
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
-  selectedOption,
+  selectedDuration,
   startDate,
   endDate,
-  attendanceDataWithPercentage,
+  attendanceData,
   isLoading,
+  selectedButton,
+  classData,
+  onScroll,
 }) => {
   return (
-    <ScrollView>
+    <ScrollView
+      onScroll={({ nativeEvent }) => {
+        const { contentOffset } = nativeEvent;
+        onScroll(contentOffset.y);
+      }}
+      scrollEventThrottle={16}
+    >
       <Box p="$4">
         {isLoading ? (
           <Box>
@@ -34,10 +51,12 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
           </Box>
         ) : (
           <AttendanceDataRenderer
-            attendanceData={attendanceDataWithPercentage}
-            selectedOption={selectedOption}
+            attendanceData={attendanceData}
+            selectedDuration={selectedDuration}
             startDate={startDate}
             endDate={endDate}
+            selectedButton={selectedButton}
+            classData={classData}
           />
         )}
       </Box>
@@ -46,31 +65,43 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
 };
 
 interface AttendanceDataRendererProps {
-  attendanceData: StudentAttendanceDataWithPercentage[];
-  selectedOption: string;
+  attendanceData: AttendanceData[];
+  selectedDuration: SelectedDuration;
   startDate: string;
   endDate: string;
+  selectedButton: 'left' | 'right';
+  classData: ClassData[];
 }
 
 const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
   attendanceData,
-  selectedOption,
+  selectedDuration,
   startDate,
   endDate,
+  selectedButton,
 }) => {
   return (
     <>
-      {attendanceData.map((data) => (
-        <AttendanceCard
-          key={data.student.id}
-          studentAttendanceData={data}
-          className={data.className}
-          section={data.section}
-          selectedOption={selectedOption}
-          totalAttendance={data.totalAttendance}
-          presentAttendance={data.presentAttendance}
-        />
-      ))}
+      {attendanceData.map((data) => {
+        if (selectedButton === 'left' && 'classId' in data) {
+          return <ClassAttendanceCard key={data.classId} classData={data} />;
+        } else if (selectedButton === 'right' && 'student' in data && 'totalAttendance' in data && 'presentAttendance' in data) {
+          return (
+            <StudentAttendanceCard
+              key={data.student.id}
+              studentAttendanceData={data}
+              className={data.className}
+              section={data.section}
+              selectedDuration={selectedDuration}
+              totalAttendance={data.totalAttendance}
+              presentAttendance={data.presentAttendance}
+              morningStatus={data.attendanceRecord?.morningStatus}
+              afternoonStatus={data.attendanceRecord?.afternoonStatus}
+            />
+          );
+        }
+        return null;
+      })}
     </>
   );
 };

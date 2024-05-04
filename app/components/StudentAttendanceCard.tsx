@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Text } from '@gluestack-ui/themed';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
+import { SelectedDuration, AttendanceStatus } from '../services/utils/enums';
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -8,13 +9,15 @@ interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   presentAttendance: number;
 }
 
-interface AttendanceCardProps {
+interface StudentAttendanceCardProps {
   studentAttendanceData: StudentAttendanceDataWithPercentage;
   className: string;
   section: string;
-  selectedOption: string;
+  selectedDuration: SelectedDuration;
   totalAttendance: number;
   presentAttendance: number;
+  morningStatus?: AttendanceStatus;
+  afternoonStatus?: AttendanceStatus;
 }
 
 const toOrdinal = (n: number): string => {
@@ -23,13 +26,15 @@ const toOrdinal = (n: number): string => {
   return n + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
 };
 
-const AttendanceCard: React.FC<AttendanceCardProps> = ({
+const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
   studentAttendanceData,
   className,
   section,
-  selectedOption,
+  selectedDuration,
   totalAttendance,
   presentAttendance,
+  morningStatus,
+  afternoonStatus,
 }) => {
   const { student } = studentAttendanceData;
   const { name, rollNumber } = student;
@@ -38,16 +43,30 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
 
   const classNameOrdinal = toOrdinal(parseInt(className));
 
+  const getStatusAbbreviation = (status?: AttendanceStatus) => {
+    switch (status) {
+      case AttendanceStatus.Present:
+        return 'P';
+      case AttendanceStatus.Absent:
+        return 'A';
+      case AttendanceStatus.OnLeave:
+        return 'OL';
+      default:
+        return 'N/A';
+    }
+  };
+
   const renderAttendanceBox = () => {
-    if (selectedOption === 'daily') {
+    if (selectedDuration === SelectedDuration.Daily) {
       return (
         <Box alignContent="center" display="flex" flexDirection="row">
           <Box display="flex" flexDirection="column">
             <Box display="flex" flexDirection="row" alignSelf="center">
-              <Text fontSize="$md" color="$pixText100">S-1</Text>
-              <Text fontSize="$md" color="$pixSecondary2" mr="$2">: A</Text>
-              <Text fontSize="$md" color="$pixText100">S-2</Text>
-              <Text fontSize="$md" color="$pixSecondary2">: P</Text>
+              <Text fontSize="$md" color="$pixSecondary2">S-1</Text>
+              <Text fontSize="$md" color="$pixText100" mr="$2">: {getStatusAbbreviation(morningStatus)}
+</Text>
+              <Text fontSize="$md" color="$pixSecondary2">S-2</Text>
+              <Text fontSize="$md" color="$pixText100">: {getStatusAbbreviation(afternoonStatus)}</Text>
             </Box>
             <Text fontSize="$sm" color="$pixSecondary2" alignSelf="center">Attendance</Text>
           </Box>
@@ -130,4 +149,4 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
   );
 };
 
-export default AttendanceCard;
+export default StudentAttendanceCard;

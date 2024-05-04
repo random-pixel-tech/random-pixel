@@ -30,7 +30,7 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
   return (
     <Box display="flex" flexDirection="column" flex={1}>
       <AttendanceListHeader
-        FirstColumnText="Roll No."
+        FirstColumnText="R.N."
         SecondColumnText="Name"
         ThirdColumnText="P"
         FourthColumnText="A"

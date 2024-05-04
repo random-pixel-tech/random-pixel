@@ -1,20 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box } from '@gluestack-ui/themed';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
 import { useAttendanceStats } from '../../services/utils/api/useAttendanceStats';
 import DatePicker from '../../components/DatePicker';
-import FilterAttendance from '../../components/FilterAttendance';
+import StatsSearchAndFilterBar from '../../components/StatsSearchAndFilterBar';
 
 const AttendanceStats = () => {
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+  const [isStatsSearchAndFilterBarVisible, setIsStatsSearchAndFilterBarVisible] = useState(true);
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+
+  const handleScroll = (position: number) => {
+    setPrevScrollPosition(scrollPosition);
+    setScrollPosition(position);
+
+    if (position > prevScrollPosition) {
+      setIsScrollingDown(true);
+      setIsStatsSearchAndFilterBarVisible(false);
+    } else if (position < prevScrollPosition) {
+      setIsScrollingDown(false);
+      setIsStatsSearchAndFilterBarVisible(true);
+    }
+  };
+
   const {
-    selectedOption,
+    selectedDuration,
     handlePrevDay,
     handleNextDay,
     handleOptionSelect,
     isOptionsMenuOpen,
-    handleOptionsMenuOpen,
-    handleOptionsMenuClose,
+    handleRangeOptionsMenuOpen,
+    handleRangeOptionsMenuClose,
     currentDate,
     startDate,
     endDate,
@@ -22,7 +40,7 @@ const AttendanceStats = () => {
     handleDatePickerCancel,
     handleDatePickerOk,
     showFilterActionsheet,
-    setShowFilterActionsheet,
+    handleOpenFilterActionsheet,
     selectedFilterTab,
     selectedFilterOption,
     selectedFilters,
@@ -37,7 +55,7 @@ const AttendanceStats = () => {
     filteredAttendanceData,
     isLoading,
     isNextDisabled,
-    handleOk,
+    handleCustomDateChange,
     startDay,
     startMonth,
     startYear,
@@ -53,51 +71,83 @@ const AttendanceStats = () => {
     isValidDay,
     isValidMonth,
     isValidYear,
+    selectedButton,
+    handleLeftButtonClick,
+    handleRightButtonClick,
+    classData,
+    searchQuery,
+    showSearchInput,
+    handleSearchButtonClick,
+    handleSearchInputChange,
+    handleClearSearch,
+    isClassOptionSelected,
+    searchButtonPress,
+    filterButtonPress,
+    handleClearCategoryFilters
   } = useAttendanceStats();
 
   return (
+
     <Box bg="$pixWhite" w="$full" h="$full">
       <StatsHeader
         title="Attendance"
-        selectedOption={selectedOption}
+        selectedDuration={selectedDuration}
         handlePrevDay={handlePrevDay}
         handleNextDay={handleNextDay}
         handleOptionSelect={handleOptionSelect}
         isOptionsMenuOpen={isOptionsMenuOpen}
-        handleOptionsMenuOpen={handleOptionsMenuOpen}
-        handleOptionsMenuClose={handleOptionsMenuClose}
+        handleRangeOptionsMenuOpen={handleRangeOptionsMenuOpen}
+        handleRangeOptionsMenuClose={handleRangeOptionsMenuClose}
         currentDate={currentDate}
         startDate={startDate}
         endDate={endDate}
         showDatePicker={showDatePicker}
         isNextDisabled={isNextDisabled}
       />
-      <FilterAttendance
-        showActionsheet={showFilterActionsheet}
-        selectedTab={selectedFilterTab}
-        selectedFilters={selectedFilters}
-        selectedFilterOption={selectedFilterOption}
-        onClose={handleCloseFilterActionsheet}
-        onTabSelect={handleFilterTabSelect}
-        onCategorySelect={handleCategoryOptionSelect}
-        onFilterOptionSelect={handleFilterOptionSelect}
-        onSortOptionSelect={handleFilterSortOptionSelect}
-        onClear={handleFilterClear}
-        onApply={handleFilterApply}
-        onShowActionsheet={setShowFilterActionsheet}
-        sortOption={sortOption}
-      />
+      {isStatsSearchAndFilterBarVisible && !isScrollingDown && (
+        <StatsSearchAndFilterBar
+          showActionsheet={showFilterActionsheet}
+          selectedTab={selectedFilterTab}
+          selectedFilters={selectedFilters}
+          selectedFilterOption={selectedFilterOption}
+          onClose={handleCloseFilterActionsheet}
+          onTabSelect={handleFilterTabSelect}
+          onCategorySelect={handleCategoryOptionSelect}
+          onFilterOptionSelect={handleFilterOptionSelect}
+          onSortOptionSelect={handleFilterSortOptionSelect}
+          onClear={handleFilterClear}
+          onApply={handleFilterApply}
+          handleOpenFilterActionsheet={handleOpenFilterActionsheet}
+          sortOption={sortOption}
+          selectedButton={selectedButton}
+          onLeftButtonClick={handleLeftButtonClick}
+          onRightButtonClick={handleRightButtonClick}
+          searchQuery={searchQuery}
+          showSearchInput={showSearchInput}
+          handleSearchButtonClick={handleSearchButtonClick}
+          handleSearchInputChange={handleSearchInputChange}
+          handleClearSearch={handleClearSearch}
+          isClassOptionSelected={isClassOptionSelected}
+          searchButtonPress={searchButtonPress}
+          filterButtonPress={filterButtonPress}
+          handleClearCategoryFilters={handleClearCategoryFilters}
+        />
+      )}
       <AttendanceView
-        selectedOption={selectedOption}
+        selectedDuration={selectedDuration}
         startDate={startDate}
         endDate={endDate}
-        attendanceDataWithPercentage={filteredAttendanceData}
+        attendanceData={filteredAttendanceData}
         isLoading={isLoading}
+        selectedButton={selectedButton}
+        classData={classData}
+        onScroll={handleScroll}
+
       />
       <DatePicker
         isOpen={showDatePicker}
         handleDatePickerCancel={handleDatePickerCancel}
-        handleOk={handleOk}
+        handleCustomDateChange={handleCustomDateChange}
         startDay={startDay}
         startMonth={startMonth}
         startYear={startYear}

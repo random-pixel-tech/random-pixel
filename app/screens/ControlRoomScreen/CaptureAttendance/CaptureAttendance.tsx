@@ -9,7 +9,8 @@ import Header from '../../../components/Header';
 import AttendanceList from './AttendanceList';
 import AttendanceHeader from './AttendanceHeader';
 import { RouteNames, RootStackParamList } from '../../../services/utils/RouteNames';
-
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { AttendanceSession } from '../../../services/utils/enums';
 const CaptureAttendance = () => {
   const {
     showAlertDialog,
@@ -31,16 +32,50 @@ const CaptureAttendance = () => {
     today,
     totalStudents,
     markedStudents,
-    section
+    section,
+    isOptionsMenuOpen,
+    handleOptionsMenuOpen,
+    handleOptionsMenuClose,
+    handleIconPress,
+    session,
+    handleSessionToggle,
+    checkAttendanceChanges
   } = useAttendanceLogic();
 
+
+
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const options = [
+    {
+      label: session === AttendanceSession.Morning ? 'Switch to Session Two' : 'Switch to Session One',
+      icon: 'toggle-on' as IconProp,
+      onPress: () => {
+        handleSessionToggle();
+        handleOptionsMenuClose();
+      },
+
+    },
+    {
+      label: 'Generate Attendance Report',
+      icon: 'file-export' as IconProp,
+      onPress: () => {
+        handleOptionsMenuClose();
+      },
+    },
+  ];
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
       <Header title="Attendance" icon="check" onIconPress={handleSaveAttendance} showConfirmation={true} confirmationHeading="Are you sure you want to leave?"
-      confirmationText="You will lose the captured attendance if you leave without saving."/>
-      <AttendanceHeader section={section} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
+      confirmationText="You will lose the captured attendance if you leave without saving." options={options} isOptionsMenuOpen={isOptionsMenuOpen}
+      handleOptionsMenuOpen={handleOptionsMenuOpen}
+      handleOptionsMenuClose={handleOptionsMenuClose}
+      handleIconPress={handleIconPress}
+      checkChanges={checkAttendanceChanges}
+
+      />
+      <AttendanceHeader section={section} session={session} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
       />
       <AttendanceList
         studentAttendanceData={studentAttendanceData}
@@ -68,7 +103,7 @@ const CaptureAttendance = () => {
         onClose={() => setShowAlertDialog(false)}
         onConfirm={() => {
           setShowAlertDialog(false);
-          navigation.navigate(RouteNames.AttendanceSummary);
+          navigation.navigate(RouteNames.AttendanceSummary, { session });
         }}
         message={alertMessage}
         heading="Attendance Complete!"
