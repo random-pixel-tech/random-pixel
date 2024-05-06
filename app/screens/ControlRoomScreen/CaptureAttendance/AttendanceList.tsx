@@ -39,15 +39,15 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
         <ScrollView>
           {studentAttendanceData.map(({ student, attendanceRecord }) => (
             <AttendanceListItem
-              key={student.id}
+              key={student.scholar_id}
               student={student}
               attendanceRecord={attendanceRecord}
-              isPopoverOpen={isPopoverOpen[student.id] || false}
-              onPopoverOpen={() => onPopoverOpen(student.id)}
-              onPopoverClose={() => onPopoverClose(student.id)}
-              attendanceStatus={attendanceStatus[student.id]}
-              onAttendanceStatusChange={(status) => onAttendanceStatusChange(student.id, status)}
-              onLeaveClick={() => onLeaveClick(student.id)}
+              isPopoverOpen={isPopoverOpen[student.scholar_id] || false}
+              onPopoverOpen={() => onPopoverOpen(student.scholar_id)}
+              onPopoverClose={() => onPopoverClose(student.scholar_id)}
+              attendanceStatus={attendanceStatus[student.scholar_id]}
+              onAttendanceStatusChange={(status) => onAttendanceStatusChange(student.scholar_id, status)}
+              onLeaveClick={() => onLeaveClick(student.scholar_id)}
             />
           ))}
         </ScrollView>
