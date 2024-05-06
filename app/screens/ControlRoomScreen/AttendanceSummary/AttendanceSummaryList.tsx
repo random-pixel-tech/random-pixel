@@ -7,7 +7,10 @@ import AttendanceListHeader from '../CaptureAttendance/AttendanceListHeader';
 import { AttendanceSession } from '../../../services/utils/enums';
 
 interface AttendanceSummaryListProps {
-  filteredStudents: Array<{ student: Student; attendanceRecord: AttendanceRecord | null; }>;
+  filteredStudents: Array<{
+    student: Student;
+    attendanceRecord: AttendanceRecord | null;
+  }>;
   isPopoverOpen: Record<string, boolean>;
   handlePopoverOpen: (studentId: string) => void;
   handlePopoverClose: (studentId: string) => void;
@@ -23,17 +26,21 @@ const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
 }) => {
   return (
     <Box display="flex" flexDirection="column" flex={1}>
-      <AttendanceListHeader FirstColumnText="R.N." SecondColumnText="Name" icon="ellipsis-vertical" />
+      <AttendanceListHeader
+        FirstColumnText="R.N."
+        SecondColumnText="Name"
+        icon="ellipsis-vertical"
+      />
       <Box flex={1}>
         <ScrollView>
           {filteredStudents.map(({ student, attendanceRecord }) => (
             <AttendanceSummaryListItem
-              key={student.id}
+              key={student.scholar_id}
               student={student}
               attendanceRecord={attendanceRecord}
-              isPopoverOpen={isPopoverOpen[student.id]}
-              onPopoverOpen={() => handlePopoverOpen(student.id)}
-              onPopoverClose={() => handlePopoverClose(student.id)}
+              isPopoverOpen={isPopoverOpen[student.scholar_id]}
+              onPopoverOpen={() => handlePopoverOpen(student.scholar_id)}
+              onPopoverClose={() => handlePopoverClose(student.scholar_id)}
               session={session}
             />
           ))}

@@ -14,11 +14,11 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { AttendanceSession } from '../../../services/utils/enums';
 
 type AttendanceSummaryRouteProp = RouteProp<RootStackParamList, RouteNames.AttendanceSummary>;
+
 const AttendanceSummary = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<AttendanceSummaryRouteProp>();
   const initialSession = route.params?.session || AttendanceSession.Morning;
-
   const {
     className,
     section,
