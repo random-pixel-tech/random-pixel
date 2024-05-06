@@ -1,11 +1,12 @@
 import { AttendanceStatus, AttendanceSession } from './enums';
 
-
 interface StudentAttendanceData {
-  student: { id: string };
+  student: {
+    scholar_id: string;
+  };
   attendanceRecord: {
-    morningStatus: AttendanceStatus;
-    afternoonStatus: AttendanceStatus;
+    morning_status: AttendanceStatus;
+    afternoon_status: AttendanceStatus;
   } | null;
 }
 
@@ -16,9 +17,9 @@ export const getInitialAttendanceState = (
   const initialAttendanceState: Record<string, AttendanceStatus | null> = {};
   studentAttendanceData.forEach(({ student, attendanceRecord }) => {
     if (session === AttendanceSession.Morning) {
-      initialAttendanceState[student.id] = attendanceRecord?.morningStatus || null;
+      initialAttendanceState[student.scholar_id] = attendanceRecord?.morning_status || null;
     } else {
-      initialAttendanceState[student.id] = attendanceRecord?.afternoonStatus || null;
+      initialAttendanceState[student.scholar_id] = attendanceRecord?.afternoon_status || null;
     }
   });
   return initialAttendanceState;
@@ -30,15 +31,15 @@ export const getUpdatedRecords = (
   session: AttendanceSession
 ) => {
   return studentAttendanceData.filter(({ student, attendanceRecord }) => {
-    const selectedStatus = attendanceStatus[student.id];
+    const selectedStatus = attendanceStatus[student.scholar_id];
     if (session === AttendanceSession.Morning) {
       return (
-        (attendanceRecord && attendanceRecord.morningStatus !== selectedStatus) ||
+        (attendanceRecord && attendanceRecord.morning_status !== selectedStatus) ||
         (!attendanceRecord && selectedStatus !== null)
       );
     } else {
       return (
-        (attendanceRecord && attendanceRecord.afternoonStatus !== selectedStatus) ||
+        (attendanceRecord && attendanceRecord.afternoon_status !== selectedStatus) ||
         (!attendanceRecord && selectedStatus !== null)
       );
     }

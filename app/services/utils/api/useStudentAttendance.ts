@@ -56,7 +56,7 @@ const useStudentAttendance = () => {
     const fetchStudentAttendance = async () => {
       try {
         // Hardcoded teacherId for now
-        const teacherId = 1;
+        const teacherId = 16;
 
         // Fetch class data for the given teacher
         const { data: classData, error: classError } = await supabase

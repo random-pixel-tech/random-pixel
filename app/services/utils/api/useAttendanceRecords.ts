@@ -11,7 +11,7 @@ export const useAttendanceRecords = () => {
       const { data: classData, error: classError } = await supabase
         .from('classes')
         .select('id')
-        .eq('name', className)
+        .eq('class_name', className)
         .single();
 
       if (classError) {
@@ -28,7 +28,7 @@ export const useAttendanceRecords = () => {
       const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
         .from('attendance_records')
         .select('*')
-        .eq('classId', classId);
+        .eq('class_id', classId);
 
       if (attendanceRecordsError) {
         throw attendanceRecordsError;
@@ -41,9 +41,13 @@ export const useAttendanceRecords = () => {
   };
 
   useEffect(() => {
+    // Add any necessary side effects here
   }, [attendanceRecords]);
 
-  return { attendanceRecords, fetchAttendanceRecordsByClassName };
+  return {
+    attendanceRecords,
+    fetchAttendanceRecordsByClassName,
+  };
 };
 
 export const fetchAttendanceRecordsByStudentName = async (studentName: string) => {
@@ -51,8 +55,8 @@ export const fetchAttendanceRecordsByStudentName = async (studentName: string) =
     // Fetch the student ID based on the student name
     const { data: studentData, error: studentError } = await supabase
       .from('students')
-      .select('id')
-      .eq('name', studentName)
+      .select('scholar_id')
+      .eq('student_name', studentName)
       .single();
 
     if (studentError) {
@@ -63,13 +67,13 @@ export const fetchAttendanceRecordsByStudentName = async (studentName: string) =
       throw new Error(`Student "${studentName}" not found`);
     }
 
-    const studentId = studentData.id;
+    const scholarId = studentData.scholar_id;
 
     // Fetch attendance records for the student ID
     const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
       .from('attendance_records')
       .select('*')
-      .eq('studentId', studentId);
+      .eq('scholar_id', scholarId);
 
     if (attendanceRecordsError) {
       throw attendanceRecordsError;
