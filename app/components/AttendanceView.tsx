@@ -85,18 +85,23 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
       {attendanceData.map((data) => {
         if (selectedButton === 'left' && 'classId' in data) {
           return <ClassAttendanceCard key={data.classId} classData={data} />;
-        } else if (selectedButton === 'right' && 'student' in data && 'totalAttendance' in data && 'presentAttendance' in data) {
+        } else if (
+          selectedButton === 'right' &&
+          'student' in data &&
+          'totalAttendance' in data &&
+          'presentAttendance' in data
+        ) {
           return (
             <StudentAttendanceCard
-              key={data.student.id}
+              key={data.student.scholar_id}
               studentAttendanceData={data}
-              className={data.className}
+              className={data.class_name}
               section={data.section}
               selectedDuration={selectedDuration}
               totalAttendance={data.totalAttendance}
               presentAttendance={data.presentAttendance}
-              morningStatus={data.attendanceRecord?.morningStatus}
-              afternoonStatus={data.attendanceRecord?.afternoonStatus}
+              morningStatus={data.attendanceRecord?.morning_status}
+              afternoonStatus={data.attendanceRecord?.afternoon_status}
             />
           );
         }

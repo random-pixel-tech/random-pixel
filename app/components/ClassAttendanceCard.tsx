@@ -9,7 +9,7 @@ const toOrdinal = (n: number): string => {
 
 interface ClassAttendanceCardProps {
   classData: {
-    classId: string;
+    classId: number;
     className: string;
     section: string;
     totalStudents: number;
@@ -21,6 +21,7 @@ interface ClassAttendanceCardProps {
 
 const ClassAttendanceCard: React.FC<ClassAttendanceCardProps> = ({ classData }) => {
   const { className, totalStudents, totalStudentsSum, presentStudents, presentPercentage, section } = classData;
+
   const classNameOrdinal = toOrdinal(parseInt(className));
 
   return (
