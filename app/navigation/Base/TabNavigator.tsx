@@ -36,7 +36,7 @@ const TabNavigator: React.FC = () => {
                     ),
                 }}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="Conversation"
                 component={Conversation}
                 options={{
@@ -47,7 +47,7 @@ const TabNavigator: React.FC = () => {
                     tabBarLabelStyle: { marginRight: 10 }
 
                 }}
-            />
+            /> */}
             <Tab.Screen
                 name="Control Room"
                 component={ControlRoomNav}
@@ -64,7 +64,7 @@ const TabNavigator: React.FC = () => {
                     },
                 })}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="Dashboard"
                 component={DashNav}
                 options={{
@@ -96,7 +96,7 @@ const TabNavigator: React.FC = () => {
                         </Avatar>
                     ),
                 }}
-            />
+            /> */}
         </Tab.Navigator>
     );
 };
