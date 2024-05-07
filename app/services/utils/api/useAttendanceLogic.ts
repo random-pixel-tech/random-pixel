@@ -11,7 +11,7 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
 
   const [initialAttendanceStatus, setInitialAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
 
-  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today, section } = useStudentAttendance();
+  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today, section, isHoliday } = useStudentAttendance();
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -20,44 +20,7 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
 
   const [session, setSession] = useState<AttendanceSession>(initialSession);
 
-  const [isHoliday, setIsHoliday] = useState(false);
 
-  // Function to check if the current date is a holiday
-  const checkHoliday = async () => {
-    try {
-      const { data: schoolData, error: schoolError } = await supabase
-        .from('school_info')
-        .select('school_name')
-        .single();
-  
-      if (schoolError) {
-        console.error('Error fetching school data:', schoolError);
-        return;
-      }
-  
-      const { data: holidayData, error: holidayError } = await supabase
-        .from('holidays')
-        .select('*')
-        .eq('school_name', schoolData.school_name)
-        .gte('start_date', today)
-        .lte('end_date', today)
-        .limit(1); // Fetch the first row (if any)
-  
-      if (holidayError) {
-        console.error('Error fetching holiday data:', holidayError);
-        setIsHoliday(false); // Set isHoliday to false in case of an error
-      } else {
-        setIsHoliday(holidayData.length > 0); // Check if the holidayData array has any elements
-      }
-    } catch (error) {
-      console.error('Error checking holiday:', error);
-      setIsHoliday(false); // Set isHoliday to false in case of an error
-    }
-  };
-
-  useEffect(() => {
-    checkHoliday();
-  }, [today]);
 
   const handleSessionToggle = () => {
     setSession((prevSession) =>

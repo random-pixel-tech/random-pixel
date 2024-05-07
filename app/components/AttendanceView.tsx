@@ -6,6 +6,7 @@ import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttend
 import ClassAttendanceCard from './ClassAttendanceCard';
 import { ClassData } from '../services/utils/api/useAttendanceStats';
 import { SelectedDuration } from '../services/utils/enums';
+import HolidayMessage from './HolidayMessage';
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -24,6 +25,7 @@ interface AttendanceViewProps {
   selectedButton: 'left' | 'right';
   classData: ClassData[];
   onScroll: (position: number) => void;
+  isHoliday: boolean;
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
@@ -35,6 +37,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   selectedButton,
   classData,
   onScroll,
+  isHoliday
 }) => {
   return (
     <ScrollView
@@ -57,6 +60,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
             endDate={endDate}
             selectedButton={selectedButton}
             classData={classData}
+            isHoliday={isHoliday}
           />
         )}
       </Box>
@@ -71,6 +75,7 @@ interface AttendanceDataRendererProps {
   endDate: string;
   selectedButton: 'left' | 'right';
   classData: ClassData[];
+  isHoliday: boolean;
 }
 
 const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
@@ -79,7 +84,12 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
   startDate,
   endDate,
   selectedButton,
+  isHoliday
 }) => {
+  if (selectedDuration === SelectedDuration.Daily && isHoliday) {
+    return <HolidayMessage />;
+  }
+
   return (
     <>
       {attendanceData.map((data) => {

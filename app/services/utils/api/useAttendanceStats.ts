@@ -44,7 +44,7 @@ export const useAttendanceStats = () => {
 
   const [attendanceDataByTime, setAttendanceDataByTime] = useState<{ [studentId: string]: { totalAttendance: number; presentAttendance: number } }>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { fetchAllStudentAttendance } = useStudentAttendance();
+  const { fetchAllStudentAttendance, isHoliday } = useStudentAttendance();
 
   const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<AllStudentAttendanceData[]>([]);
 
@@ -706,5 +706,6 @@ export const useAttendanceStats = () => {
     filterButtonPress,
     handleOpenFilterActionsheet,
     handleClearCategoryFilters,
+    isHoliday
   };
 };

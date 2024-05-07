@@ -83,7 +83,8 @@ const AttendanceStats = () => {
     isClassOptionSelected,
     searchButtonPress,
     filterButtonPress,
-    handleClearCategoryFilters
+    handleClearCategoryFilters,
+    isHoliday
   } = useAttendanceStats();
 
   return (
@@ -142,7 +143,7 @@ const AttendanceStats = () => {
         selectedButton={selectedButton}
         classData={classData}
         onScroll={handleScroll}
-
+        isHoliday={isHoliday}
       />
       <DatePicker
         isOpen={showDatePicker}
