@@ -29,16 +29,19 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
   if (isHoliday) {
     return (
       <Box display="flex" alignItems="center" justifyContent="center" flex={1}>
-        <Text fontWeight="bold">
-          Today is a holiday!
-        </Text>
+        <Text fontWeight="bold">Today is a holiday!</Text>
       </Box>
     );
   }
 
   return (
     <Box display="flex" flexDirection="column" flex={1}>
-      <AttendanceListHeader FirstColumnText="R.N." SecondColumnText="Name" ThirdColumnText="P" FourthColumnText="A" />
+      <AttendanceListHeader
+        FirstColumnText="R.N."
+        SecondColumnText="Name"
+        ThirdColumnText="P"
+        FourthColumnText="A"
+      />
       <Box flex={1}>
         <ScrollView>
           {studentAttendanceData.map(({ student, attendanceRecord }) => (
