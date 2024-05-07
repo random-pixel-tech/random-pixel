@@ -4,6 +4,7 @@ import AttendanceListHeader from './AttendanceListHeader';
 import AttendanceListItem from './AttendanceListItem';
 import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
 import { AttendanceStatus } from '../../../services/utils/enums';
+import HolidayMessage from '../../../components/HolidayMessage';
 
 interface AttendanceListProps {
   studentAttendanceData: Array<{ student: Student; attendanceRecord: AttendanceRecord | null }>;
@@ -28,9 +29,7 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
 }) => {
   if (isHoliday) {
     return (
-      <Box display="flex" alignItems="center" justifyContent="center" flex={1}>
-        <Text fontWeight="bold">Today is a holiday!</Text>
-      </Box>
+      <HolidayMessage/>
     );
   }
 
