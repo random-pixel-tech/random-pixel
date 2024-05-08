@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, CheckboxIcon, CheckIcon, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText, Checkbox, CheckboxIndicator, ScrollView, ActionsheetScrollView, VStack, HStack, Text } from '@gluestack-ui/themed';
+import { Button, CheckboxIcon, CheckIcon, ActionsheetDragIndicatorWrapper, ActionsheetDragIndicator, Box, Actionsheet, ActionsheetBackdrop, ActionsheetContent, ActionsheetItem, ActionsheetItemText, ButtonText, Checkbox, CheckboxIndicator, FlatList, ActionsheetFlatList, VStack, HStack, Text } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Colors } from '../services/utils/colors';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -70,39 +70,44 @@ const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
 
   const renderFilterOptions = (options: FilterOption[], category: string) => {
     return (
-
-      <ActionsheetScrollView>
-        <HStack alignContent='center' justifyContent='space-between' px="$2" mb="$2">
-          <Box alignContent='center' h="$5" justifyContent='center'>
-            <Text color='$pixText' fontSize="$xs">Filter by {category}</Text>
-          </Box>
-          <Button onPress={() => handleClearCategoryFilters(category)} variant="outline" borderWidth={0} h="$5" p="$0">
-            <ButtonText color="$pixTextLight50" fontSize="$xs">Clear Filters</ButtonText>
-          </Button>
-        </HStack>
-        {options.map(option => (
-          <ActionsheetItem key={option.value} onPress={() => onFilterOptionSelect(category, option.value)} p="$0">
-            <Checkbox
-              value={option.value}
-              isChecked={selectedFilters[category].includes(option.value)}
-              onChange={() => onFilterOptionSelect(category, option.value)}
-              rounded="$md"
-              aria-label={option.label}
-              size='lg'
-              p="$3"
-            >
-              <CheckboxIndicator
-                borderColor="$pixPrimary"
-                bg={selectedFilters[category].includes(option.value) ? '$pixPrimary' : 'transparent'}
+      <ActionsheetFlatList
+        data={options}
+        renderItem={({ item }) => {
+          const option = item as FilterOption;
+          return (
+            <ActionsheetItem key={option.value} onPress={() => onFilterOptionSelect(category, option.value)} p="$0">
+              <Checkbox
+                value={option.value}
+                isChecked={selectedFilters[category].includes(option.value)}
+                onChange={() => onFilterOptionSelect(category, option.value)}
+                rounded="$md"
+                aria-label={option.label}
+                size='lg'
+                p="$3"
               >
-                <CheckboxIcon as={CheckIcon} />
-              </CheckboxIndicator>
-            </Checkbox>
-            <ActionsheetItemText color='$pixText100'>{option.label}</ActionsheetItemText>
-          </ActionsheetItem>
-        ))}
-
-      </ActionsheetScrollView>
+                <CheckboxIndicator
+                  borderColor="$pixPrimary"
+                  bg={selectedFilters[category].includes(option.value) ? '$pixPrimary' : 'transparent'}
+                >
+                  <CheckboxIcon as={CheckIcon} />
+                </CheckboxIndicator>
+              </Checkbox>
+              <ActionsheetItemText color='$pixText100'>{option.label}</ActionsheetItemText>
+            </ActionsheetItem>
+          );
+        }}
+        keyExtractor={(item) => (item as FilterOption).value}
+        ListHeaderComponent={
+          <HStack alignContent='center' justifyContent='space-between' px="$2" mb="$2">
+            <Box alignContent='center' h="$5" justifyContent='center'>
+              <Text color='$pixText' fontSize="$xs">Filter by {category}</Text>
+            </Box>
+            <Button onPress={() => handleClearCategoryFilters(category)} variant="outline" borderWidth={0} h="$5" p="$0">
+              <ButtonText color="$pixTextLight50" fontSize="$xs">Clear Filters</ButtonText>
+            </Button>
+          </HStack>
+        }
+      />
     );
   };
 
@@ -139,16 +144,25 @@ const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
 
   // Render sort options with icons
   const renderSortOptions = (options: { label: string, icon: IconProp }[]) => {
-    return options.map(option => (
-      <ActionsheetItem key={option.label} onPress={() => onSortOptionSelect(option.label)}>
-        <Box flexDirection="row" alignItems="center">
-          <FontAwesomeIcon icon={option.icon} size={sortOption === option.label ? 28 : 24} color={Colors.Primary} />
-          <ActionsheetItemText color="$pixText100" fontWeight={sortOption === option.label ? 'bold' : 'normal'}>
-            {option.label}
-          </ActionsheetItemText>
-        </Box>
-      </ActionsheetItem>
-    ));
+    return (
+      <FlatList
+        data={options}
+        renderItem={({ item }) => {
+          const option = item as { label: string; icon: IconProp };
+          return (
+            <ActionsheetItem key={option.label} onPress={() => onSortOptionSelect(option.label)}>
+              <Box flexDirection="row" alignItems="center">
+                <FontAwesomeIcon icon={option.icon} size={sortOption === option.label ? 28 : 24} color={Colors.Primary} />
+                <ActionsheetItemText color="$pixText100" fontWeight={sortOption === option.label ? 'bold' : 'normal'}>
+                  {option.label}
+                </ActionsheetItemText>
+              </Box>
+            </ActionsheetItem>
+          );
+        }}
+        keyExtractor={(item) => (item as { label: string; icon: IconProp }).label}
+      />
+    );
   };
 
 
@@ -213,13 +227,22 @@ const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
       }
     }
 
-    return options.map(option => (
-      <ActionsheetItem key={option.value} onPress={() => onCategorySelect(option.value)}>
-        <ActionsheetItemText color='$pixText100' fontWeight={selectedFilterOption === option.value ? 'bold' : 'normal'}>
-          {option.label}
-        </ActionsheetItemText>
-      </ActionsheetItem>
-    ));
+    return (
+      <FlatList
+        data={options}
+        renderItem={({ item }) => {
+          const option = item as FilterOption;
+          return (
+            <ActionsheetItem key={option.value} onPress={() => onCategorySelect(option.value)}>
+              <ActionsheetItemText color='$pixText100' fontWeight={selectedFilterOption === option.value ? 'bold' : 'normal'}>
+                {option.label}
+              </ActionsheetItemText>
+            </ActionsheetItem>
+          );
+        }}
+        keyExtractor={(item) => (item as FilterOption).value}
+      />
+    );
   };
 
   return (
