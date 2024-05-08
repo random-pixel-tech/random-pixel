@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import dayjs from 'dayjs';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { supabase } from '../supabase';
-import { AttendanceStatus, SelectedDuration } from '../enums';
+import { AttendanceStatus, SelectedDuration, Segment } from '../enums';
 import useStudentAttendance, { AllStudentAttendanceData } from './useStudentAttendance';
 
 dayjs.extend(weekOfYear);
@@ -56,7 +56,7 @@ export const useAttendanceStats = () => {
   const [endYear, setEndYear] = useState('');
 
   const [classData, setClassData] = useState<ClassData[]>([]);
-  const [selectedButton, setSelectedButton] = useState<'left' | 'right'>('left');
+  const [selectedSegment, setSelectedSegment] = useState<Segment>(Segment.ClassSegment);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchInput, setShowSearchInput] = useState(false);
@@ -64,10 +64,10 @@ export const useAttendanceStats = () => {
   const [searchButtonPress, setSearchButtonPress] = useState(false);
   const [filterButtonPress, setFilterButtonPress] = useState(false);
 
-  const handleSearchButtonClick = (selectedButton: 'left' | 'right') => {
+  const handleSearchButtonClick = (selectedSegment: Segment) => {
     setShowSearchInput(true);
     setSearchButtonPress(true);
-    setSelectedButton(selectedButton);
+    setSelectedSegment(selectedSegment);
   };
 
   const handleSearchInputChange = (value: string) => {
@@ -170,12 +170,12 @@ export const useAttendanceStats = () => {
   const sortedAttendanceData = useMemo(() => {
     // Check if the sort option is not changed
     if (!sortOption) {
-      return selectedButton === 'right' ? attendanceDataWithPercentage : classData;
+      return selectedSegment === Segment.StudentSegment ? attendanceDataWithPercentage : classData;
     }
 
     // Sort function based on the selected option
     const sortFunction = (a: StudentAttendanceDataWithPercentage | ClassData, b: StudentAttendanceDataWithPercentage | ClassData) => {
-      if (selectedButton === 'right') {
+      if (selectedSegment === Segment.StudentSegment) {
         switch (sortOption) {
           case 'Name: A to Z':
             return (a as StudentAttendanceDataWithPercentage).student.student_name.localeCompare((b as StudentAttendanceDataWithPercentage).student.student_name);
@@ -220,17 +220,17 @@ export const useAttendanceStats = () => {
       return classNameA - classNameB;
     };
 
-    // Sort based on the selected button
-    return selectedButton === 'right'
+    // Sort based on the selected segment
+    return selectedSegment === Segment.StudentSegment
       ? [...attendanceDataWithPercentage].sort(sortFunction)
       : [...classData].sort(sortFunction);
-  }, [attendanceDataWithPercentage, classData, sortOption, selectedButton]);
+  }, [attendanceDataWithPercentage, classData, sortOption, selectedSegment]);
 
   // Filter attendance data based on the selected filters
   const filteredAttendanceData = useMemo(() => {
     // Filter function to check if a data point matches the selected filters and search query
     const filterFunction = (data: StudentAttendanceDataWithPercentage | ClassData) => {
-      if (selectedButton === 'right') {
+      if (selectedSegment === Segment.StudentSegment) {
         const percentage = (data as StudentAttendanceDataWithPercentage).attendancePercentage;
         const className = (data as StudentAttendanceDataWithPercentage).class_name;
         const section = (data as StudentAttendanceDataWithPercentage).section;
@@ -289,11 +289,11 @@ export const useAttendanceStats = () => {
     ) {
       return sortedAttendanceData;
     } else {
-      return selectedButton === 'right'
+      return selectedSegment === Segment.StudentSegment
         ? (sortedAttendanceData as StudentAttendanceDataWithPercentage[]).filter(filterFunction)
         : (sortedAttendanceData as ClassData[]).filter(filterFunction);
     }
-  }, [sortedAttendanceData, selectedFilters, searchQuery, selectedButton]);
+  }, [sortedAttendanceData, selectedFilters, searchQuery, selectedSegment]);
 
   useEffect(() => {
     const dateRanges: Record<string, [string, string]> = {
@@ -345,14 +345,14 @@ export const useAttendanceStats = () => {
         break;
     }
   };
-
+  
   const isNextDisabled = useMemo(() => {
     if (selectedDuration === SelectedDuration.CustomRange) {
       return false;
     }
-
+  
     const today = dayjs();
-
+  
     switch (selectedDuration) {
       case SelectedDuration.Daily:
         return currentDate.isSame(today, 'day');
@@ -366,35 +366,35 @@ export const useAttendanceStats = () => {
         return false;
     }
   }, [currentDate, selectedDuration]);
-
+  
   const handleOptionSelect = (optionId: SelectedDuration) => {
     setSelectedDuration(optionId);
     setIsOptionsMenuOpen(false);
     setCurrentDate(dayjs());
-
+  
     if (optionId === SelectedDuration.CustomRange) {
       setShowDatePicker(true);
     }
   };
-
+  
   const handleDatePickerCancel = () => {
     setShowDatePicker(false);
   };
-
+  
   const handleDatePickerOk = (startDate: string, endDate: string) => {
     setStartDate(startDate);
     setEndDate(endDate);
     setShowDatePicker(false);
   };
-
+  
   const handleRangeOptionsMenuOpen = () => {
     setIsOptionsMenuOpen(true);
   };
-
+  
   const handleRangeOptionsMenuClose = () => {
     setIsOptionsMenuOpen(false);
   };
-
+  
   const fetchAttendanceByTime = async (
     studentIds: string[],
     startDate: string,
@@ -408,58 +408,58 @@ export const useAttendanceStats = () => {
         .in('scholar_id', studentIds)
         .gte('date', startDate)
         .lte('date', endDate);
-
+  
       if (attendanceError) {
         console.error('Error fetching attendance records:', attendanceError);
         return {};
       }
-
+  
       // Initialize attendance data object
       const attendanceData: { [studentId: string]: { totalAttendance: number; presentAttendance: number } } = {};
-
+  
       // Iterate over each student
       studentIds.forEach(studentId => {
         // Initialize total and present attendance counters for the current student
         let totalAttendance = 0;
         let presentAttendance = 0;
-
+  
         // Filter attendance records for the current student
         const studentAttendanceRecords = attendanceRecords.filter(record => record.scholar_id === studentId);
-
+  
         // Iterate over attendance records for the current student
         studentAttendanceRecords.forEach(record => {
           // Increment total attendance for each recorded session
           if (record.morning_status !== null) totalAttendance += 0.5;
           if (record.afternoon_status !== null) totalAttendance += 0.5;
-
+  
           // Increment present attendance for each recorded session marked as present
           if (record.morning_status === AttendanceStatus.Present) presentAttendance += 0.5;
           if (record.afternoon_status === AttendanceStatus.Present) presentAttendance += 0.5;
         });
-
+  
         // Store total and present attendance for the current student
         attendanceData[studentId] = {
           totalAttendance,
           presentAttendance,
         };
       });
-
+  
       return attendanceData;
     } catch (error) {
       console.error('Error fetching attendance:', error);
       return {};
     }
   };
-
+  
   const handleCategoryOptionSelect = (option: string) => {
     setSelectedFilterOption(option);
   };
-
+  
   const handleOpenFilterActionsheet = () => {
     setShowFilterActionsheet(true);
     setFilterButtonPress(true);
   };
-
+  
   const handleCloseFilterActionsheet = () => {
     setShowFilterActionsheet(false);
     // Check if both setSelectedFilters and setSortOption are empty
@@ -470,32 +470,32 @@ export const useAttendanceStats = () => {
       setFilterButtonPress(false);
     }
   };
-
+  
   const handleFilterOptionSelect = (category: string, option: string) => {
     const updatedFilters = { ...selectedFilters };
     const categoryFilters = updatedFilters[category];
-
+  
     if (categoryFilters.includes(option)) {
       updatedFilters[category] = categoryFilters.filter((filter) => filter !== option);
     } else {
       updatedFilters[category] = [...categoryFilters, option];
     }
-
+  
     setSelectedFilters(updatedFilters);
-
+  
     if (category === 'class') {
       setIsClassOptionSelected(updatedFilters.class.length > 0);
     }
   };
-
+  
   const handleFilterTabSelect = (tab: string) => {
     setSelectedFilterTab(tab);
   };
-
+  
   const handleFilterSortOptionSelect = (option: string) => {
     setSortOption(option);
   };
-
+  
   const handleFilterClear = () => {
     if (selectedFilterTab === 'Filter') {
       setSelectedFilters({
@@ -507,19 +507,19 @@ export const useAttendanceStats = () => {
       setSortOption('');
     }
   };
-
+  
   const handleClearCategoryFilters = (category: string) => {
     setSelectedFilters(prevFilters => ({
       ...prevFilters,
       [category]: [],
     }));
   };
-
+  
   const handleFilterApply = () => {
     // Apply selected filters and sorting
     setShowFilterActionsheet(false);
   };
-
+  
   useEffect(() => {
     const fetchClassData = async () => {
       try {
@@ -527,34 +527,34 @@ export const useAttendanceStats = () => {
         const { data: classes, error: classesError } = await supabase
           .from('classes')
           .select('id, class_name, section');
-
+  
         if (classesError) {
           console.error('Error fetching classes:', classesError);
           return;
         }
-
+  
         // Fetch all students and their class IDs
         const { data: students, error: studentsError } = await supabase
           .from('students')
           .select('id, class_id');
-
+  
         if (studentsError) {
           console.error('Error fetching students:', studentsError);
           return;
         }
-
+  
         // Fetch attendance records for the selected date range
         const { data: attendanceRecords, error: attendanceError } = await supabase
           .from('attendance_records')
           .select('morning_status, afternoon_status, scholar_id')
           .gte('date', startDate)
           .lte('date', endDate);
-
+  
         if (attendanceError) {
           console.error('Error fetching attendance records:', attendanceError);
           return;
         }
-
+  
         // Create a map of class IDs to student IDs
         const classStudentsMap = new Map<number, string[]>();
         students.forEach((student) => {
@@ -564,7 +564,7 @@ export const useAttendanceStats = () => {
           }
           classStudentsMap.get(classId)!.push(student.id);
         });
-
+  
         // Create a map of student IDs to attendance status
         const studentAttendanceMap = new Map<string, { morning: boolean; afternoon: boolean }>();
         attendanceRecords.forEach((record) => {
@@ -574,44 +574,44 @@ export const useAttendanceStats = () => {
             afternoon: record.afternoon_status === AttendanceStatus.Present,
           });
         });
-
+  
         // Sort classes based on numeric order and section
         const sortedClasses = classes.sort((a, b) => {
           const classNameA = parseInt(a.class_name, 10);
           const classNameB = parseInt(b.class_name, 10);
-
+  
           if (classNameA === classNameB) {
             return a.section.localeCompare(b.section);
           }
-
+  
           return classNameA - classNameB;
         });
-
+  
         // Calculate the number of days in the selected date range
         const numberOfDays = dayjs(endDate).diff(startDate, 'day') + 1;
-
+  
         // Calculate class data
         const classDataResults = sortedClasses.map((classItem) => {
           const classId = classItem.id;
           const studentIds = classStudentsMap.get(classId) || [];
           const totalStudents = studentIds.length;
           const totalStudentsSum = studentIds.length * numberOfDays;
-
+  
           let presentStudents = 0;
-
+  
           studentIds.forEach((studentId) => {
             const studentAttendanceRecords = attendanceRecords.filter(
               (record) => record.scholar_id === studentId
             );
-
+  
             studentAttendanceRecords.forEach((record) => {
               if (record.morning_status === AttendanceStatus.Present) presentStudents += 0.5;
               if (record.afternoon_status === AttendanceStatus.Present) presentStudents += 0.5;
             });
           });
-
+  
           const presentPercentage = totalStudentsSum > 0 ? (presentStudents / totalStudentsSum) * 100 : 0;
-
+  
           return {
             classId,
             className: classItem.class_name,
@@ -622,26 +622,20 @@ export const useAttendanceStats = () => {
             presentPercentage,
           };
         });
-
+  
         setClassData(classDataResults);
       } catch (error) {
         console.error('Error fetching class data:', error);
       }
     };
-
+  
     fetchClassData();
   }, [currentDate, startDate, endDate]);
-
-  const handleLeftButtonClick = () => {
-    setSelectedButton('left');
-    // Perform any additional actions when the left button is clicked
+  
+  const handleSegmentChange = (segment: Segment) => {
+    setSelectedSegment(segment);
   };
-
-  const handleRightButtonClick = () => {
-    setSelectedButton('right');
-    // Perform any additional actions when the right button is clicked
-  };
-
+  
   return {
     currentDate,
     selectedDuration,
@@ -693,9 +687,8 @@ export const useAttendanceStats = () => {
     isValidMonth,
     isValidYear,
     classData,
-    selectedButton,
-    handleLeftButtonClick,
-    handleRightButtonClick,
+    selectedSegment,
+    handleSegmentChange,
     searchQuery,
     showSearchInput,
     handleSearchButtonClick,
@@ -708,4 +701,4 @@ export const useAttendanceStats = () => {
     handleClearCategoryFilters,
     isHoliday
   };
-};
+  };

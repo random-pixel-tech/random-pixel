@@ -4,7 +4,7 @@ import StudentAttendanceCard from './StudentAttendanceCard';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 import ClassAttendanceCard from './ClassAttendanceCard';
 import { ClassData } from '../services/utils/api/useAttendanceStats';
-import { SelectedDuration } from '../services/utils/enums';
+import { SelectedDuration, Segment } from '../services/utils/enums';
 import HolidayMessage from './HolidayMessage';
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
@@ -21,7 +21,7 @@ interface AttendanceViewProps {
   endDate: string;
   attendanceData: AttendanceData[];
   isLoading: boolean;
-  selectedButton: 'left' | 'right';
+  selectedSegment: Segment;
   classData: ClassData[];
   onScroll: (position: number) => void;
   isHoliday: boolean;
@@ -33,7 +33,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   endDate,
   attendanceData,
   isLoading,
-  selectedButton,
+  selectedSegment,
   classData,
   onScroll,
   isHoliday,
@@ -42,11 +42,10 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
     if (selectedDuration === SelectedDuration.Daily && isHoliday) {
       return <HolidayMessage />;
     }
-
-    if (selectedButton === 'left' && 'classId' in item) {
+    if (selectedSegment === Segment.ClassSegment && 'classId' in item) {
       return <ClassAttendanceCard classData={item} />;
     } else if (
-      selectedButton === 'right' &&
+      selectedSegment === Segment.StudentSegment &&
       'student' in item &&
       'totalAttendance' in item &&
       'presentAttendance' in item
@@ -64,7 +63,6 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
         />
       );
     }
-
     return null;
   };
 

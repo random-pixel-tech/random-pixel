@@ -71,9 +71,8 @@ const AttendanceStats = () => {
     isValidDay,
     isValidMonth,
     isValidYear,
-    selectedButton,
-    handleLeftButtonClick,
-    handleRightButtonClick,
+    selectedSegment,
+    handleSegmentChange,
     classData,
     searchQuery,
     showSearchInput,
@@ -120,9 +119,8 @@ const AttendanceStats = () => {
           onApply={handleFilterApply}
           handleOpenFilterActionsheet={handleOpenFilterActionsheet}
           sortOption={sortOption}
-          selectedButton={selectedButton}
-          onLeftButtonClick={handleLeftButtonClick}
-          onRightButtonClick={handleRightButtonClick}
+          selectedSegment={selectedSegment}
+          onSegmentChange={handleSegmentChange}
           searchQuery={searchQuery}
           showSearchInput={showSearchInput}
           handleSearchButtonClick={handleSearchButtonClick}
@@ -140,7 +138,7 @@ const AttendanceStats = () => {
         endDate={endDate}
         attendanceData={filteredAttendanceData}
         isLoading={isLoading}
-        selectedButton={selectedButton}
+        selectedSegment={selectedSegment}
         classData={classData}
         onScroll={handleScroll}
         isHoliday={isHoliday}

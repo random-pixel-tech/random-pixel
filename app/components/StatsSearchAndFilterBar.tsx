@@ -6,6 +6,7 @@ import SearchButton from './SearchButton';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Colors } from '../services/utils/colors';
 import { Pressable } from '@gluestack-ui/themed';
+import { Segment } from '../services/utils/enums';
 
 interface StatsSearchAndFilterBarProps {
   showActionsheet: boolean;
@@ -21,18 +22,18 @@ interface StatsSearchAndFilterBarProps {
   sortOption: string;
   handleOpenFilterActionsheet: () => void;
   onClose: () => void;
-  selectedButton: 'left' | 'right';
-  onLeftButtonClick: () => void;
-  onRightButtonClick: () => void;
+  selectedSegment: Segment;
+  onSegmentChange: (segment: Segment) => void;
   searchQuery: string;
   showSearchInput: boolean;
-  handleSearchButtonClick: (selectedButton: 'left' | 'right') => void;
+  handleSearchButtonClick: (selectedSegment: Segment) => void;
   handleSearchInputChange: (value: string) => void;
   handleClearSearch: () => void;
   isClassOptionSelected: boolean;
   searchButtonPress: boolean;
   filterButtonPress: boolean;
-  handleClearCategoryFilters: (category: string) => void;}
+  handleClearCategoryFilters: (category: string) => void;
+}
 
 const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
   showActionsheet,
@@ -48,9 +49,8 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
   sortOption,
   handleOpenFilterActionsheet,
   onClose,
-  selectedButton,
-  onLeftButtonClick,
-  onRightButtonClick,
+  selectedSegment,
+  onSegmentChange,
   searchQuery,
   showSearchInput,
   handleSearchButtonClick,
@@ -59,7 +59,7 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
   isClassOptionSelected,
   searchButtonPress,
   filterButtonPress,
-  handleClearCategoryFilters
+  handleClearCategoryFilters,
 }) => {
   return (
     <Box>
@@ -80,20 +80,19 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
           sortOption={sortOption}
           isClassOptionSelected={isClassOptionSelected}
           filterButtonPress={filterButtonPress}
-          selectedButton={selectedButton}
+          selectedSegment={selectedSegment}
           handleClearCategoryFilters={handleClearCategoryFilters}
         />
         <SegmentedControl
           leftButtonLabel="Classes"
           rightButtonLabel="Students"
-          selectedButton={selectedButton}
-          onLeftButtonClick={onLeftButtonClick}
-          onRightButtonClick={onRightButtonClick}
+          selectedSegment={selectedSegment}
+          onSegmentChange={onSegmentChange}
         />
         <SearchButton
           onPress={handleSearchButtonClick}
           searchButtonPress={searchButtonPress}
-          selectedButton={selectedButton}
+          selectedSegment={selectedSegment}
         />
       </Box>
       {showSearchInput && (
@@ -102,7 +101,11 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
             <InputField
               value={searchQuery}
               onChangeText={handleSearchInputChange}
-              placeholder={selectedButton === 'left' ? 'Search for class name' : 'Search for student name'}
+              placeholder={
+                selectedSegment === Segment.ClassSegment
+                  ? 'Search for class name'
+                  : 'Search for student name'
+              }
             />
           </Input>
           <Pressable ml="$2" onPress={handleClearSearch}>
