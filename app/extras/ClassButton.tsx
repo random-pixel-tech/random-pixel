@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAttendanceRecords } from '../../services/utils/api/useAttendanceRecords';
+import { useAttendanceRecords } from '../services/utils/api/useAttendanceRecords';
 import { Button, ButtonText } from '@gluestack-ui/themed';
 
 interface ClassButtonProps {

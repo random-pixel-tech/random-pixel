@@ -1,12 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Settings from '../../screens/Settings';
-import HomePage from '../../screens/HomePage';
+import HomePage from '../../extras/HomePage';
 import { Avatar, AvatarFallbackText } from '@gluestack-ui/themed';
-import Profile from '../../screens/Profile';
+import Profile from '../../extras/Profile';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import ControlRoomNav from '../ControlRoomNav';
-import DashNav from '../DashNav';
+import DashNav from '../../extras/DashNav';
 import { useNavigation } from '@react-navigation/native';
 import { RouteNames } from '../../services/utils/RouteNames';
 

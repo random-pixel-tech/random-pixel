@@ -1,8 +1,8 @@
 import React from 'react';
 import ClassButton from './ClassButton';
 import { Box, Button, ButtonText } from '@gluestack-ui/themed';
-import { RouteNames } from '../../services/utils/RouteNames';
-import { useHandleNavigateToScreen } from '../../services/utils/navigationUtils';
+import { RouteNames } from '../services/utils/RouteNames';
+import { useHandleNavigateToScreen } from '../services/utils/navigationUtils';
 
 const Dashboard: React.FC = () => {
   const { handleDashboardNavigation } = useHandleNavigateToScreen([], () => {});
