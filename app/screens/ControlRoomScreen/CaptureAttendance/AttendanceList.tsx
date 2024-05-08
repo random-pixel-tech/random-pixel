@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, ScrollView, Text } from '@gluestack-ui/themed';
+import { Box, FlatList, Text } from '@gluestack-ui/themed';
 import AttendanceListHeader from './AttendanceListHeader';
 import AttendanceListItem from './AttendanceListItem';
 import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
@@ -7,7 +7,10 @@ import { AttendanceStatus } from '../../../services/utils/enums';
 import HolidayMessage from '../../../components/HolidayMessage';
 
 interface AttendanceListProps {
-  studentAttendanceData: Array<{ student: Student; attendanceRecord: AttendanceRecord | null }>;
+  studentAttendanceData: Array<{
+    student: Student;
+    attendanceRecord: AttendanceRecord | null;
+  }>;
   isPopoverOpen: Record<string, boolean>;
   onPopoverOpen: (studentId: string) => void;
   onPopoverClose: (studentId: string) => void;
@@ -28,10 +31,22 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
   isHoliday,
 }) => {
   if (isHoliday) {
-    return (
-      <HolidayMessage/>
-    );
+    return <HolidayMessage />;
   }
+
+  const renderItem = ({ item }: { item: { student: Student; attendanceRecord: AttendanceRecord | null } }) => (
+    <AttendanceListItem
+      key={item.student.scholar_id}
+      student={item.student}
+      attendanceRecord={item.attendanceRecord}
+      isPopoverOpen={isPopoverOpen[item.student.scholar_id] || false}
+      onPopoverOpen={() => onPopoverOpen(item.student.scholar_id)}
+      onPopoverClose={() => onPopoverClose(item.student.scholar_id)}
+      attendanceStatus={attendanceStatus[item.student.scholar_id]}
+      onAttendanceStatusChange={(status) => onAttendanceStatusChange(item.student.scholar_id, status)}
+      onLeaveClick={() => onLeaveClick(item.student.scholar_id)}
+    />
+  );
 
   return (
     <Box display="flex" flexDirection="column" flex={1}>
@@ -42,21 +57,11 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
         FourthColumnText="A"
       />
       <Box flex={1}>
-        <ScrollView>
-          {studentAttendanceData.map(({ student, attendanceRecord }) => (
-            <AttendanceListItem
-              key={student.scholar_id}
-              student={student}
-              attendanceRecord={attendanceRecord}
-              isPopoverOpen={isPopoverOpen[student.scholar_id] || false}
-              onPopoverOpen={() => onPopoverOpen(student.scholar_id)}
-              onPopoverClose={() => onPopoverClose(student.scholar_id)}
-              attendanceStatus={attendanceStatus[student.scholar_id]}
-              onAttendanceStatusChange={(status) => onAttendanceStatusChange(student.scholar_id, status)}
-              onLeaveClick={() => onLeaveClick(student.scholar_id)}
-            />
-          ))}
-        </ScrollView>
+        <FlatList
+          data={studentAttendanceData}
+          renderItem={({ item }) => renderItem({ item: item as { student: Student; attendanceRecord: AttendanceRecord | null } })}
+          keyExtractor={(item) => (item as { student: Student; attendanceRecord: AttendanceRecord | null }).student.scholar_id}
+        />
       </Box>
     </Box>
   );
