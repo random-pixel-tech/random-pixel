@@ -86,6 +86,7 @@ const CaptureAttendance = () => {
         className={className}
         today={today}
         summaryValues={{ markedStudents, totalStudents }}
+        isHoliday={isHoliday}
       />
       <AttendanceList
         studentAttendanceData={studentAttendanceData}
