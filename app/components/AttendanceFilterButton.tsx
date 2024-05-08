@@ -306,10 +306,10 @@ const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
           size={18}
           color={filterButtonPress ? Colors.White : Colors.Primary}
         />
-        <Actionsheet isOpen={showActionsheet} closeOnOverlayClick zIndex={999} rounded="$none">
+        <Actionsheet isOpen={showActionsheet} closeOnOverlayClick zIndex={999}>
           <ActionsheetBackdrop />
 
-          <ActionsheetContent h="$5/6" zIndex={999}>
+          <ActionsheetContent h="$5/6" zIndex={999} rounded="$sm">
             <Button alignSelf="flex-end" py="$1" px="$0" onPress={onClose} variant="outline" borderWidth={0}>
               <FontAwesomeIcon icon="xmark" size={24} color={Colors.Primary} />
             </Button>
