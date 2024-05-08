@@ -1,32 +1,35 @@
 import React from 'react';
 import { Box, Button, ButtonText } from '@gluestack-ui/themed';
-import { Segment } from '../services/utils/enums';
 
-interface SegmentedControlProps {
+interface SegmentedControlProps<TLeft, TRight> {
   leftButtonLabel: string;
   rightButtonLabel: string;
-  selectedSegment: Segment;
-  onSegmentChange: (segment: Segment) => void;
+  selectedSegment: TLeft | TRight;
+  onSegmentChange: (segment: TLeft | TRight) => void;
+  leftSegmentValue: TLeft;
+  rightSegmentValue: TRight;
 }
 
-const SegmentedControl: React.FC<SegmentedControlProps> = ({
+const SegmentedControl = <TLeft, TRight>({
   leftButtonLabel,
   rightButtonLabel,
   selectedSegment,
   onSegmentChange,
-}) => {
+  leftSegmentValue,
+  rightSegmentValue,
+}: SegmentedControlProps<TLeft, TRight>) => {
   return (
     <Box flexDirection="row" alignContent="center" justifyContent="center" p="$4">
       <Button
         px="$9"
-        onPress={() => onSegmentChange(Segment.ClassSegment)}
+        onPress={() => onSegmentChange(leftSegmentValue)}
         borderTopLeftRadius="$full"
         borderBottomLeftRadius="$full"
-        bg={selectedSegment === Segment.ClassSegment ? '$pixSecondary2' : '$white'}
-        variant={selectedSegment === Segment.ClassSegment ? 'solid' : 'outline'}
+        bg={selectedSegment === leftSegmentValue ? '$pixSecondary2' : '$white'}
+        variant={selectedSegment === leftSegmentValue ? 'solid' : 'outline'}
       >
         <ButtonText
-          color={selectedSegment === Segment.ClassSegment ? '$white' : '$pixPrimaryDark50'}
+          color={selectedSegment === leftSegmentValue ? '$white' : '$pixPrimaryDark50'}
           fontSize={12}
         >
           {leftButtonLabel}
@@ -34,14 +37,14 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
       </Button>
       <Button
         px="$9"
-        onPress={() => onSegmentChange(Segment.StudentSegment)}
+        onPress={() => onSegmentChange(rightSegmentValue)}
         borderTopRightRadius="$full"
         borderBottomRightRadius="$full"
-        bg={selectedSegment === Segment.StudentSegment ? '$pixSecondary2' : '$white'}
-        variant={selectedSegment === Segment.StudentSegment ? 'solid' : 'outline'}
+        bg={selectedSegment === rightSegmentValue ? '$pixSecondary2' : '$white'}
+        variant={selectedSegment === rightSegmentValue ? 'solid' : 'outline'}
       >
         <ButtonText
-          color={selectedSegment === Segment.StudentSegment ? '$white' : '$pixPrimaryDark50'}
+          color={selectedSegment === rightSegmentValue ? '$white' : '$pixPrimaryDark50'}
           fontSize={12}
         >
           {rightButtonLabel}

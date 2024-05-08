@@ -88,6 +88,8 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
           rightButtonLabel="Students"
           selectedSegment={selectedSegment}
           onSegmentChange={onSegmentChange}
+          leftSegmentValue={Segment.ClassSegment}
+          rightSegmentValue={Segment.StudentSegment}
         />
         <SearchButton
           onPress={handleSearchButtonClick}
