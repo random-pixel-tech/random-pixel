@@ -1,6 +1,6 @@
 // AttendanceSummaryList.tsx
 import React from 'react';
-import { Box, ScrollView } from '@gluestack-ui/themed';
+import { Box, FlatList } from '@gluestack-ui/themed';
 import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
 import AttendanceSummaryListItem from './AttendanceSummaryListItem';
 import AttendanceListHeader from '../CaptureAttendance/AttendanceListHeader';
@@ -24,6 +24,18 @@ const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
   handlePopoverClose,
   session,
 }) => {
+  const renderItem = ({ item }: { item: { student: Student; attendanceRecord: AttendanceRecord | null } }) => (
+    <AttendanceSummaryListItem
+      key={item.student.scholar_id}
+      student={item.student}
+      attendanceRecord={item.attendanceRecord}
+      isPopoverOpen={isPopoverOpen[item.student.scholar_id]}
+      onPopoverOpen={() => handlePopoverOpen(item.student.scholar_id)}
+      onPopoverClose={() => handlePopoverClose(item.student.scholar_id)}
+      session={session}
+    />
+  );
+
   return (
     <Box display="flex" flexDirection="column" flex={1}>
       <AttendanceListHeader
@@ -32,19 +44,11 @@ const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
         icon="ellipsis-vertical"
       />
       <Box flex={1}>
-        <ScrollView>
-          {filteredStudents.map(({ student, attendanceRecord }) => (
-            <AttendanceSummaryListItem
-              key={student.scholar_id}
-              student={student}
-              attendanceRecord={attendanceRecord}
-              isPopoverOpen={isPopoverOpen[student.scholar_id]}
-              onPopoverOpen={() => handlePopoverOpen(student.scholar_id)}
-              onPopoverClose={() => handlePopoverClose(student.scholar_id)}
-              session={session}
-            />
-          ))}
-        </ScrollView>
+        <FlatList
+          data={filteredStudents}
+          renderItem={({ item }) => renderItem({ item: item as { student: Student; attendanceRecord: AttendanceRecord | null } })}
+          keyExtractor={(item) => (item as { student: Student; attendanceRecord: AttendanceRecord | null }).student.scholar_id}
+        />
       </Box>
     </Box>
   );

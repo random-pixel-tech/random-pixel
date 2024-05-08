@@ -40,6 +40,7 @@ const AttendanceSummary = () => {
     handleIconPress,
     session,
     handleSessionToggle,
+    isHoliday
   } = useAttendanceLogic(initialSession);
 
   const options = [
@@ -87,6 +88,7 @@ const AttendanceSummary = () => {
         today={today}
         summaryValues={{ markedStudents, totalStudents }}
         session={session}
+        isHoliday={isHoliday}
       />
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
