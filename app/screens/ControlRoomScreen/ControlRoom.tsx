@@ -21,11 +21,11 @@ const ControlRoom: React.FC = () => {
     <Box flexDirection="column" alignItems="center">
       <Box flexDirection="row">
         <InteractiveBoxWithIcon onPress={handleFirstBoxPress} title="Attendance" icon="user-check"/>
-        <InteractiveBoxWithIcon title="Attendance" icon="bullhorn" />
+        <InteractiveBoxWithIcon title="Notices" icon="bullhorn" />
       </Box>
       <Box flexDirection="row">
-        <InteractiveBoxWithIcon title="Attendance" icon="person-chalkboard" />
-        <InteractiveBoxWithIcon title="Attendance" icon="calendar" />
+        <InteractiveBoxWithIcon title="Classes" icon="person-chalkboard" />
+        <InteractiveBoxWithIcon title="Calendar" icon="calendar" />
       </Box>
 
       <AttendanceActionSheetComponent isOpen={showActionSheet} onClose={handleCloseActionSheet} initialFocusRef={initialFocusRef} studentAttendanceData={studentAttendanceData}/>
