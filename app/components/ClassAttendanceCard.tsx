@@ -47,14 +47,16 @@ const ClassAttendanceCard: React.FC<ClassAttendanceCardProps> = ({ classData }) 
                 {classNameOrdinal}
               </Text>
             </Box>
-            <Box display="flex" flexDirection="row" alignContent="center">
-              <Text fontSize="$md" color="$pixSecondary2" pr="$1">
-                Section:
-              </Text>
-              <Text fontSize="$sm" color="$pixPrimaryDark50">
-                {section}
-              </Text>
-            </Box>
+            {section && (
+              <Box display="flex" flexDirection="row" alignContent="center">
+                <Text fontSize="$md" color="$pixSecondary2" pr="$1">
+                  Section:
+                </Text>
+                <Text fontSize="$sm" color="$pixPrimaryDark50">
+                  {section}
+                </Text>
+              </Box>
+            )}
           </Box>
           <Box bg="#DFD6F8" px="$2" py="$0.5" rounded="$md" alignSelf="flex-end">
             <Text fontSize="$sm" color="$pixPrimaryDark50">

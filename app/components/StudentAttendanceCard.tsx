@@ -138,14 +138,16 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
               {classNameOrdinal}
             </Text>
           </Box>
-          <Box display="flex" flexDirection="row" alignContent="center">
-            <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
-              Section:
-            </Text>
-            <Text fontSize="$sm" color="$pixPrimaryDark50">
-              {section}
-            </Text>
-          </Box>
+          {section && (
+            <Box display="flex" flexDirection="row" alignContent="center">
+              <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
+                Section:
+              </Text>
+              <Text fontSize="$sm" color="$pixPrimaryDark50">
+                {section}
+              </Text>
+            </Box>
+          )}
         </Box>
       </Box>
 
