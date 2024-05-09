@@ -23,7 +23,6 @@ interface AttendanceViewProps {
   isLoading: boolean;
   selectedSegment: Segment;
   classData: ClassData[];
-  onScroll: (position: number) => void;
   isHoliday: boolean;
 }
 
@@ -35,7 +34,6 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   isLoading,
   selectedSegment,
   classData,
-  onScroll,
   isHoliday,
 }) => {
   const renderAttendanceItem = (item: AttendanceData) => {
@@ -68,7 +66,9 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
 
   const keyExtractor = (item: unknown, index: number) => {
     const attendanceItem = item as AttendanceData;
-    return 'classId' in attendanceItem ? attendanceItem.classId.toString() : attendanceItem.student.scholar_id;
+    return 'classId' in attendanceItem
+      ? attendanceItem.classId.toString()
+      : attendanceItem.student.scholar_id;
   };
 
   return (
@@ -76,11 +76,6 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
       data={attendanceData}
       renderItem={({ item }) => renderAttendanceItem(item as AttendanceData)}
       keyExtractor={keyExtractor}
-      onScroll={({ nativeEvent }) => {
-        const { contentOffset } = nativeEvent;
-        onScroll(contentOffset.y);
-      }}
-      scrollEventThrottle={16}
       ListEmptyComponent={
         isLoading ? (
           <Box>
