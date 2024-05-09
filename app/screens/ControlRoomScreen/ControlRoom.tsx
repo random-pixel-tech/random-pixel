@@ -20,12 +20,12 @@ const ControlRoom: React.FC = () => {
   return (
     <Box flexDirection="column" alignItems="center">
       <Box flexDirection="row">
-        <InteractiveBoxWithIcon onPress={handleFirstBoxPress} title="Attendance" icon="user-check"/>
-        <InteractiveBoxWithIcon title="Notices" icon="bullhorn" />
+        <InteractiveBoxWithIcon onPress={handleFirstBoxPress} title="Attendance" icon="user-check" />
+        <InteractiveBoxWithIcon title="Notices" icon="bullhorn"  disabled={true}/>
       </Box>
       <Box flexDirection="row">
-        <InteractiveBoxWithIcon title="Classes" icon="person-chalkboard" />
-        <InteractiveBoxWithIcon title="Calendar" icon="calendar" />
+        <InteractiveBoxWithIcon title="Classes" icon="person-chalkboard" disabled={true}/>
+        <InteractiveBoxWithIcon title="Calendar" icon="calendar" disabled={true}/>
       </Box>
 
       <AttendanceActionSheetComponent isOpen={showActionSheet} onClose={handleCloseActionSheet} initialFocusRef={initialFocusRef} studentAttendanceData={studentAttendanceData}/>
