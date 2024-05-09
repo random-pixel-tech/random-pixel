@@ -9,12 +9,14 @@ interface SearchButtonProps {
   onPress: (selectedSegment: Segment) => void;
   searchButtonPress: boolean;
   selectedSegment: Segment;
+  isLoading: boolean;
 }
 
 const SearchButton: React.FC<SearchButtonProps> = ({
   onPress,
   searchButtonPress,
   selectedSegment,
+  isLoading,
 }) => {
   return (
     <Box p="$4">

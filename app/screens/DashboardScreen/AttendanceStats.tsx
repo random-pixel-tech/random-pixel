@@ -126,6 +126,7 @@ const AttendanceStats = () => {
             searchButtonPress={searchButtonPress}
             filterButtonPress={filterButtonPress}
             handleClearCategoryFilters={handleClearCategoryFilters}
+            isLoading={isLoading}
           />
         </Animated.View>
         <AttendanceView

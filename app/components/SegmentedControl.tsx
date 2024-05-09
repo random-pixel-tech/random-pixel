@@ -8,6 +8,7 @@ interface SegmentedControlProps<TLeft, TRight> {
   onSegmentChange: (segment: TLeft | TRight) => void;
   leftSegmentValue: TLeft;
   rightSegmentValue: TRight;
+  isLoading: boolean;
 }
 
 const SegmentedControl = <TLeft, TRight>({
@@ -17,6 +18,7 @@ const SegmentedControl = <TLeft, TRight>({
   onSegmentChange,
   leftSegmentValue,
   rightSegmentValue,
+  isLoading,
 }: SegmentedControlProps<TLeft, TRight>) => {
   return (
     <Box flexDirection="row" alignContent="center" justifyContent="center" py="$4">

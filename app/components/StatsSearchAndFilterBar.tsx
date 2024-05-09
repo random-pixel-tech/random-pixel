@@ -33,6 +33,7 @@ interface StatsSearchAndFilterBarProps {
   searchButtonPress: boolean;
   filterButtonPress: boolean;
   handleClearCategoryFilters: (category: string) => void;
+  isLoading: boolean;
 }
 
 const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
@@ -60,9 +61,10 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
   searchButtonPress,
   filterButtonPress,
   handleClearCategoryFilters,
+  isLoading,
 }) => {
   return (
-    <Box>
+    <Box opacity={isLoading ? 0.5 : 1} pointerEvents={isLoading ? 'none' : 'auto'}>
       <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
         <AttendanceFilterButton
           showActionsheet={showActionsheet}
@@ -82,6 +84,7 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
           filterButtonPress={filterButtonPress}
           selectedSegment={selectedSegment}
           handleClearCategoryFilters={handleClearCategoryFilters}
+          isLoading={isLoading}
         />
         <SegmentedControl
           leftButtonLabel="Classes"
@@ -90,11 +93,13 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
           onSegmentChange={onSegmentChange}
           leftSegmentValue={Segment.ClassSegment}
           rightSegmentValue={Segment.StudentSegment}
+          isLoading={isLoading}
         />
         <SearchButton
           onPress={handleSearchButtonClick}
           searchButtonPress={searchButtonPress}
           selectedSegment={selectedSegment}
+          isLoading={isLoading}
         />
       </Box>
       {showSearchInput && (

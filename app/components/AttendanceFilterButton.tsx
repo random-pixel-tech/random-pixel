@@ -43,6 +43,7 @@ interface AttendanceFilterButtonProps {
   filterButtonPress: boolean;
   selectedSegment: Segment;
   handleClearCategoryFilters: (category: string) => void;
+  isLoading: boolean;
 }
 
 interface FilterOption {
@@ -68,6 +69,7 @@ const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
   filterButtonPress,
   selectedSegment,
   handleClearCategoryFilters,
+  isLoading
 }) => {
   const renderTabBar = () => (
     <Box flexDirection="row" w="$full" borderBottomWidth={1} borderBottomColor="$pixPrimaryLight100">
