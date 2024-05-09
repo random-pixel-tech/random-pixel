@@ -19,7 +19,7 @@ const SegmentedControl = <TLeft, TRight>({
   rightSegmentValue,
 }: SegmentedControlProps<TLeft, TRight>) => {
   return (
-    <Box flexDirection="row" alignContent="center" justifyContent="center" p="$4">
+    <Box flexDirection="row" alignContent="center" justifyContent="center" py="$4">
       <Button
         px="$9"
         onPress={() => onSegmentChange(leftSegmentValue)}
