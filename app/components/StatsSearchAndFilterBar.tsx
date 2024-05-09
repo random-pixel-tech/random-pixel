@@ -63,7 +63,7 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
 }) => {
   return (
     <Box>
-      <Box display="flex" flexDirection="row" alignItems="center">
+      <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
         <AttendanceFilterButton
           showActionsheet={showActionsheet}
           selectedTab={selectedTab}
