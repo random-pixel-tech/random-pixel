@@ -5,7 +5,7 @@ SET session_replication_role = replica;
 --
 
 -- Dumped from database version 15.1 (Ubuntu 15.1-1.pgdg20.04+1)
--- Dumped by pg_dump version 15.5 (Ubuntu 15.5-1.pgdg20.04+1)
+-- Dumped by pg_dump version 15.6 (Ubuntu 15.6-1.pgdg20.04+1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -24,7 +24,12 @@ SET row_security = off;
 
 INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created_at", "ip_address") VALUES
 	('00000000-0000-0000-0000-000000000000', 'e1d86ced-52b4-4a6d-a567-9518cd2f16ce', '{"action":"user_confirmation_requested","actor_id":"b5ea9fbe-d7e0-419b-ba96-2901e572a816","actor_username":"dmdn@dmn.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-03-22 12:39:22.726705+00', ''),
-	('00000000-0000-0000-0000-000000000000', '747607eb-ec2c-40d2-94fd-9e5a18d791a4', '{"action":"user_confirmation_requested","actor_id":"e6bc2c04-607d-4b39-9ee3-dad6433adcef","actor_username":"dsmdn@dmnff.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-03-26 08:10:35.161673+00', '');
+	('00000000-0000-0000-0000-000000000000', '747607eb-ec2c-40d2-94fd-9e5a18d791a4', '{"action":"user_confirmation_requested","actor_id":"e6bc2c04-607d-4b39-9ee3-dad6433adcef","actor_username":"dsmdn@dmnff.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-03-26 08:10:35.161673+00', ''),
+	('00000000-0000-0000-0000-000000000000', '520597e1-eebb-4a1b-90ca-eca055ed7083', '{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"dsmdn@dmnff.com","user_id":"e6bc2c04-607d-4b39-9ee3-dad6433adcef","user_phone":""}}', '2024-05-10 02:55:46.965233+00', ''),
+	('00000000-0000-0000-0000-000000000000', '95239b48-0f57-4237-a4fb-2eabb150b630', '{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"dmdn@dmn.com","user_id":"b5ea9fbe-d7e0-419b-ba96-2901e572a816","user_phone":""}}', '2024-05-10 02:55:50.043558+00', ''),
+	('00000000-0000-0000-0000-000000000000', '9422bd94-7420-4a6f-9f76-a3e91a455381', '{"action":"user_signedup","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"mohittater.iiita@gmail.com","user_id":"e1db028d-5b11-452a-aef2-a5b2a7d8f569","user_phone":""}}', '2024-05-10 03:23:40.371424+00', ''),
+	('00000000-0000-0000-0000-000000000000', '99ea1c8c-1b9d-45c2-b932-5098c9d7edb1', '{"action":"user_signedup","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"admin@123","user_id":"ba21d448-1d70-4f3f-974c-a2998916f5d9","user_phone":""}}', '2024-05-10 03:24:18.70631+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'dc0568bf-9f2f-4252-9c6b-2a0de00560c8', '{"action":"user_signedup","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"teacher@123","user_id":"627c3c75-9f1c-4125-8d0e-5ae33555dbad","user_phone":""}}', '2024-05-10 03:24:49.684508+00', '');
 
 
 --
@@ -38,8 +43,9 @@ INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created
 --
 
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
-	('00000000-0000-0000-0000-000000000000', 'b5ea9fbe-d7e0-419b-ba96-2901e572a816', 'authenticated', 'authenticated', 'dmdn@dmn.com', '$2a$10$1KAatW7S8AamYgf0VofV8enc5k8/JQuUALBWRZNbetuw.GGMF9kVq', NULL, NULL, '0072ec6e653604b73d5916ba5f93d662537134e33e004cac643b3442', '2024-03-22 12:39:22.730793+00', '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"sub": "b5ea9fbe-d7e0-419b-ba96-2901e572a816", "email": "dmdn@dmn.com", "email_verified": false, "phone_verified": false}', NULL, '2024-03-22 12:39:22.715097+00', '2024-03-22 12:39:25.871886+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
-	('00000000-0000-0000-0000-000000000000', 'e6bc2c04-607d-4b39-9ee3-dad6433adcef', 'authenticated', 'authenticated', 'dsmdn@dmnff.com', '$2a$10$gCYmJlVE2L2UOjMWXrnO5eATcUA4KI5gGsJLNUxRQuOXXBq/fe7sS', NULL, NULL, '85b71311d40ce31b114164f9789d954bc32236b7d92ac046605d8d03', '2024-03-26 08:10:35.163069+00', '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{"sub": "e6bc2c04-607d-4b39-9ee3-dad6433adcef", "email": "dsmdn@dmnff.com", "email_verified": false, "phone_verified": false}', NULL, '2024-03-26 08:10:35.153337+00', '2024-03-26 08:10:38.279511+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+	('00000000-0000-0000-0000-000000000000', 'e1db028d-5b11-452a-aef2-a5b2a7d8f569', 'authenticated', 'authenticated', 'mohittater.iiita@gmail.com', '$2a$10$9jK1d5f4HH.B5jGlUYFqI.pWJeFBPyQJiEXggs9U1IFCf/Lm68l9W', '2024-05-10 03:23:40.373402+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{}', NULL, '2024-05-10 03:23:40.366092+00', '2024-05-10 03:23:40.375808+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
+	('00000000-0000-0000-0000-000000000000', 'ba21d448-1d70-4f3f-974c-a2998916f5d9', 'authenticated', 'authenticated', 'admin@123', '$2a$10$7jSnpuwXFW/XvyAfnVH4SOdjkWXmZ5qXg65LPjZ2V2K53KW/G/ba2', '2024-05-10 03:24:18.707579+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{}', NULL, '2024-05-10 03:24:18.704267+00', '2024-05-10 03:24:18.707793+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
+	('00000000-0000-0000-0000-000000000000', '627c3c75-9f1c-4125-8d0e-5ae33555dbad', 'authenticated', 'authenticated', 'teacher@123', '$2a$10$in6k/q9VgSdCTMQ6GdjGGep0QYdHFY26NKysYC1PXs1c3XA1vgXBi', '2024-05-10 03:24:49.68564+00', NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{}', NULL, '2024-05-10 03:24:49.681965+00', '2024-05-10 03:24:49.685878+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
@@ -47,8 +53,9 @@ INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encryp
 --
 
 INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
-	('b5ea9fbe-d7e0-419b-ba96-2901e572a816', 'b5ea9fbe-d7e0-419b-ba96-2901e572a816', '{"sub": "b5ea9fbe-d7e0-419b-ba96-2901e572a816", "email": "dmdn@dmn.com", "email_verified": false, "phone_verified": false}', 'email', '2024-03-22 12:39:22.723047+00', '2024-03-22 12:39:22.723113+00', '2024-03-22 12:39:22.723113+00', '77c7de3e-f4db-482b-83dc-7eab0642ef3c'),
-	('e6bc2c04-607d-4b39-9ee3-dad6433adcef', 'e6bc2c04-607d-4b39-9ee3-dad6433adcef', '{"sub": "e6bc2c04-607d-4b39-9ee3-dad6433adcef", "email": "dsmdn@dmnff.com", "email_verified": false, "phone_verified": false}', 'email', '2024-03-26 08:10:35.159042+00', '2024-03-26 08:10:35.159116+00', '2024-03-26 08:10:35.159116+00', '36656298-d48c-4ad1-b1bc-5235a72020c5');
+	('e1db028d-5b11-452a-aef2-a5b2a7d8f569', 'e1db028d-5b11-452a-aef2-a5b2a7d8f569', '{"sub": "e1db028d-5b11-452a-aef2-a5b2a7d8f569", "email": "mohittater.iiita@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2024-05-10 03:23:40.369406+00', '2024-05-10 03:23:40.369465+00', '2024-05-10 03:23:40.369465+00', '735317b2-5cef-43af-b6e3-bff5d36537d6'),
+	('ba21d448-1d70-4f3f-974c-a2998916f5d9', 'ba21d448-1d70-4f3f-974c-a2998916f5d9', '{"sub": "ba21d448-1d70-4f3f-974c-a2998916f5d9", "email": "admin@123", "email_verified": false, "phone_verified": false}', 'email', '2024-05-10 03:24:18.705379+00', '2024-05-10 03:24:18.705435+00', '2024-05-10 03:24:18.705435+00', '56bd385f-59cb-4319-b15d-251fcdc0b661'),
+	('627c3c75-9f1c-4125-8d0e-5ae33555dbad', '627c3c75-9f1c-4125-8d0e-5ae33555dbad', '{"sub": "627c3c75-9f1c-4125-8d0e-5ae33555dbad", "email": "teacher@123", "email_verified": false, "phone_verified": false}', 'email', '2024-05-10 03:24:49.683046+00', '2024-05-10 03:24:49.683103+00', '2024-05-10 03:24:49.683103+00', 'eb2ed07f-5c27-4a1d-bbcc-117050684da1');
 
 
 --
@@ -399,6 +406,9 @@ INSERT INTO "public"."attendance_records" ("id", "studentId", "classId", "date",
 	(104, '1da3ec02-45b0-40eb-9363-321c7652d8ce', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-16', 'present', NULL, NULL, NULL, '2024-04-16 13:00:47.742+00', NULL, '2024-04-16 13:00:49.228742+00', '2024-04-16 13:00:49.228742+00'),
 	(96, '2df26707-a2b6-404b-bad3-b5ea6e7d3040', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-16', 'present', NULL, NULL, NULL, '2024-04-16 13:00:47.734+00', NULL, '2024-04-16 11:33:26.903368+00', '2024-04-16 11:33:26.903368+00'),
 	(100, 'fe3a1474-bf69-4dbf-8d14-7226c1a68ccb', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-16', 'present', NULL, NULL, NULL, '2024-04-16 13:01:36.311+00', NULL, '2024-04-16 13:00:49.080674+00', '2024-04-16 13:00:49.080674+00'),
+	(146, '9bbdc27d-25a4-4c61-a056-d5ca31e3f82d', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.676+00', NULL, '2024-04-29 09:39:08.823419+00', '2024-04-29 09:39:08.823419+00'),
+	(147, '25d7a15d-85d0-4a6a-98b2-fc82b6ef2b22', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'absent', NULL, NULL, NULL, '2024-04-29 09:39:08.672+00', NULL, '2024-04-29 09:39:08.835909+00', '2024-04-29 09:39:08.835909+00'),
+	(148, '47856676-2f70-4e55-b971-6037224df84c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.673+00', NULL, '2024-04-29 09:39:08.84045+00', '2024-04-29 09:39:08.84045+00'),
 	(106, '3c846b40-7213-40b1-9ea8-6f4e300e1eaa', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-16', 'absent', NULL, NULL, NULL, '2024-04-16 13:08:42.532+00', NULL, '2024-04-16 13:00:49.318222+00', '2024-04-16 13:00:49.318222+00'),
 	(105, 'a78439cb-b036-4592-a458-3d4bd065e5db', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-16', 'present', NULL, NULL, NULL, '2024-04-16 13:08:42.535+00', NULL, '2024-04-16 13:00:49.268056+00', '2024-04-16 13:00:49.268056+00'),
 	(101, 'b792de20-b520-47f3-a7b5-11165af51f72', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-16', 'present', NULL, NULL, NULL, '2024-04-16 13:08:42.531+00', NULL, '2024-04-16 13:00:49.082118+00', '2024-04-16 13:00:49.082118+00'),
@@ -410,18 +420,100 @@ INSERT INTO "public"."attendance_records" ("id", "studentId", "classId", "date",
 	(116, '3c846b40-7213-40b1-9ea8-6f4e300e1eaa', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'present', NULL, NULL, NULL, '2024-04-18 16:23:10.579+00', NULL, '2024-04-18 16:23:12.475335+00', '2024-04-18 16:23:12.475335+00'),
 	(117, 'a0cead51-de39-49ae-953a-4696bb942dd5', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'absent', NULL, NULL, NULL, '2024-04-18 16:23:10.579+00', NULL, '2024-04-18 16:23:12.486156+00', '2024-04-18 16:23:12.486156+00'),
 	(119, '52a0cba6-71fd-4230-92cf-2509eccd4cc7', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'absent', NULL, NULL, NULL, '2024-04-18 16:23:10.581+00', NULL, '2024-04-18 16:23:12.580494+00', '2024-04-18 16:23:12.580494+00'),
+	(149, '7c789f87-f968-441b-bc65-6875d8078dd9', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'absent', NULL, NULL, NULL, '2024-04-29 09:39:08.674+00', NULL, '2024-04-29 09:39:08.914162+00', '2024-04-29 09:39:08.914162+00'),
 	(110, 'c0805d2d-a302-4428-acde-f124b8d86538', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'present', NULL, NULL, NULL, '2024-04-18 16:23:41.469+00', NULL, '2024-04-18 16:23:12.178676+00', '2024-04-18 16:23:12.178676+00'),
 	(108, '40d11229-4ad2-4610-890a-4f053feb6ea2', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'absent', NULL, NULL, NULL, '2024-04-18 16:24:31.936+00', NULL, '2024-04-18 16:23:12.142577+00', '2024-04-18 16:23:12.142577+00'),
 	(109, 'fe3a1474-bf69-4dbf-8d14-7226c1a68ccb', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'absent', NULL, NULL, NULL, '2024-04-18 16:24:31.935+00', NULL, '2024-04-18 16:23:12.163634+00', '2024-04-18 16:23:12.163634+00'),
 	(111, '2df26707-a2b6-404b-bad3-b5ea6e7d3040', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'absent', NULL, NULL, NULL, '2024-04-18 16:24:31.933+00', NULL, '2024-04-18 16:23:12.188043+00', '2024-04-18 16:23:12.188043+00'),
 	(118, 'a2d1cd5c-a4fe-446d-bb77-e9757ed8c947', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'absent', NULL, NULL, NULL, '2024-04-18 16:24:31.932+00', NULL, '2024-04-18 16:23:12.576023+00', '2024-04-18 16:23:12.576023+00'),
-	(112, 'a7179424-6ac0-4d8a-a7a0-6f5eb4ad4ec2', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'present', NULL, NULL, NULL, '2024-04-18 16:24:31.934+00', NULL, '2024-04-18 16:23:12.187932+00', '2024-04-18 16:23:12.187932+00');
+	(112, 'a7179424-6ac0-4d8a-a7a0-6f5eb4ad4ec2', '5e853fbd-cf47-4b35-b12b-2b8a683c452c', '2024-04-18', 'present', NULL, NULL, NULL, '2024-04-18 16:24:31.934+00', NULL, '2024-04-18 16:23:12.187932+00', '2024-04-18 16:23:12.187932+00'),
+	(120, '3fbce51c-8154-41f7-a06e-5ef8ab13af3a', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 10:32:20.076+00', NULL, '2024-04-25 10:32:20.530393+00', '2024-04-25 10:32:20.530393+00'),
+	(121, '47856676-2f70-4e55-b971-6037224df84c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'absent', NULL, NULL, NULL, '2024-04-25 11:22:29.034+00', NULL, '2024-04-25 11:22:30.742818+00', '2024-04-25 11:22:30.742818+00'),
+	(122, '7c789f87-f968-441b-bc65-6875d8078dd9', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 11:22:29.035+00', NULL, '2024-04-25 11:22:30.759375+00', '2024-04-25 11:22:30.759375+00'),
+	(123, '32f0fd29-6205-43c3-b3d2-39d51d61864e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 11:22:29.036+00', NULL, '2024-04-25 11:22:30.765278+00', '2024-04-25 11:22:30.765278+00'),
+	(124, '9bbdc27d-25a4-4c61-a056-d5ca31e3f82d', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 11:22:29.035+00', NULL, '2024-04-25 11:22:30.893563+00', '2024-04-25 11:22:30.893563+00'),
+	(125, '2454bbff-6075-4991-9232-54f5f4ce9142', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 11:22:29.037+00', NULL, '2024-04-25 11:22:30.899966+00', '2024-04-25 11:22:30.899966+00'),
+	(126, '96ad80dd-a433-47ee-a54a-44d90108ec3c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 11:22:29.038+00', NULL, '2024-04-25 11:22:30.946022+00', '2024-04-25 11:22:30.946022+00'),
+	(127, '14dcdb2c-5a48-4c1e-92b5-caf203fd06d0', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 11:22:29.037+00', NULL, '2024-04-25 11:22:30.967544+00', '2024-04-25 11:22:30.967544+00'),
+	(128, '8e570c2e-976f-4f89-aa55-f791f94ede8e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 11:22:29.039+00', NULL, '2024-04-25 11:22:31.107987+00', '2024-04-25 11:22:31.107987+00'),
+	(129, 'bbdbf785-737e-4965-ad2b-94754e920348', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 11:22:29.039+00', NULL, '2024-04-25 11:22:31.110819+00', '2024-04-25 11:22:31.110819+00'),
+	(130, '25d7a15d-85d0-4a6a-98b2-fc82b6ef2b22', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'absent', NULL, NULL, NULL, '2024-04-25 11:22:29.032+00', NULL, '2024-04-25 11:22:31.125011+00', '2024-04-25 11:22:31.125011+00'),
+	(131, 'b90588f5-a3fd-4b9c-8405-e98ba63c9b72', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'present', NULL, NULL, NULL, '2024-04-25 11:22:29.038+00', NULL, '2024-04-25 11:22:31.125043+00', '2024-04-25 11:22:31.125043+00'),
+	(132, 'e8a75c28-999e-4c71-b1ef-771bd6f3b569', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-25', 'absent', NULL, NULL, NULL, '2024-04-25 11:22:29.04+00', NULL, '2024-04-25 11:22:31.261405+00', '2024-04-25 11:22:31.261405+00'),
+	(133, '25d7a15d-85d0-4a6a-98b2-fc82b6ef2b22', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'absent', NULL, NULL, NULL, '2024-04-27 13:30:34.279+00', NULL, '2024-04-27 13:30:36.225203+00', '2024-04-27 13:30:36.225203+00'),
+	(134, '32f0fd29-6205-43c3-b3d2-39d51d61864e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.283+00', NULL, '2024-04-27 13:30:36.267665+00', '2024-04-27 13:30:36.267665+00'),
+	(135, '7c789f87-f968-441b-bc65-6875d8078dd9', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.281+00', NULL, '2024-04-27 13:30:36.272043+00', '2024-04-27 13:30:36.272043+00'),
+	(136, '47856676-2f70-4e55-b971-6037224df84c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'absent', NULL, NULL, NULL, '2024-04-27 13:30:34.28+00', NULL, '2024-04-27 13:30:36.285793+00', '2024-04-27 13:30:36.285793+00'),
+	(137, '2454bbff-6075-4991-9232-54f5f4ce9142', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.283+00', NULL, '2024-04-27 13:30:36.392857+00', '2024-04-27 13:30:36.392857+00'),
+	(138, '9bbdc27d-25a4-4c61-a056-d5ca31e3f82d', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.282+00', NULL, '2024-04-27 13:30:36.428718+00', '2024-04-27 13:30:36.428718+00'),
+	(139, '14dcdb2c-5a48-4c1e-92b5-caf203fd06d0', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.284+00', NULL, '2024-04-27 13:30:36.458947+00', '2024-04-27 13:30:36.458947+00'),
+	(140, 'b90588f5-a3fd-4b9c-8405-e98ba63c9b72', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.287+00', NULL, '2024-04-27 13:30:36.551411+00', '2024-04-27 13:30:36.551411+00'),
+	(141, '96ad80dd-a433-47ee-a54a-44d90108ec3c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.287+00', NULL, '2024-04-27 13:30:36.572934+00', '2024-04-27 13:30:36.572934+00'),
+	(142, '8e570c2e-976f-4f89-aa55-f791f94ede8e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.288+00', NULL, '2024-04-27 13:30:36.62756+00', '2024-04-27 13:30:36.62756+00'),
+	(143, 'bbdbf785-737e-4965-ad2b-94754e920348', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.288+00', NULL, '2024-04-27 13:30:36.71529+00', '2024-04-27 13:30:36.71529+00'),
+	(144, 'e8a75c28-999e-4c71-b1ef-771bd6f3b569', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.289+00', NULL, '2024-04-27 13:30:36.723485+00', '2024-04-27 13:30:36.723485+00'),
+	(145, '3fbce51c-8154-41f7-a06e-5ef8ab13af3a', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-27', 'present', NULL, NULL, NULL, '2024-04-27 13:30:34.278+00', NULL, '2024-04-27 13:30:36.780969+00', '2024-04-27 13:30:36.780969+00'),
+	(150, '32f0fd29-6205-43c3-b3d2-39d51d61864e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.677+00', NULL, '2024-04-29 09:39:08.936955+00', '2024-04-29 09:39:08.936955+00'),
+	(151, '14dcdb2c-5a48-4c1e-92b5-caf203fd06d0', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.679+00', NULL, '2024-04-29 09:39:09.04355+00', '2024-04-29 09:39:09.04355+00'),
+	(152, '96ad80dd-a433-47ee-a54a-44d90108ec3c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.68+00', NULL, '2024-04-29 09:39:09.045119+00', '2024-04-29 09:39:09.045119+00'),
+	(153, '8e570c2e-976f-4f89-aa55-f791f94ede8e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.682+00', NULL, '2024-04-29 09:39:09.059741+00', '2024-04-29 09:39:09.059741+00'),
+	(154, 'b90588f5-a3fd-4b9c-8405-e98ba63c9b72', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.681+00', NULL, '2024-04-29 09:39:09.068807+00', '2024-04-29 09:39:09.068807+00'),
+	(155, '2454bbff-6075-4991-9232-54f5f4ce9142', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.678+00', NULL, '2024-04-29 09:39:09.147066+00', '2024-04-29 09:39:09.147066+00'),
+	(156, 'bbdbf785-737e-4965-ad2b-94754e920348', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'absent', NULL, NULL, NULL, '2024-04-29 09:39:08.683+00', NULL, '2024-04-29 09:39:09.157502+00', '2024-04-29 09:39:09.157502+00'),
+	(157, 'e8a75c28-999e-4c71-b1ef-771bd6f3b569', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.683+00', NULL, '2024-04-29 09:39:09.16493+00', '2024-04-29 09:39:09.16493+00'),
+	(158, '3fbce51c-8154-41f7-a06e-5ef8ab13af3a', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-04-29', 'present', NULL, NULL, NULL, '2024-04-29 09:39:08.671+00', NULL, '2024-04-29 09:39:09.216871+00', '2024-04-29 09:39:09.216871+00'),
+	(160, '9bbdc27d-25a4-4c61-a056-d5ca31e3f82d', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.475+00', NULL, '2024-05-01 03:59:40.779375+00', '2024-05-01 03:59:40.779375+00'),
+	(159, '7c789f87-f968-441b-bc65-6875d8078dd9', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.475+00', NULL, '2024-05-01 03:59:40.781732+00', '2024-05-01 03:59:40.781732+00'),
+	(161, '32f0fd29-6205-43c3-b3d2-39d51d61864e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.476+00', NULL, '2024-05-01 03:59:40.797194+00', '2024-05-01 03:59:40.797194+00'),
+	(162, '47856676-2f70-4e55-b971-6037224df84c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'absent', NULL, NULL, NULL, '2024-05-01 03:59:40.474+00', NULL, '2024-05-01 03:59:40.861536+00', '2024-05-01 03:59:40.861536+00'),
+	(166, '96ad80dd-a433-47ee-a54a-44d90108ec3c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.477+00', NULL, '2024-05-01 03:59:40.927172+00', '2024-05-01 03:59:40.927172+00'),
+	(169, 'bbdbf785-737e-4965-ad2b-94754e920348', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.479+00', NULL, '2024-05-01 03:59:40.9863+00', '2024-05-01 03:59:40.9863+00'),
+	(163, '25d7a15d-85d0-4a6a-98b2-fc82b6ef2b22', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.474+00', NULL, '2024-05-01 03:59:40.865072+00', '2024-05-01 03:59:40.865072+00'),
+	(165, '14dcdb2c-5a48-4c1e-92b5-caf203fd06d0', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.477+00', NULL, '2024-05-01 03:59:40.88117+00', '2024-05-01 03:59:40.88117+00'),
+	(168, 'b90588f5-a3fd-4b9c-8405-e98ba63c9b72', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'absent', NULL, NULL, NULL, '2024-05-01 03:59:40.478+00', NULL, '2024-05-01 03:59:40.955599+00', '2024-05-01 03:59:40.955599+00'),
+	(171, '3fbce51c-8154-41f7-a06e-5ef8ab13af3a', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.473+00', NULL, '2024-05-01 03:59:41.110017+00', '2024-05-01 03:59:41.110017+00'),
+	(164, '2454bbff-6075-4991-9232-54f5f4ce9142', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.477+00', NULL, '2024-05-01 03:59:40.877885+00', '2024-05-01 03:59:40.877885+00'),
+	(167, '8e570c2e-976f-4f89-aa55-f791f94ede8e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.478+00', NULL, '2024-05-01 03:59:40.951581+00', '2024-05-01 03:59:40.951581+00'),
+	(170, 'e8a75c28-999e-4c71-b1ef-771bd6f3b569', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-01', 'present', NULL, NULL, NULL, '2024-05-01 03:59:40.479+00', NULL, '2024-05-01 03:59:41.006635+00', '2024-05-01 03:59:41.006635+00'),
+	(172, '25d7a15d-85d0-4a6a-98b2-fc82b6ef2b22', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'absent', NULL, NULL, NULL, '2024-05-04 07:32:51.035+00', NULL, '2024-05-04 07:32:51.366767+00', '2024-05-04 07:32:51.366767+00'),
+	(173, '3fbce51c-8154-41f7-a06e-5ef8ab13af3a', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.034+00', NULL, '2024-05-04 07:32:51.384261+00', '2024-05-04 07:32:51.384261+00'),
+	(174, '2454bbff-6075-4991-9232-54f5f4ce9142', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.035+00', NULL, '2024-05-04 07:32:51.385137+00', '2024-05-04 07:32:51.385137+00'),
+	(175, 'bbdbf785-737e-4965-ad2b-94754e920348', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.036+00', NULL, '2024-05-04 07:32:51.398062+00', '2024-05-04 07:32:51.398062+00'),
+	(176, '14dcdb2c-5a48-4c1e-92b5-caf203fd06d0', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.036+00', NULL, '2024-05-04 07:32:51.457037+00', '2024-05-04 07:32:51.457037+00'),
+	(177, '9bbdc27d-25a4-4c61-a056-d5ca31e3f82d', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.035+00', NULL, '2024-05-04 07:32:51.458875+00', '2024-05-04 07:32:51.458875+00'),
+	(178, 'e8a75c28-999e-4c71-b1ef-771bd6f3b569', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'absent', NULL, NULL, NULL, '2024-05-04 07:32:51.036+00', NULL, '2024-05-04 07:32:51.461571+00', '2024-05-04 07:32:51.461571+00'),
+	(179, '47856676-2f70-4e55-b971-6037224df84c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.035+00', NULL, '2024-05-04 07:32:51.462779+00', '2024-05-04 07:32:51.462779+00'),
+	(180, '8e570c2e-976f-4f89-aa55-f791f94ede8e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.036+00', NULL, '2024-05-04 07:32:51.470801+00', '2024-05-04 07:32:51.470801+00'),
+	(181, '32f0fd29-6205-43c3-b3d2-39d51d61864e', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'absent', NULL, NULL, NULL, '2024-05-04 07:32:51.035+00', NULL, '2024-05-04 07:32:51.471306+00', '2024-05-04 07:32:51.471306+00'),
+	(182, '7c789f87-f968-441b-bc65-6875d8078dd9', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.035+00', NULL, '2024-05-04 07:32:51.47367+00', '2024-05-04 07:32:51.47367+00'),
+	(183, 'b90588f5-a3fd-4b9c-8405-e98ba63c9b72', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.036+00', NULL, '2024-05-04 07:32:51.475686+00', '2024-05-04 07:32:51.475686+00'),
+	(184, '96ad80dd-a433-47ee-a54a-44d90108ec3c', 'af3bd909-e77b-4be8-92dc-c78a23f2a353', '2024-05-04', 'present', NULL, NULL, NULL, '2024-05-04 07:32:51.036+00', NULL, '2024-05-04 07:32:51.48182+00', '2024-05-04 07:32:51.48182+00');
 
 
 --
 -- Data for Name: attendance_reports; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+
+
+--
+-- Data for Name: roles; Type: TABLE DATA; Schema: rbac; Owner: postgres
+--
+
+INSERT INTO "rbac"."roles" ("id", "created_at", "role") VALUES
+	(1, '2024-05-10 02:12:15.32298+00', 'admin'),
+	(2, '2024-05-10 02:12:21.665066+00', 'teacher'),
+	(3, '2024-05-10 02:12:26.82774+00', 'staff'),
+	(4, '2024-05-10 02:12:32.163359+00', 'student');
+
+
+--
+-- Data for Name: user_roles; Type: TABLE DATA; Schema: rbac; Owner: postgres
+--
+
+INSERT INTO "rbac"."user_roles" ("user_id", "created_at", "id", "role") VALUES
+	('ba21d448-1d70-4f3f-974c-a2998916f5d9', '2024-05-10 03:25:48.443799+00', '3f7df7ef-50f8-4d20-ad1d-5665d422ee7a', 1),
+	('627c3c75-9f1c-4125-8d0e-5ae33555dbad', '2024-05-10 03:25:59.902608+00', '8bcbe56d-0248-4859-8fd6-13da6e473637', 2);
 
 
 --
@@ -472,7 +564,14 @@ SELECT pg_catalog.setval('"pgsodium"."key_key_id_seq"', 1, false);
 -- Name: attendance_records_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."attendance_records_id_seq"', 119, true);
+SELECT pg_catalog.setval('"public"."attendance_records_id_seq"', 184, true);
+
+
+--
+-- Name: roles_id_seq; Type: SEQUENCE SET; Schema: rbac; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"rbac"."roles_id_seq"', 4, true);
 
 
 --

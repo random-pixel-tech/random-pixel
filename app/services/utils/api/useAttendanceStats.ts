@@ -137,6 +137,8 @@ const handleCustomDateChange = () => {
       }
     };
 
+    console.log('fetching data');
+
     fetchData();
   }, [memoizedFetchAllStudentAttendance]);
 

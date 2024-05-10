@@ -6,6 +6,7 @@ import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttend
 import ClassAttendanceCard from './ClassAttendanceCard';
 import { ClassData } from '../services/utils/api/useAttendanceStats';
 import { SelectedDuration } from '../services/utils/enums';
+import { FlatList } from "react-native";
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -21,7 +22,7 @@ interface AttendanceViewProps {
   endDate: string;
   attendanceData: AttendanceData[];
   isLoading: boolean;
-  selectedButton: 'left' | 'right';
+  selectedButton: "left" | "right";
   classData: ClassData[];
   onScroll: (position: number) => void;
 }
@@ -69,7 +70,7 @@ interface AttendanceDataRendererProps {
   selectedDuration: SelectedDuration;
   startDate: string;
   endDate: string;
-  selectedButton: 'left' | 'right';
+  selectedButton: "left" | "right";
   classData: ClassData[];
 }
 
@@ -81,28 +82,57 @@ const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
   selectedButton,
 }) => {
   return (
-    <>
-      {attendanceData.map((data) => {
-        if (selectedButton === 'left' && 'classId' in data) {
-          return <ClassAttendanceCard key={data.classId} classData={data} />;
-        } else if (selectedButton === 'right' && 'student' in data && 'totalAttendance' in data && 'presentAttendance' in data) {
+    <FlatList
+      data={attendanceData}
+      renderItem={({ item }) => {
+        if (selectedButton === "left" && "classId" in item) {
+          return <ClassAttendanceCard key={item.classId} classData={item} />;
+        } else if (
+          selectedButton === "right" &&
+          "student" in item &&
+          "totalAttendance" in item &&
+          "presentAttendance" in item
+        ) {
           return (
             <StudentAttendanceCard
-              key={data.student.id}
-              studentAttendanceData={data}
-              className={data.className}
-              section={data.section}
+              key={item.student.id}
+              studentAttendanceData={item}
+              className={item.className}
+              section={item.section}
               selectedDuration={selectedDuration}
-              totalAttendance={data.totalAttendance}
-              presentAttendance={data.presentAttendance}
-              morningStatus={data.attendanceRecord?.morningStatus}
-              afternoonStatus={data.attendanceRecord?.afternoonStatus}
+              totalAttendance={item.totalAttendance}
+              presentAttendance={item.presentAttendance}
+              morningStatus={item.attendanceRecord?.morningStatus}
+              afternoonStatus={item.attendanceRecord?.afternoonStatus}
             />
           );
+        } else {
+          return null;
         }
-        return null;
-      })}
-    </>
+      }}
+    />
+    // <>
+    //   {attendanceData.map((data) => {
+    //     if (selectedButton === 'left' && 'classId' in data) {
+    //       return <ClassAttendanceCard key={data.classId} classData={data} />;
+    //     } else if (selectedButton === 'right' && 'student' in data && 'totalAttendance' in data && 'presentAttendance' in data) {
+    //       return (
+    //         <StudentAttendanceCard
+    //           key={data.student.id}
+    //           studentAttendanceData={data}
+    //           className={data.className}
+    //           section={data.section}
+    //           selectedDuration={selectedDuration}
+    //           totalAttendance={data.totalAttendance}
+    //           presentAttendance={data.presentAttendance}
+    //           morningStatus={data.attendanceRecord?.morningStatus}
+    //           afternoonStatus={data.attendanceRecord?.afternoonStatus}
+    //         />
+    //       );
+    //     }
+    //     return null;
+    //   })}
+    // </>
   );
 };
 

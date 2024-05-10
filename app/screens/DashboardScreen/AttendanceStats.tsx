@@ -87,7 +87,6 @@ const AttendanceStats = () => {
   } = useAttendanceStats();
 
   return (
-
     <Box bg="$pixWhite" w="$full" h="$full">
       <StatsHeader
         title="Attendance"
@@ -142,7 +141,6 @@ const AttendanceStats = () => {
         selectedButton={selectedButton}
         classData={classData}
         onScroll={handleScroll}
-
       />
       <DatePicker
         isOpen={showDatePicker}

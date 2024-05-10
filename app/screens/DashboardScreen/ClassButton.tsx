@@ -10,7 +10,7 @@ const ClassButton: React.FC<ClassButtonProps> = ({ classNumber }) => {
   const { fetchAttendanceRecordsByClassName } = useAttendanceRecords();
 
   const handlePress = () => {
-    fetchAttendanceRecordsByClassName(`Class ${classNumber}`);
+    fetchAttendanceRecordsByClassName(`${classNumber}`);
   };
 
   return (

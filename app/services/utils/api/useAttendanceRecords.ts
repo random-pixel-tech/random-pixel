@@ -9,10 +9,9 @@ export const useAttendanceRecords = () => {
     try {
       // Fetch the class ID based on the class name
       const { data: classData, error: classError } = await supabase
-        .from('classes')
-        .select('id')
-        .eq('name', className)
-        .single();
+        .from("classes")
+        .select("id")
+        .eq("name", className);
 
       if (classError) {
         throw classError;
@@ -22,19 +21,39 @@ export const useAttendanceRecords = () => {
         throw new Error(`Class "${className}" not found`);
       }
 
-      const classId = classData.id;
+      if (classData.length === 0) {
+        throw new Error(`Class "${className}" not found`);
+      }
+      // fetch attendance record for each class
+      if (classData.length > 0) {
+        const attendanceRecords = [];
+        classData.map(async (data) => {
+          console.log("fetching: ", data.id);
+          const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
+            .from("attendance_records")
+            .select("*")
+            .eq("classId", data.id);
 
-      // Fetch attendance records for the class ID
-      const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
-        .from('attendance_records')
-        .select('*')
-        .eq('classId', classId);
+          if (attendanceRecordsError) {
+            console.log("attendanceRecordsError: ", attendanceRecordsError);
+            throw attendanceRecordsError;
+          }
+          console.log("attendanceRecords: ", attendanceRecordsData);
+          attendanceRecords.push(attendanceRecordsData);
+        });
 
-      if (attendanceRecordsError) {
-        throw attendanceRecordsError;
+        setAttendanceRecords(attendanceRecords);
       }
 
-      setAttendanceRecords(attendanceRecordsData);
+      // Fetch attendance records for the class ID
+      // const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
+      //   .from("attendance_records")
+      //   .select("*")
+      //   .eq("classId", classId);
+
+      //   if (attendanceRecordsError) {
+      //     throw attendanceRecordsError;
+      //   }
     } catch (error) {
       console.error('Error fetching attendance records:', error);
     }
