@@ -25,7 +25,7 @@ import { Colors } from '../services/utils/colors';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { Segment } from '../services/utils/enums';
 
-interface AttendanceFilterButtonProps {
+interface AttendanceFilterPanelProps {
   showActionsheet: boolean;
   selectedTab: string;
   selectedFilters: Record<string, string[]>;
@@ -51,7 +51,7 @@ interface FilterOption {
   value: string;
 }
 
-const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
+const AttendanceFilterPanel: React.FC<AttendanceFilterPanelProps> = ({
   showActionsheet,
   selectedTab,
   selectedFilters,
@@ -357,4 +357,4 @@ const AttendanceFilterButton: React.FC<AttendanceFilterButtonProps> = ({
   );
 };
 
-export default AttendanceFilterButton;
+export default AttendanceFilterPanel;
