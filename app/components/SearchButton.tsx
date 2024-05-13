@@ -3,27 +3,38 @@ import { Button } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Colors } from '../services/utils/colors';
 import { Box } from '@gluestack-ui/themed';
+import { Segment } from '../services/utils/enums';
 
 interface SearchButtonProps {
-  onPress: (selectedButton: 'left' | 'right') => void;
+  onPress: (selectedSegment: Segment) => void;
   searchButtonPress: boolean;
-  selectedButton: 'left' | 'right';
+  selectedSegment: Segment;
+  isLoading: boolean;
 }
 
-const SearchButton: React.FC<SearchButtonProps> = ({ onPress, searchButtonPress, selectedButton }) => {
+const SearchButton: React.FC<SearchButtonProps> = ({
+  onPress,
+  searchButtonPress,
+  selectedSegment,
+  isLoading,
+}) => {
   return (
     <Box p="$4">
       <Button
-        onPress={() => onPress(selectedButton)}
+        onPress={() => onPress(selectedSegment)}
         variant="outline"
         w="$8"
         flexDirection="column"
         alignContent="center"
         justifyContent="center"
-        bg={searchButtonPress ? "$pixSecondary2" : "transparent"}
-        borderColor={searchButtonPress ? "$pixSecondary2" : "$pixPrimary"}
+        bg={searchButtonPress ? '$pixSecondary2' : 'transparent'}
+        borderColor={searchButtonPress ? '$pixSecondary2' : '$pixPrimary'}
       >
-        <FontAwesomeIcon icon="magnifying-glass" size={18} color={searchButtonPress ? Colors.White : Colors.Primary} />
+        <FontAwesomeIcon
+          icon="magnifying-glass"
+          size={18}
+          color={searchButtonPress ? Colors.White : Colors.Primary}
+        />
       </Button>
     </Box>
   );

@@ -1,6 +1,6 @@
 // AttendanceSummaryListItem.tsx
-import React, { useState } from 'react';
-import { Box, Text, ScrollView } from '@gluestack-ui/themed';
+import React from 'react';
+import { Box, Text } from '@gluestack-ui/themed';
 import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
 import AttendanceOptions from '../CaptureAttendance/AttendanceOptions';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -33,22 +33,26 @@ const AttendanceSummaryListItem: React.FC<AttendanceSummaryListItemProps> = ({
     },
   ];
 
-  const attendanceStatus = attendanceRecord?.[`${session.toLowerCase()}Status`];
+  const attendanceStatus = attendanceRecord?.[`${session.toLowerCase()}_status`];
 
   return (
     <Box display="flex" py="$2" my="$0.25" flexDirection="row" minHeight={36}>
       <Box w="$1/6" px="$4" py="$3">
-        <Text size='lg'>{student.rollNumber || '-'}</Text>
+        <Text size='lg'>{student.roll_number || '-'}</Text>
       </Box>
       <Box w="$4/6" px="$4" py="$3">
-        <Text numberOfLines={1} size='lg'>{student.name}</Text>
+        <Text numberOfLines={1} size='lg'>{student.student_name}</Text>
       </Box>
       <Box w="$1/6" justifyContent="center" alignItems="center">
         <AttendanceOptions
           isOpen={isPopoverOpen}
           onClose={onPopoverClose}
           onOpen={onPopoverOpen}
-          student={{ id: student.id, name: student.name, rollNumber: student.rollNumber }}
+          student={{
+            scholar_id: student.scholar_id,
+            student_name: student.student_name,
+            roll_number: student.roll_number,
+          }}
           options={options}
         />
       </Box>

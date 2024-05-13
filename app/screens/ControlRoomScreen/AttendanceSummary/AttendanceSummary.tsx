@@ -14,11 +14,11 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { AttendanceSession } from '../../../services/utils/enums';
 
 type AttendanceSummaryRouteProp = RouteProp<RootStackParamList, RouteNames.AttendanceSummary>;
+
 const AttendanceSummary = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<AttendanceSummaryRouteProp>();
   const initialSession = route.params?.session || AttendanceSession.Morning;
-
   const {
     className,
     section,
@@ -40,6 +40,7 @@ const AttendanceSummary = () => {
     handleIconPress,
     session,
     handleSessionToggle,
+    isHoliday
   } = useAttendanceLogic(initialSession);
 
   const options = [
@@ -87,6 +88,7 @@ const AttendanceSummary = () => {
         today={today}
         summaryValues={{ markedStudents, totalStudents }}
         session={session}
+        isHoliday={isHoliday}
       />
       <Box>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>

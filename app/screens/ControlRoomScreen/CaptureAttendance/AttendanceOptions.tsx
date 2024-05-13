@@ -28,9 +28,9 @@ interface AttendanceOptionsProps {
   onClose: () => void;
   onOpen: () => void;
   student: {
-    id: string;
-    name: string;
-    rollNumber: number | null;
+    scholar_id: string;
+    student_name: string;
+    roll_number: number | null;
   };
   options: AttendanceOption[];
 }
@@ -44,7 +44,14 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
 }) => {
   return (
     <>
-      <Pressable justifyContent="center" w="$1/6" onPress={onOpen} aria-label="Open Options" py="$3" px="$6">
+      <Pressable
+        justifyContent="center"
+        w="$1/6"
+        onPress={onOpen}
+        aria-label="Open Options"
+        py="$3"
+        px="$6"
+      >
         <FontAwesomeIcon icon="ellipsis-vertical" size={18} />
       </Pressable>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -60,10 +67,10 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
               justifyContent="center"
               alignItems="center"
             >
-              <Heading color="$pixPrimaryDark50">{student.rollNumber}</Heading>
+              <Heading color="$pixPrimaryDark50">{student.roll_number}</Heading>
             </Box>
             <Heading color="$pixPrimaryDark50" px="$4">
-              {student.name}
+              {student.student_name}
             </Heading>
           </ModalHeader>
           <Divider my="$2" bg="$pixSecondary2" />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Dashboard from '../screens/DashboardScreen/Dashboard';
+import Dashboard from './Dashboard';
 import AttendanceStats from '../screens/DashboardScreen/AttendanceStats';
 import { RouteNames } from '../services/utils/RouteNames';
 

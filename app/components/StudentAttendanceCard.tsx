@@ -37,7 +37,7 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
   afternoonStatus,
 }) => {
   const { student } = studentAttendanceData;
-  const { name, rollNumber } = student;
+  const { student_name, roll_number } = student;
 
   const percentage = totalAttendance === 0 ? 0 : (presentAttendance / totalAttendance) * 100;
 
@@ -62,13 +62,22 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
         <Box alignContent="center" display="flex" flexDirection="row">
           <Box display="flex" flexDirection="column">
             <Box display="flex" flexDirection="row" alignSelf="center">
-              <Text fontSize="$md" color="$pixSecondary2">S-1</Text>
-              <Text fontSize="$md" color="$pixText100" mr="$2">: {getStatusAbbreviation(morningStatus)}
-</Text>
-              <Text fontSize="$md" color="$pixSecondary2">S-2</Text>
-              <Text fontSize="$md" color="$pixText100">: {getStatusAbbreviation(afternoonStatus)}</Text>
+              <Text fontSize="$md" color="$pixSecondary2">
+                S-1
+              </Text>
+              <Text fontSize="$md" color="$pixText100" mr="$2">
+                : {getStatusAbbreviation(morningStatus)}
+              </Text>
+              <Text fontSize="$md" color="$pixSecondary2">
+                S-2
+              </Text>
+              <Text fontSize="$md" color="$pixText100">
+                : {getStatusAbbreviation(afternoonStatus)}
+              </Text>
             </Box>
-            <Text fontSize="$sm" color="$pixSecondary2" alignSelf="center">Attendance</Text>
+            <Text fontSize="$sm" color="$pixSecondary2" alignSelf="center">
+              Attendance
+            </Text>
           </Box>
         </Box>
       );
@@ -79,13 +88,17 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
             <Text fontSize="$md" color="$pixText100" alignSelf="center">
               {presentAttendance}/{totalAttendance}
             </Text>
-            <Text fontSize="$sm" color="$pixSecondary2">Attendance</Text>
+            <Text fontSize="$sm" color="$pixSecondary2">
+              Attendance
+            </Text>
           </Box>
           <Box display="flex" flexDirection="column">
             <Text fontSize="$md" color="$pixText100" alignSelf="center">
               {percentage.toFixed(0)}%
             </Text>
-            <Text fontSize="$sm" color="$pixSecondary2">Percentage</Text>
+            <Text fontSize="$sm" color="$pixSecondary2">
+              Percentage
+            </Text>
           </Box>
         </Box>
       );
@@ -106,14 +119,14 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
     >
       <Box display="flex" flexDirection="column">
         <Text fontSize="$lg" fontWeight="$semibold" mb="$2" color="$pixPrimaryDark50">
-          {name}
+          {student_name}
         </Text>
         <Box display="flex" flexDirection="row" alignContent="center" mb="$2">
           <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
             Roll No:
           </Text>
           <Text fontSize="$sm" color="$pixPrimaryDark50">
-            {rollNumber}
+            {roll_number}
           </Text>
         </Box>
         <Box display="flex" flexDirection="row" alignContent="center">
@@ -125,14 +138,16 @@ const StudentAttendanceCard: React.FC<StudentAttendanceCardProps> = ({
               {classNameOrdinal}
             </Text>
           </Box>
-          <Box display="flex" flexDirection="row" alignContent="center">
-            <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
-              Section:
-            </Text>
-            <Text fontSize="$sm" color="$pixPrimaryDark50">
-              {section}
-            </Text>
-          </Box>
+          {section && (
+            <Box display="flex" flexDirection="row" alignContent="center">
+              <Text fontSize="$sm" color="$pixSecondary2" pr="$1">
+                Section:
+              </Text>
+              <Text fontSize="$sm" color="$pixPrimaryDark50">
+                {section}
+              </Text>
+            </Box>
+          )}
         </Box>
       </Box>
 

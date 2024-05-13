@@ -66,18 +66,18 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
   return (
     <Box display="flex" py="$2" my="$0.25" flexDirection="row" minHeight={36}>
       <Box w="$1/6" px="$4" py="$3">
-        <Text size='lg'>{student.rollNumber || '-'}</Text>
+        <Text size='lg'>{student.roll_number || '-'}</Text>
       </Box>
       <Box w="$2/6" px="$4" py="$3">
-        <Text numberOfLines={1} size='lg' >{student.name}</Text>
+        <Text numberOfLines={1} size='lg' >{student.student_name}</Text>
       </Box>
       <Box w="$1/6" px="$4" justifyContent="center">
         <Checkbox
-          value={`morning-present-${student.id}`}
+          value={`morning-present-${student.scholar_id}`}
           isChecked={attendanceStatus === AttendanceStatus.Present}
           onChange={() => onAttendanceStatusChange(AttendanceStatus.Present)}
           rounded="$md"
-          aria-label={`Mark present for ${student.name}`}
+          aria-label={`Mark present for ${student.student_name}`}
           size='lg'
           py="$3"
           px="$6"
@@ -94,10 +94,10 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> = ({
         <Box flexDirection="row" alignItems="center">
           <Box minWidth={24}>
             <Checkbox
-              value={`morning-absent-${student.id}`}
+              value={`morning-absent-${student.scholar_id}`}
               isChecked={attendanceStatus === AttendanceStatus.Absent || attendanceStatus === AttendanceStatus.OnLeave}
               onChange={() => onAttendanceStatusChange(AttendanceStatus.Absent)}
-              aria-label={`Mark absent for ${student.name}`}
+              aria-label={`Mark absent for ${student.student_name}`}
               rounded="$md"
               size='lg'
               py="$3"

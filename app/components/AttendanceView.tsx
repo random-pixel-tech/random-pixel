@@ -1,11 +1,11 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
-import { Box, Text } from '@gluestack-ui/themed';
+import { Box, Text, FlatList } from '@gluestack-ui/themed';
 import StudentAttendanceCard from './StudentAttendanceCard';
 import { AllStudentAttendanceData } from '../services/utils/api/useStudentAttendance';
 import ClassAttendanceCard from './ClassAttendanceCard';
 import { ClassData } from '../services/utils/api/useAttendanceStats';
-import { SelectedDuration } from '../services/utils/enums';
+import { SelectedDuration, Segment } from '../services/utils/enums';
+import HolidayMessage from './HolidayMessage';
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -21,9 +21,9 @@ interface AttendanceViewProps {
   endDate: string;
   attendanceData: AttendanceData[];
   isLoading: boolean;
-  selectedButton: 'left' | 'right';
+  selectedSegment: Segment;
   classData: ClassData[];
-  onScroll: (position: number) => void;
+  isHoliday: boolean;
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
@@ -32,77 +32,59 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   endDate,
   attendanceData,
   isLoading,
-  selectedButton,
+  selectedSegment,
   classData,
-  onScroll,
+  isHoliday,
 }) => {
+  const renderAttendanceItem = (item: AttendanceData) => {
+    if (selectedDuration === SelectedDuration.Daily && isHoliday) {
+      return <HolidayMessage />;
+    }
+    if (selectedSegment === Segment.ClassSegment && 'classId' in item) {
+      return <ClassAttendanceCard classData={item} />;
+    } else if (
+      selectedSegment === Segment.StudentSegment &&
+      'student' in item &&
+      'totalAttendance' in item &&
+      'presentAttendance' in item
+    ) {
+      return (
+        <StudentAttendanceCard
+          studentAttendanceData={item}
+          className={item.class_name}
+          section={item.section}
+          selectedDuration={selectedDuration}
+          totalAttendance={item.totalAttendance}
+          presentAttendance={item.presentAttendance}
+          morningStatus={item.attendanceRecord?.morning_status}
+          afternoonStatus={item.attendanceRecord?.afternoon_status}
+        />
+      );
+    }
+    return null;
+  };
+
+  const keyExtractor = (item: unknown, index: number) => {
+    const attendanceItem = item as AttendanceData;
+    return 'classId' in attendanceItem
+      ? attendanceItem.classId.toString()
+      : attendanceItem.student.scholar_id;
+  };
+
   return (
-    <ScrollView
-      onScroll={({ nativeEvent }) => {
-        const { contentOffset } = nativeEvent;
-        onScroll(contentOffset.y);
-      }}
-      scrollEventThrottle={16}
-    >
-      <Box p="$4">
-        {isLoading ? (
+    <FlatList
+      data={attendanceData}
+      renderItem={({ item }) => renderAttendanceItem(item as AttendanceData)}
+      keyExtractor={keyExtractor}
+      ListEmptyComponent={
+        isLoading ? (
           <Box>
             <Text>Loading...</Text>
           </Box>
-        ) : (
-          <AttendanceDataRenderer
-            attendanceData={attendanceData}
-            selectedDuration={selectedDuration}
-            startDate={startDate}
-            endDate={endDate}
-            selectedButton={selectedButton}
-            classData={classData}
-          />
-        )}
-      </Box>
-    </ScrollView>
-  );
-};
-
-interface AttendanceDataRendererProps {
-  attendanceData: AttendanceData[];
-  selectedDuration: SelectedDuration;
-  startDate: string;
-  endDate: string;
-  selectedButton: 'left' | 'right';
-  classData: ClassData[];
-}
-
-const AttendanceDataRenderer: React.FC<AttendanceDataRendererProps> = ({
-  attendanceData,
-  selectedDuration,
-  startDate,
-  endDate,
-  selectedButton,
-}) => {
-  return (
-    <>
-      {attendanceData.map((data) => {
-        if (selectedButton === 'left' && 'classId' in data) {
-          return <ClassAttendanceCard key={data.classId} classData={data} />;
-        } else if (selectedButton === 'right' && 'student' in data && 'totalAttendance' in data && 'presentAttendance' in data) {
-          return (
-            <StudentAttendanceCard
-              key={data.student.id}
-              studentAttendanceData={data}
-              className={data.className}
-              section={data.section}
-              selectedDuration={selectedDuration}
-              totalAttendance={data.totalAttendance}
-              presentAttendance={data.presentAttendance}
-              morningStatus={data.attendanceRecord?.morningStatus}
-              afternoonStatus={data.attendanceRecord?.afternoonStatus}
-            />
-          );
-        }
-        return null;
-      })}
-    </>
+        ) : null
+      }
+      contentContainerStyle={{ padding: 16 }}
+    />
   );
 };
 

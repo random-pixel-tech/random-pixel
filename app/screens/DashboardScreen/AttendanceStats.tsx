@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { Box } from '@gluestack-ui/themed';
+import { Animated } from 'react-native';
 import StatsHeader from '../../components/StatsHeader';
 import AttendanceView from '../../components/AttendanceView';
 import { useAttendanceStats } from '../../services/utils/api/useAttendanceStats';
@@ -7,24 +8,6 @@ import DatePicker from '../../components/DatePicker';
 import StatsSearchAndFilterBar from '../../components/StatsSearchAndFilterBar';
 
 const AttendanceStats = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [prevScrollPosition, setPrevScrollPosition] = useState(0);
-  const [isStatsSearchAndFilterBarVisible, setIsStatsSearchAndFilterBarVisible] = useState(true);
-  const [isScrollingDown, setIsScrollingDown] = useState(false);
-
-  const handleScroll = (position: number) => {
-    setPrevScrollPosition(scrollPosition);
-    setScrollPosition(position);
-
-    if (position > prevScrollPosition) {
-      setIsScrollingDown(true);
-      setIsStatsSearchAndFilterBarVisible(false);
-    } else if (position < prevScrollPosition) {
-      setIsScrollingDown(false);
-      setIsStatsSearchAndFilterBarVisible(true);
-    }
-  };
-
   const {
     selectedDuration,
     handlePrevDay,
@@ -71,9 +54,8 @@ const AttendanceStats = () => {
     isValidDay,
     isValidMonth,
     isValidYear,
-    selectedButton,
-    handleLeftButtonClick,
-    handleRightButtonClick,
+    selectedSegment,
+    handleSegmentChange,
     classData,
     searchQuery,
     showSearchInput,
@@ -83,11 +65,18 @@ const AttendanceStats = () => {
     isClassOptionSelected,
     searchButtonPress,
     filterButtonPress,
-    handleClearCategoryFilters
+    handleClearCategoryFilters,
+    isHoliday,
   } = useAttendanceStats();
 
-  return (
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const translateY = scrollY.interpolate({
+    inputRange: [0, 50],
+    outputRange: [0, -100],
+    extrapolate: 'clamp',
+  });
 
+  return (
     <Box bg="$pixWhite" w="$full" h="$full">
       <StatsHeader
         title="Attendance"
@@ -104,46 +93,53 @@ const AttendanceStats = () => {
         showDatePicker={showDatePicker}
         isNextDisabled={isNextDisabled}
       />
-      {isStatsSearchAndFilterBarVisible && !isScrollingDown && (
-        <StatsSearchAndFilterBar
-          showActionsheet={showFilterActionsheet}
-          selectedTab={selectedFilterTab}
-          selectedFilters={selectedFilters}
-          selectedFilterOption={selectedFilterOption}
-          onClose={handleCloseFilterActionsheet}
-          onTabSelect={handleFilterTabSelect}
-          onCategorySelect={handleCategoryOptionSelect}
-          onFilterOptionSelect={handleFilterOptionSelect}
-          onSortOptionSelect={handleFilterSortOptionSelect}
-          onClear={handleFilterClear}
-          onApply={handleFilterApply}
-          handleOpenFilterActionsheet={handleOpenFilterActionsheet}
-          sortOption={sortOption}
-          selectedButton={selectedButton}
-          onLeftButtonClick={handleLeftButtonClick}
-          onRightButtonClick={handleRightButtonClick}
-          searchQuery={searchQuery}
-          showSearchInput={showSearchInput}
-          handleSearchButtonClick={handleSearchButtonClick}
-          handleSearchInputChange={handleSearchInputChange}
-          handleClearSearch={handleClearSearch}
-          isClassOptionSelected={isClassOptionSelected}
-          searchButtonPress={searchButtonPress}
-          filterButtonPress={filterButtonPress}
-          handleClearCategoryFilters={handleClearCategoryFilters}
+      <Animated.ScrollView
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+      >
+        <Animated.View style={{ transform: [{ translateY }] }}>
+          <StatsSearchAndFilterBar
+            showActionsheet={showFilterActionsheet}
+            selectedTab={selectedFilterTab}
+            selectedFilters={selectedFilters}
+            selectedFilterOption={selectedFilterOption}
+            onClose={handleCloseFilterActionsheet}
+            onTabSelect={handleFilterTabSelect}
+            onCategorySelect={handleCategoryOptionSelect}
+            onFilterOptionSelect={handleFilterOptionSelect}
+            onSortOptionSelect={handleFilterSortOptionSelect}
+            onClear={handleFilterClear}
+            onApply={handleFilterApply}
+            handleOpenFilterActionsheet={handleOpenFilterActionsheet}
+            sortOption={sortOption}
+            selectedSegment={selectedSegment}
+            onSegmentChange={handleSegmentChange}
+            searchQuery={searchQuery}
+            showSearchInput={showSearchInput}
+            handleSearchButtonClick={handleSearchButtonClick}
+            handleSearchInputChange={handleSearchInputChange}
+            handleClearSearch={handleClearSearch}
+            isClassOptionSelected={isClassOptionSelected}
+            searchButtonPress={searchButtonPress}
+            filterButtonPress={filterButtonPress}
+            handleClearCategoryFilters={handleClearCategoryFilters}
+            isLoading={isLoading}
+          />
+        </Animated.View>
+        <AttendanceView
+          selectedDuration={selectedDuration}
+          startDate={startDate}
+          endDate={endDate}
+          attendanceData={filteredAttendanceData}
+          isLoading={isLoading}
+          selectedSegment={selectedSegment}
+          classData={classData}
+          isHoliday={isHoliday}
         />
-      )}
-      <AttendanceView
-        selectedDuration={selectedDuration}
-        startDate={startDate}
-        endDate={endDate}
-        attendanceData={filteredAttendanceData}
-        isLoading={isLoading}
-        selectedButton={selectedButton}
-        classData={classData}
-        onScroll={handleScroll}
-
-      />
+      </Animated.ScrollView>
       <DatePicker
         isOpen={showDatePicker}
         handleDatePickerCancel={handleDatePickerCancel}

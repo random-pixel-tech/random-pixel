@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import useStudentAttendance, { TeacherId } from './useStudentAttendance';
+import useStudentAttendance, { StudentAttendanceData } from './useStudentAttendance';
 import { getInitialAttendanceState, getUpdatedRecords } from '../attendanceUtils';
 import { AttendanceStatus, AttendanceSession } from '../enums';
+import { supabase } from '../supabase';
 
 const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSession.Morning) => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
@@ -10,7 +11,7 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
 
   const [initialAttendanceStatus, setInitialAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
 
-  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today, section } = useStudentAttendance();
+  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today, section, isHoliday } = useStudentAttendance();
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
@@ -19,13 +20,14 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
 
   const [session, setSession] = useState<AttendanceSession>(initialSession);
 
+
+
   const handleSessionToggle = () => {
     setSession((prevSession) =>
       prevSession === AttendanceSession.Morning ? AttendanceSession.Afternoon : AttendanceSession.Morning
     );
   };
 
-  
   const handleOptionsMenuOpen = () => {
     setIsOptionsMenuOpen(true);
   };
@@ -53,22 +55,20 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
     }
 
     return studentAttendanceData.filter(({ attendanceRecord }) => {
-      return attendanceRecord?.[`${session.toLowerCase()}Status`] === selectedStatus;
+      return attendanceRecord?.[`${session.toLowerCase()}_status`] === selectedStatus;
     });
   };
 
-
   // Calculate students based on their status
   const presentCount = studentAttendanceData.filter(
-    (item) => item.attendanceRecord?.[`${session.toLowerCase()}Status`] === AttendanceStatus.Present
+    (item) => item.attendanceRecord?.[`${session.toLowerCase()}_status`] === AttendanceStatus.Present
   ).length;
   const absentCount = studentAttendanceData.filter(
-    (item) => item.attendanceRecord?.[`${session.toLowerCase()}Status`] === AttendanceStatus.Absent
+    (item) => item.attendanceRecord?.[`${session.toLowerCase()}_status`] === AttendanceStatus.Absent
   ).length;
   const onLeaveCount = studentAttendanceData.filter(
-    (item) => item.attendanceRecord?.[`${session.toLowerCase()}Status`] === AttendanceStatus.OnLeave
+    (item) => item.attendanceRecord?.[`${session.toLowerCase()}_status`] === AttendanceStatus.OnLeave
   ).length;
-
 
   // Calculate marked students and total students
   const totalStudents = studentAttendanceData.length;
@@ -97,23 +97,23 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
     setIsPopoverOpen((prevState) => ({ ...prevState, [studentId]: false }));
   };
 
- // Function for updating attendance status
- const handleAttendanceStatusChange = (studentId: string, status: AttendanceStatus | null) => {
-  setAttendanceStatus((prevState) => {
-    const currentStatus = prevState[studentId];
-    if (currentStatus === AttendanceStatus.OnLeave && status === AttendanceStatus.Absent) {
-      return { ...prevState, [studentId]: null };
-    } else if (currentStatus === status) {
-      return { ...prevState, [studentId]: null };
-    } else {
-      return { ...prevState, [studentId]: status };
-    }
-  });
-};
+  // Function for updating attendance status
+  const handleAttendanceStatusChange = (studentId: string, status: AttendanceStatus | null) => {
+    setAttendanceStatus((prevState) => {
+      const currentStatus = prevState[studentId];
+      if (currentStatus === AttendanceStatus.OnLeave && status === AttendanceStatus.Absent) {
+        return { ...prevState, [studentId]: null };
+      } else if (currentStatus === status) {
+        return { ...prevState, [studentId]: null };
+      } else {
+        return { ...prevState, [studentId]: status };
+      }
+    });
+  };
 
   // Function for saving attendance
   const handleSaveAttendance = async () => {
-    const unmarkedStudents = studentAttendanceData.filter(({ student }) => attendanceStatus[student.id] === null);
+    const unmarkedStudents = studentAttendanceData.filter(({ student }) => attendanceStatus[student.scholar_id] === null);
     const unmarkedCount = unmarkedStudents.length;
     setUnmarkedStudentCount(unmarkedCount);
 
@@ -129,9 +129,9 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
     const updatedRecords = getUpdatedRecords(studentAttendanceData, attendanceStatus, session);
     await Promise.all(
       updatedRecords.map(async ({ student }) => {
-        const selectedStatus = attendanceStatus[student.id];
+        const selectedStatus = attendanceStatus[student.scholar_id];
         if (selectedStatus !== null) {
-          await updateAttendanceRecord(student.id, session, selectedStatus);
+          await updateAttendanceRecord(student.scholar_id, session, selectedStatus);
         }
       })
     );
@@ -145,10 +145,8 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
   };
 
   const handleLeaveClick = (studentId: string) => {
-    setAttendanceStatus((prevState) => ({ ...prevState, [studentId]: AttendanceStatus.OnLeave, }));
+    setAttendanceStatus((prevState) => ({ ...prevState, [studentId]: AttendanceStatus.OnLeave }));
   };
-
-  
 
   return {
     showAlertDialog,
@@ -183,7 +181,8 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
     handleIconPress,
     session,
     handleSessionToggle,
-    checkAttendanceChanges
+    checkAttendanceChanges,
+    isHoliday
   };
 };
 

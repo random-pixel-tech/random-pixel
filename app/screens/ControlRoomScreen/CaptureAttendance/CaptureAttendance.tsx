@@ -11,6 +11,7 @@ import AttendanceHeader from './AttendanceHeader';
 import { RouteNames, RootStackParamList } from '../../../services/utils/RouteNames';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { AttendanceSession } from '../../../services/utils/enums';
+
 const CaptureAttendance = () => {
   const {
     showAlertDialog,
@@ -39,10 +40,9 @@ const CaptureAttendance = () => {
     handleIconPress,
     session,
     handleSessionToggle,
-    checkAttendanceChanges
+    checkAttendanceChanges,
+    isHoliday,
   } = useAttendanceLogic();
-
-
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -54,7 +54,6 @@ const CaptureAttendance = () => {
         handleSessionToggle();
         handleOptionsMenuClose();
       },
-
     },
     {
       label: 'Generate Attendance Report',
@@ -67,15 +66,27 @@ const CaptureAttendance = () => {
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
-      <Header title="Attendance" icon="check" onIconPress={handleSaveAttendance} showConfirmation={true} confirmationHeading="Are you sure you want to leave?"
-      confirmationText="You will lose the captured attendance if you leave without saving." options={options} isOptionsMenuOpen={isOptionsMenuOpen}
-      handleOptionsMenuOpen={handleOptionsMenuOpen}
-      handleOptionsMenuClose={handleOptionsMenuClose}
-      handleIconPress={handleIconPress}
-      checkChanges={checkAttendanceChanges}
-
+      <Header
+        title="Attendance"
+        icon="check"
+        onIconPress={handleSaveAttendance}
+        showConfirmation={true}
+        confirmationHeading="Are you sure you want to leave?"
+        confirmationText="You will lose the captured attendance if you leave without saving."
+        options={options}
+        isOptionsMenuOpen={isOptionsMenuOpen}
+        handleOptionsMenuOpen={handleOptionsMenuOpen}
+        handleOptionsMenuClose={handleOptionsMenuClose}
+        handleIconPress={handleIconPress}
+        checkChanges={checkAttendanceChanges}
       />
-      <AttendanceHeader section={section} session={session} className={className} today={today} summaryValues={{ markedStudents, totalStudents }}
+      <AttendanceHeader
+        section={section}
+        session={session}
+        className={className}
+        today={today}
+        summaryValues={{ markedStudents, totalStudents }}
+        isHoliday={isHoliday}
       />
       <AttendanceList
         studentAttendanceData={studentAttendanceData}
@@ -85,6 +96,7 @@ const CaptureAttendance = () => {
         attendanceStatus={attendanceStatus}
         onAttendanceStatusChange={handleAttendanceStatusChange}
         onLeaveClick={handleLeaveClick}
+        isHoliday={isHoliday}
       />
       <ConfirmationDialog
         isOpen={showConfirmationDialog}
