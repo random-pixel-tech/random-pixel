@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Input, InputField } from '@gluestack-ui/themed';
-import AttendanceFilterButton from './AttendanceFilterButton';
+import AttendanceFilterPanel from './AttendanceFilterPanel';
 import SegmentedControl from './SegmentedControl';
 import SearchButton from './SearchButton';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -66,7 +66,7 @@ const StatsSearchAndFilterBar: React.FC<StatsSearchAndFilterBarProps> = ({
   return (
     <Box opacity={isLoading ? 0.5 : 1} pointerEvents={isLoading ? 'none' : 'auto'}>
       <Box display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
-        <AttendanceFilterButton
+        <AttendanceFilterPanel
           showActionsheet={showActionsheet}
           selectedTab={selectedTab}
           selectedFilters={selectedFilters}
