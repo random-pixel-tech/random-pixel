@@ -50,189 +50,99 @@ const useStudentAttendance = () => {
   const [studentAttendanceData, setStudentAttendanceData] = useState<StudentAttendanceData[]>([]);
   const [className, setClassName] = useState<string>('');
   const [section, setSection] = useState<string>('');
-  const today = new Date().toISOString().split('T')[0];
+  const [isHoliday, setIsHoliday] = useState<boolean>(false);
 
-  const [isHoliday, setIsHoliday] = useState(false);
+  // Define constants
+  const today: string = new Date().toISOString().split('T')[0];
 
-  // Function to check if the current date is a holiday
-  const checkHoliday = async () => {
+  // Fetch school data
+  const fetchSchoolData = async (): Promise<string | null> => {
     try {
-      const { data: schoolData, error: schoolError } = await supabase
-        .from('school_info')
-        .select('school_name')
-        .single();
-  
-      if (schoolError) {
-        console.error('Error fetching school data:', schoolError);
-        return;
-      }
-  
-      const { data: holidayData, error: holidayError } = await supabase
+      const { data, error } = await supabase.from('school_info').select('school_name').single();
+      if (error) throw error;
+      return data?.school_name ?? null;
+    } catch (error) {
+      console.error('Error fetching school data:', error);
+      return null;
+    }
+  };
+
+  // Fetch holiday data
+  const fetchHolidayData = async (schoolName: string): Promise<boolean> => {
+    try {
+      const { data, error } = await supabase
         .from('holidays')
         .select('*')
-        .eq('school_name', schoolData.school_name)
+        .eq('school_name', schoolName)
         .gte('start_date', today)
         .lte('end_date', today)
-        .limit(1); // Fetch the first row (if any)
-  
-      if (holidayError) {
-        console.error('Error fetching holiday data:', holidayError);
-        setIsHoliday(false); // Set isHoliday to false in case of an error
-      } else {
-        setIsHoliday(holidayData.length > 0); // Check if the holidayData array has any elements
-      }
+        .limit(1);
+      if (error) throw error;
+      return data?.length > 0 ?? false;
     } catch (error) {
-      console.error('Error checking holiday:', error);
-      setIsHoliday(false); // Set isHoliday to false in case of an error
+      console.error('Error fetching holiday data:', error);
+      return false;
     }
   };
 
-  useEffect(() => {
-    checkHoliday();
-  }, [today]);
-
-  useEffect(() => {
-    const fetchStudentAttendance = async () => {
-      try {
-        // Hardcoded teacherId for now
-        const teacherId = 16;
-
-        // Fetch class data for the given teacher
-        const { data: classData, error: classError } = await supabase
-          .from('classes')
-          .select('id, class_name, section')
-          .eq('teacher_id', teacherId)
-          .single();
-
-        if (classError) {
-          console.error('Error fetching class:', classError);
-          return;
-        }
-
-        // Fetch class name and section
-        if (classData) {
-          setClassName(classData.class_name);
-          setSection(classData.section);
-        }
-
-        // Fetch students data for the class in ascending order of roll_number
-        const { data: studentsData, error: studentsError } = await supabase
-          .from('students')
-          .select('*')
-          .eq('class_id', classData.id)
-          .order('roll_number', { ascending: true });
-
-        if (studentsError) {
-          console.error('Error fetching students:', studentsError);
-          return;
-        }
-
-        // Fetch attendance records for the class and current date
-        const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
-          .from('attendance_records')
-          .select('*')
-          .eq('class_id', classData.id)
-          .eq('date', today);
-
-        if (attendanceRecordsError) {
-          console.error('Error fetching attendance records:', attendanceRecordsError);
-          return;
-        }
-
-        // Combine student data and attendance records
-        const studentAttendanceData: StudentAttendanceData[] = studentsData.map((student) => {
-          const existingRecord = attendanceRecordsData.find(
-            (record) => record.scholar_id === student.scholar_id
-          );
-
-          return { student, attendanceRecord: existingRecord || null };
-        });
-        setStudentAttendanceData(studentAttendanceData);
-      } catch (error) {
-        console.error('Error fetching student attendance data:', error);
-      }
-    };
-
-    fetchStudentAttendance();
-  }, []);
-
-  const updateAttendanceRecord = async (
-    scholarId: string,
-    session: AttendanceSession,
-    status: AttendanceStatus
-  ) => {
+  // Fetch class data
+  const fetchClassData = async (teacherId: TeacherId): Promise<number | null> => {
     try {
-      const today = new Date().toISOString().split('T')[0];
-      const existingRecord = studentAttendanceData.find(
-        (item) => item.student.scholar_id === scholarId
-      )?.attendanceRecord;
-
-      if (existingRecord) {
-        // Update existing attendance record
-        const { error } = await supabase
-          .from('attendance_records')
-          .update({
-            [session + '_status']: status,
-            [session + '_attendance_taken_at']: new Date().toISOString(),
-          })
-          .eq('id', existingRecord.id);
-
-        if (error) {
-          console.error('Error updating attendance record:', error);
-          throw error;
-        }
-      } else {
-        // Create a new attendance record
-        const { error } = await supabase
-          .from('attendance_records')
-          .insert({
-            scholar_id: scholarId,
-            class_id: studentAttendanceData.find((item) => item.student.scholar_id === scholarId)?.student.class_id,
-            date: today,
-            [session + '_status']: status,
-            [session + '_attendance_taken_at']: new Date().toISOString(),
-          });
-
-        if (error) {
-          console.error('Error creating attendance record:', error);
-          throw error;
-        }
+      const { data, error } = await supabase
+        .from('classes')
+        .select('id, class_name, section')
+        .eq('teacher_id', teacherId)
+        .single();
+      if (error) throw error;
+      if (data) {
+        setClassName(data.class_name);
+        setSection(data.section);
+        return data.id;
       }
+      return null;
     } catch (error) {
-      console.error('Error updating attendance record:', error);
-      throw error;
+      console.error('Error fetching class data:', error);
+      return null;
     }
   };
 
-  const fetchUpdatedAttendanceData = async () => {
+  // Fetch students data
+  const fetchStudentsData = async (classId: number): Promise<Student[]> => {
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const { data, error } = await supabase.from('students').select('*').eq('class_id', classId).order('roll_number');
+      if (error) throw error;
+      return data ?? [];
+    } catch (error) {
+      console.error('Error fetching students data:', error);
+      return [];
+    }
+  };
 
-      const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
-        .from('attendance_records')
-        .select('*')
-        .eq('date', today);
+  // Fetch attendance records
+  const fetchAttendanceRecords = async (classId: number): Promise<AttendanceRecord[]> => {
+    try {
+      const { data, error } = await supabase.from('attendance_records').select('*').eq('class_id', classId).eq('date', today);
+      if (error) throw error;
+      return data ?? [];
+    } catch (error) {
+      console.error('Error fetching attendance records:', error);
+      return [];
+    }
+  };
 
-      if (attendanceRecordsError) {
-        console.error('Error fetching updated attendance records:', attendanceRecordsError);
-        return studentAttendanceData;
-      }
-
-      const updatedStudentAttendanceData: StudentAttendanceData[] = studentAttendanceData.map((item) => {
-        const updatedRecord = attendanceRecordsData.find(
-          (record) => record.scholar_id === item.student.scholar_id
-        );
-
-        return { student: item.student, attendanceRecord: updatedRecord || null };
-      });
-
-      return updatedStudentAttendanceData;
+  // Fetch updated attendance data
+  const fetchUpdatedAttendanceData = async (): Promise<StudentAttendanceData[]> => {
+    try {
+      const { data, error } = await supabase.from('attendance_records').select('*').eq('date', today);
+      if (error) throw error;
+      return data ?? [];
     } catch (error) {
       console.error('Error fetching updated attendance data:', error);
       return studentAttendanceData;
     }
   };
 
+  // Fetch all student attendance
   const fetchAllStudentAttendance = async (): Promise<AllStudentAttendanceData[]> => {
     try {
       // Fetch classes data
@@ -240,48 +150,21 @@ const useStudentAttendance = () => {
         .from('classes')
         .select('*')
         .order('class_name', { ascending: true, nullsFirst: true });
-
-      if (classesError) {
-        console.error('Error fetching classes:', classesError);
-        return [];
-      }
+      if (classesError) throw classesError;
 
       const allStudentAttendanceData: AllStudentAttendanceData[] = [];
 
       // Loop through each class
       for (const classData of classesData) {
-        const classNumber = Number(classData.class_name.replace(/\D/g, ''));
+        // Fetch students data
+        const studentsData = await fetchStudentsData(classData.id);
 
-        // Fetch students data for the current class in ascending order of roll_number
-        const { data: studentsData, error: studentsError } = await supabase
-          .from('students')
-          .select('*')
-          .eq('class_id', classData.id)
-          .order('roll_number', { ascending: true });
-
-        if (studentsError) {
-          console.error('Error fetching students:', studentsError);
-          return [];
-        }
-
-        // Fetch attendance records for the current class and current date
-        const { data: attendanceRecordsData, error: attendanceRecordsError } = await supabase
-          .from('attendance_records')
-          .select('*')
-          .eq('class_id', classData.id)
-          .eq('date', today);
-
-        if (attendanceRecordsError) {
-          console.error('Error fetching attendance records:', attendanceRecordsError);
-          return [];
-        }
+        // Fetch attendance records
+        const attendanceRecordsData = await fetchAttendanceRecords(classData.id);
 
         // Combine student data, attendance records, class, and section
-        const classStudentAttendanceData: AllStudentAttendanceData[] = studentsData.map((student) => {
-          const existingRecord = attendanceRecordsData.find(
-            (record) => record.scholar_id === student.scholar_id
-          );
-
+        const classStudentAttendanceData = studentsData.map((student) => {
+          const existingRecord = attendanceRecordsData.find((record) => record.scholar_id === student.scholar_id);
           return {
             student,
             attendanceRecord: existingRecord || null,
@@ -308,16 +191,42 @@ const useStudentAttendance = () => {
     }
   };
 
+  // Effect to check holiday
+  useEffect(() => {
+    const fetchData = async () => {
+      const schoolName = await fetchSchoolData();
+      if (schoolName) {
+        const isHoliday = await fetchHolidayData(schoolName);
+        setIsHoliday(isHoliday);
+      }
+    };
+    fetchData();
+  }, []);
+
   return {
     studentAttendanceData,
-    updateAttendanceRecord,
     setStudentAttendanceData,
+    updateAttendanceRecord: async (scholarId: string, session: AttendanceSession, status: AttendanceStatus) => {
+      try {
+        const existingRecord = studentAttendanceData.find((item) => item.student.scholar_id === scholarId)?.attendanceRecord;
+        const recordId = existingRecord ? existingRecord.id : null;
+        const fieldsToUpdate = {
+          [`${session}_status`]: status,
+          [`${session}_attendance_taken_at`]: new Date().toISOString(),
+        };
+        const { error } = await supabase.from('attendance_records').upsert({ id: recordId, scholar_id: scholarId, class_id: existingRecord?.class_id, date: today, ...fieldsToUpdate });
+        if (error) throw error;
+      } catch (error) {
+        console.error('Error updating attendance record:', error);
+        throw error;
+      }
+    },
     fetchUpdatedAttendanceData,
     className,
     section,
     today,
     fetchAllStudentAttendance,
-    isHoliday
+    isHoliday,
   };
 };
 

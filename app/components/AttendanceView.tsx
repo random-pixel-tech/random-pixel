@@ -36,10 +36,11 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   classData,
   isHoliday,
 }) => {
+  if (selectedDuration === SelectedDuration.Daily && isHoliday) {
+    return <HolidayMessage />;
+  }
+
   const renderAttendanceItem = (item: AttendanceData) => {
-    if (selectedDuration === SelectedDuration.Daily && isHoliday) {
-      return <HolidayMessage />;
-    }
     if (selectedSegment === Segment.ClassSegment && 'classId' in item) {
       return <ClassAttendanceCard classData={item} />;
     } else if (
