@@ -1,11 +1,11 @@
-import React, { useRef } from 'react';
-import { Box } from '@gluestack-ui/themed';
-import { Animated } from 'react-native';
-import StatsHeader from '../../components/StatsHeader';
-import AttendanceView from '../../components/AttendanceView';
-import { useAttendanceStats } from '../../services/utils/api/useAttendanceStats';
-import DatePicker from '../../components/DatePicker';
-import StatsSearchAndFilterBar from '../../components/StatsSearchAndFilterBar';
+import React, { useCallback, useRef, useState } from "react";
+import { Box } from "@gluestack-ui/themed";
+import { Animated, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import StatsHeader from "../../components/StatsHeader";
+import AttendanceView from "../../components/AttendanceView";
+import { useAttendanceStats } from "../../services/utils/api/useAttendanceStats";
+import DatePicker from "../../components/DatePicker";
+import StatsSearchAndFilterBar from "../../components/StatsSearchAndFilterBar";
 
 const AttendanceStats = () => {
   const {
@@ -69,12 +69,22 @@ const AttendanceStats = () => {
     isHoliday,
   } = useAttendanceStats();
 
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const translateY = scrollY.interpolate({
-    inputRange: [0, 50],
-    outputRange: [0, -100],
-    extrapolate: 'clamp',
-  });
+  const [isSearchBarVisible, setSearchBarVisible] = useState(true);
+  const [yOffset, setYOffset] = useState(0);
+
+  const handleScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const currentOffset = event.nativeEvent.contentOffset.y;
+
+    setYOffset((prevOffset) => {
+      if (currentOffset < 0) return 0;
+      if (currentOffset > prevOffset) {
+        setSearchBarVisible(false);
+      } else if (currentOffset <= prevOffset) {
+        setSearchBarVisible(true);
+      }
+      return currentOffset;
+    });
+  }, []);
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
@@ -93,53 +103,46 @@ const AttendanceStats = () => {
         showDatePicker={showDatePicker}
         isNextDisabled={isNextDisabled}
       />
-      <Animated.ScrollView
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true }
-        )}
-      >
-        <Animated.View style={{ transform: [{ translateY }] }}>
-          <StatsSearchAndFilterBar
-            showActionsheet={showFilterActionsheet}
-            selectedTab={selectedFilterTab}
-            selectedFilters={selectedFilters}
-            selectedFilterOption={selectedFilterOption}
-            onClose={handleCloseFilterActionsheet}
-            onTabSelect={handleFilterTabSelect}
-            onCategorySelect={handleCategoryOptionSelect}
-            onFilterOptionSelect={handleFilterOptionSelect}
-            onSortOptionSelect={handleFilterSortOptionSelect}
-            onClear={handleFilterClear}
-            onApply={handleFilterApply}
-            handleOpenFilterActionsheet={handleOpenFilterActionsheet}
-            sortOption={sortOption}
-            selectedSegment={selectedSegment}
-            onSegmentChange={handleSegmentChange}
-            searchQuery={searchQuery}
-            showSearchInput={showSearchInput}
-            handleSearchButtonClick={handleSearchButtonClick}
-            handleSearchInputChange={handleSearchInputChange}
-            handleClearSearch={handleClearSearch}
-            isClassOptionSelected={isClassOptionSelected}
-            searchButtonPress={searchButtonPress}
-            filterButtonPress={filterButtonPress}
-            handleClearCategoryFilters={handleClearCategoryFilters}
-            isLoading={isLoading}
-          />
-        </Animated.View>
-        <AttendanceView
-          selectedDuration={selectedDuration}
-          startDate={startDate}
-          endDate={endDate}
-          attendanceData={filteredAttendanceData}
-          isLoading={isLoading}
+      {isSearchBarVisible && (
+        <StatsSearchAndFilterBar
+          showActionsheet={showFilterActionsheet}
+          selectedTab={selectedFilterTab}
+          selectedFilters={selectedFilters}
+          selectedFilterOption={selectedFilterOption}
+          onClose={handleCloseFilterActionsheet}
+          onTabSelect={handleFilterTabSelect}
+          onCategorySelect={handleCategoryOptionSelect}
+          onFilterOptionSelect={handleFilterOptionSelect}
+          onSortOptionSelect={handleFilterSortOptionSelect}
+          onClear={handleFilterClear}
+          onApply={handleFilterApply}
+          handleOpenFilterActionsheet={handleOpenFilterActionsheet}
+          sortOption={sortOption}
           selectedSegment={selectedSegment}
-          classData={classData}
-          isHoliday={isHoliday}
+          onSegmentChange={handleSegmentChange}
+          searchQuery={searchQuery}
+          showSearchInput={showSearchInput}
+          handleSearchButtonClick={handleSearchButtonClick}
+          handleSearchInputChange={handleSearchInputChange}
+          handleClearSearch={handleClearSearch}
+          isClassOptionSelected={isClassOptionSelected}
+          searchButtonPress={searchButtonPress}
+          filterButtonPress={filterButtonPress}
+          handleClearCategoryFilters={handleClearCategoryFilters}
+          isLoading={isLoading}
         />
-      </Animated.ScrollView>
+      )}
+      <AttendanceView
+        selectedDuration={selectedDuration}
+        startDate={startDate}
+        endDate={endDate}
+        attendanceData={filteredAttendanceData}
+        isLoading={isLoading}
+        selectedSegment={selectedSegment}
+        classData={classData}
+        isHoliday={isHoliday}
+        onScroll={handleScroll}
+      />
       <DatePicker
         isOpen={showDatePicker}
         handleDatePickerCancel={handleDatePickerCancel}

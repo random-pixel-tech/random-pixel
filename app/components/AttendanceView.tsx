@@ -6,6 +6,7 @@ import ClassAttendanceCard from './ClassAttendanceCard';
 import { ClassData } from '../services/utils/api/useAttendanceStats';
 import { SelectedDuration, Segment } from '../services/utils/enums';
 import HolidayMessage from './HolidayMessage';
+import { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -24,6 +25,7 @@ interface AttendanceViewProps {
   selectedSegment: Segment;
   classData: ClassData[];
   isHoliday: boolean;
+  onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 }
 
 const AttendanceView: React.FC<AttendanceViewProps> = ({
@@ -35,18 +37,19 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
   selectedSegment,
   classData,
   isHoliday,
+  onScroll,
 }) => {
   const renderAttendanceItem = (item: AttendanceData) => {
     if (selectedDuration === SelectedDuration.Daily && isHoliday) {
       return <HolidayMessage />;
     }
-    if (selectedSegment === Segment.ClassSegment && 'classId' in item) {
+    if (selectedSegment === Segment.ClassSegment && "classId" in item) {
       return <ClassAttendanceCard classData={item} />;
     } else if (
       selectedSegment === Segment.StudentSegment &&
-      'student' in item &&
-      'totalAttendance' in item &&
-      'presentAttendance' in item
+      "student" in item &&
+      "totalAttendance" in item &&
+      "presentAttendance" in item
     ) {
       return (
         <StudentAttendanceCard
@@ -66,7 +69,7 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
 
   const keyExtractor = (item: unknown, index: number) => {
     const attendanceItem = item as AttendanceData;
-    return 'classId' in attendanceItem
+    return "classId" in attendanceItem
       ? attendanceItem.classId.toString()
       : attendanceItem.student.scholar_id;
   };
@@ -84,6 +87,8 @@ const AttendanceView: React.FC<AttendanceViewProps> = ({
         ) : null
       }
       contentContainerStyle={{ padding: 16 }}
+      scrollEventThrottle={16}
+      onScroll={onScroll}
     />
   );
 };
