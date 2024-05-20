@@ -1,30 +1,90 @@
-import { useState, useEffect } from 'react';
-import useStudentAttendance, { StudentAttendanceData } from './useStudentAttendance';
-import { getInitialAttendanceState, getUpdatedRecords } from '../attendanceUtils';
-import { AttendanceStatus, AttendanceSession } from '../enums';
-import { supabase } from '../supabase';
+import { useState, useEffect, createContext } from "react";
+import useStudentAttendance from "./useStudentAttendance";
+import { getInitialAttendanceState, getUpdatedRecords } from "../attendanceUtils";
+import { AttendanceStatus, AttendanceSession } from "../enums";
 
-const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSession.Morning) => {
+interface CaptureAttendanceProps {
+  children: React.ReactNode;
+  initialSession?: AttendanceSession;
+}
+
+interface AttendanceProviderProps {
+  attendanceStatus: Record<string, AttendanceStatus | null>;
+  handleAttendanceStatusChange: (studentId: string, status: AttendanceStatus | null) => void;
+  handleIconPress: () => void;
+  handlePopoverOpen: (studentId: string) => void;
+  handlePopoverClose: (studentId: string) => void;
+  handleSaveAttendance: () => Promise<void>;
+  handleStatusClick: (status: AttendanceStatus | null) => void;
+  handleLeaveClick: (studentId: string) => void;
+  totalStudents: number;
+  markedStudents: number;
+  presentCount: number;
+  absentCount: number;
+  onLeaveCount: number;
+  isPopoverOpen: Record<string, boolean>;
+  checkAttendanceChanges: () => boolean;
+  alertMessage: string | undefined;
+  showAlertDialog: boolean;
+  setShowAlertDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  showConfirmationDialog: boolean;
+  setShowConfirmationDialog: React.Dispatch<React.SetStateAction<boolean>>;
+  unmarkedStudentCount: number;
+  studentAttendanceData: any[];
+  className: string;
+  today: string;
+  section: string;
+  isHoliday: boolean;
+  session: AttendanceSession;
+  handleSessionToggle: () => void;
+  saveAttendance: () => Promise<void>;
+  selectedStatus: AttendanceStatus | null;
+  getFilteredStudents: () => any[];
+  isOptionsMenuOpen: boolean;
+  handleOptionsMenuClose: () => void;
+  handleOptionsMenuOpen: () => void;
+}
+
+export const CaptureAttendanceContext = createContext<any | null>(null);
+
+const AttendanceProvider = ({
+  children,
+  initialSession = AttendanceSession.Morning,
+}: CaptureAttendanceProps) => {
   const [showAlertDialog, setShowAlertDialog] = useState(false);
   const [unmarkedStudentCount, setUnmarkedStudentCount] = useState(0);
-  const [alertMessage, setAlertMessage] = useState('');
+  const [alertMessage, setAlertMessage] = useState("");
 
-  const [initialAttendanceStatus, setInitialAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
+  const [initialAttendanceStatus, setInitialAttendanceStatus] = useState<
+    Record<string, AttendanceStatus | null>
+  >({});
 
-  const { studentAttendanceData, updateAttendanceRecord, setStudentAttendanceData, fetchUpdatedAttendanceData, className, today, section, isHoliday } = useStudentAttendance();
+  const {
+    studentAttendanceData,
+    updateAttendanceRecord,
+    setStudentAttendanceData,
+    fetchUpdatedAttendanceData,
+    className,
+    today,
+    section,
+    isHoliday,
+  } = useStudentAttendance();
+
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
-  const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>({});
+  const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>(
+    {}
+  );
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<AttendanceStatus | null>(null);
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
 
   const [session, setSession] = useState<AttendanceSession>(initialSession);
 
-
-
   const handleSessionToggle = () => {
     setSession((prevSession) =>
-      prevSession === AttendanceSession.Morning ? AttendanceSession.Afternoon : AttendanceSession.Morning
+      prevSession === AttendanceSession.Morning
+        ? AttendanceSession.Afternoon
+        : AttendanceSession.Morning
     );
   };
 
@@ -61,13 +121,15 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
 
   // Calculate students based on their status
   const presentCount = studentAttendanceData.filter(
-    (item) => item.attendanceRecord?.[`${session.toLowerCase()}_status`] === AttendanceStatus.Present
+    (item) =>
+      item.attendanceRecord?.[`${session.toLowerCase()}_status`] === AttendanceStatus.Present
   ).length;
   const absentCount = studentAttendanceData.filter(
     (item) => item.attendanceRecord?.[`${session.toLowerCase()}_status`] === AttendanceStatus.Absent
   ).length;
   const onLeaveCount = studentAttendanceData.filter(
-    (item) => item.attendanceRecord?.[`${session.toLowerCase()}_status`] === AttendanceStatus.OnLeave
+    (item) =>
+      item.attendanceRecord?.[`${session.toLowerCase()}_status`] === AttendanceStatus.OnLeave
   ).length;
 
   // Calculate marked students and total students
@@ -113,7 +175,9 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
 
   // Function for saving attendance
   const handleSaveAttendance = async () => {
-    const unmarkedStudents = studentAttendanceData.filter(({ student }) => attendanceStatus[student.scholar_id] === null);
+    const unmarkedStudents = studentAttendanceData.filter(
+      ({ student }) => attendanceStatus[student.scholar_id] === null
+    );
     const unmarkedCount = unmarkedStudents.length;
     setUnmarkedStudentCount(unmarkedCount);
 
@@ -140,7 +204,9 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
     setStudentAttendanceData(updatedAttendanceData);
 
     const currentDate = new Date().toLocaleDateString();
-    setAlertMessage(`Marking attendance complete for ${currentDate}. You will be able to access the attendance from stats panel.`);
+    setAlertMessage(
+      `Marking attendance complete for ${currentDate}. You will be able to access the attendance from stats panel.`
+    );
     setShowAlertDialog(true);
   };
 
@@ -148,42 +214,48 @@ const useAttendanceLogic = (initialSession: AttendanceSession = AttendanceSessio
     setAttendanceStatus((prevState) => ({ ...prevState, [studentId]: AttendanceStatus.OnLeave }));
   };
 
-  return {
-    showAlertDialog,
-    setShowAlertDialog,
-    alertMessage,
-    studentAttendanceData,
-    isPopoverOpen,
-    handlePopoverOpen,
-    handlePopoverClose,
-    attendanceStatus,
-    handleAttendanceStatusChange,
-    showConfirmationDialog,
-    setShowConfirmationDialog,
-    handleSaveAttendance,
-    saveAttendance,
-    handleLeaveClick,
-    unmarkedStudentCount,
-    className,
-    today,
-    totalStudents,
-    markedStudents,
-    selectedStatus,
-    handleStatusClick,
-    getFilteredStudents,
-    presentCount,
-    absentCount,
-    onLeaveCount,
-    section,
-    isOptionsMenuOpen,
-    handleOptionsMenuOpen,
-    handleOptionsMenuClose,
-    handleIconPress,
-    session,
-    handleSessionToggle,
-    checkAttendanceChanges,
-    isHoliday
-  };
+  return (
+    <CaptureAttendanceContext.Provider
+      value={{
+        showAlertDialog,
+        setShowAlertDialog,
+        alertMessage,
+        studentAttendanceData,
+        isPopoverOpen,
+        handlePopoverOpen,
+        handlePopoverClose,
+        attendanceStatus,
+        handleAttendanceStatusChange,
+        showConfirmationDialog,
+        setShowConfirmationDialog,
+        handleSaveAttendance,
+        saveAttendance,
+        handleLeaveClick,
+        unmarkedStudentCount,
+        className,
+        today,
+        totalStudents,
+        markedStudents,
+        selectedStatus,
+        handleStatusClick,
+        getFilteredStudents,
+        presentCount,
+        absentCount,
+        onLeaveCount,
+        section,
+        isOptionsMenuOpen,
+        handleOptionsMenuOpen,
+        handleOptionsMenuClose,
+        handleIconPress,
+        session,
+        handleSessionToggle,
+        checkAttendanceChanges,
+        isHoliday,
+      }}
+    >
+      {children}
+    </CaptureAttendanceContext.Provider>
+  );
 };
 
-export default useAttendanceLogic;
+export default AttendanceProvider;

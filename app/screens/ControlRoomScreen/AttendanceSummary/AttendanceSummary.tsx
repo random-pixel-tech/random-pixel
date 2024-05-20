@@ -1,17 +1,20 @@
 // AttendanceSummary.tsx
-import React from 'react';
-import { Box, ScrollView } from '@gluestack-ui/themed';
-import useAttendanceLogic from '../../../services/utils/api/useAttendanceLogic';
-import Header from '../../../components/Header';
-import AttendanceHeader from '../CaptureAttendance/AttendanceHeader';
-import SummaryList from './AttendanceSummaryList';
-import FilterBar from '../../../components/FilterBar';
-import { AttendanceStatusOrNull, filterOptions } from '../../../services/utils/constants';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { RouteNames, RootStackParamList } from '../../../services/utils/RouteNames';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { AttendanceSession } from '../../../services/utils/enums';
+import React, { useContext } from "react";
+import { Box, ScrollView } from "@gluestack-ui/themed";
+import useAttendanceLogic, {
+  CaptureAttendanceContext,
+} from "../../../services/utils/api/useAttendanceLogic";
+import Header from "../../../components/Header";
+import AttendanceHeader from "../CaptureAttendance/AttendanceHeader";
+import SummaryList from "./AttendanceSummaryList";
+import FilterBar from "../../../components/FilterBar";
+import { AttendanceStatusOrNull, filterOptions } from "../../../services/utils/constants";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { RouteNames, RootStackParamList } from "../../../services/utils/RouteNames";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { AttendanceSession } from "../../../services/utils/enums";
+import CaptureAttendance from "../CaptureAttendance/CaptureAttendance";
 
 type AttendanceSummaryRouteProp = RouteProp<RootStackParamList, RouteNames.AttendanceSummary>;
 
@@ -40,31 +43,32 @@ const AttendanceSummary = () => {
     handleIconPress,
     session,
     handleSessionToggle,
-    isHoliday
-  } = useAttendanceLogic(initialSession);
+    isHoliday,
+  } = useContext(CaptureAttendanceContext) || {};
 
   const options = [
     {
-      label: session === AttendanceSession.Morning ? 'Switch to Session Two' : 'Switch to Session One',
-      icon: 'toggle-on' as IconProp,
+      label:
+        session === AttendanceSession.Morning ? "Switch to Session Two" : "Switch to Session One",
+      icon: "toggle-on" as IconProp,
       onPress: () => {
         handleSessionToggle();
         handleOptionsMenuClose();
       },
     },
     {
-      label: 'Share report',
-      icon: 'share' as IconProp,
-      onPress: () => console.log('Option 1 pressed'),
+      label: "Share report",
+      icon: "share" as IconProp,
+      onPress: () => console.log("Option 1 pressed"),
     },
     {
-      label: 'Export report',
-      icon: 'file-export' as IconProp,
-      onPress: () => console.log('Option 2 pressed'),
+      label: "Export report",
+      icon: "file-export" as IconProp,
+      onPress: () => console.log("Option 2 pressed"),
     },
     {
-      label: 'Edit attendance',
-      icon: 'pen-to-square' as IconProp,
+      label: "Edit attendance",
+      icon: "pen-to-square" as IconProp,
       onPress: () => {
         navigation.navigate(RouteNames.CaptureAttendance);
         handleOptionsMenuClose();

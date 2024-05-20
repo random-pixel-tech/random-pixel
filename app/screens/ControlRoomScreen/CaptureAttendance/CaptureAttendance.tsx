@@ -1,63 +1,64 @@
-import React from 'react';
-import { Box } from '@gluestack-ui/themed';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import ConfirmationDialog from '../../../components/ConfirmationDialog';
-import SuccessAlert from '../../../components/SuccessAlert';
-import useAttendanceLogic from '../../../services/utils/api/useAttendanceLogic';
-import Header from '../../../components/Header';
-import AttendanceList from './AttendanceList';
-import AttendanceHeader from './AttendanceHeader';
-import { RouteNames, RootStackParamList } from '../../../services/utils/RouteNames';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { AttendanceSession } from '../../../services/utils/enums';
+import React, { useContext } from "react";
+import { Box } from "@gluestack-ui/themed";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import ConfirmationDialog from "../../../components/ConfirmationDialog";
+import SuccessAlert from "../../../components/SuccessAlert";
+import { CaptureAttendanceContext } from "../../../services/utils/api/useAttendanceLogic";
+import Header from "../../../components/Header";
+import AttendanceList from "./AttendanceList";
+import AttendanceHeader from "./AttendanceHeader";
+import { RouteNames, RootStackParamList } from "../../../services/utils/RouteNames";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { AttendanceSession } from "../../../services/utils/enums";
 
 const CaptureAttendance = () => {
   const {
-    showAlertDialog,
-    setShowAlertDialog,
-    alertMessage,
-    studentAttendanceData,
-    isPopoverOpen,
-    handlePopoverOpen,
-    handlePopoverClose,
     attendanceStatus,
     handleAttendanceStatusChange,
-    showConfirmationDialog,
-    setShowConfirmationDialog,
     handleSaveAttendance,
     saveAttendance,
-    handleLeaveClick,
-    unmarkedStudentCount,
-    className,
-    today,
-    totalStudents,
-    markedStudents,
-    section,
     isOptionsMenuOpen,
     handleOptionsMenuOpen,
     handleOptionsMenuClose,
+    handlePopoverOpen,
+    handlePopoverClose,
     handleIconPress,
+    handleLeaveClick,
+    totalStudents,
+    markedStudents,
+    studentAttendanceData,
+    isPopoverOpen,
+    unmarkedStudentCount,
+    checkAttendanceChanges,
+    showConfirmationDialog,
+    setShowConfirmationDialog,
+    setShowAlertDialog,
+    showAlertDialog,
+    alertMessage,
     session,
     handleSessionToggle,
-    checkAttendanceChanges,
+    className,
+    today,
+    section,
     isHoliday,
-  } = useAttendanceLogic();
+  } = useContext(CaptureAttendanceContext) || {};
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const options = [
     {
-      label: session === AttendanceSession.Morning ? 'Switch to Session Two' : 'Switch to Session One',
-      icon: 'toggle-on' as IconProp,
+      label:
+        session === AttendanceSession.Morning ? "Switch to Session Two" : "Switch to Session One",
+      icon: "toggle-on" as IconProp,
       onPress: () => {
         handleSessionToggle();
         handleOptionsMenuClose();
       },
     },
     {
-      label: 'Generate Attendance Report',
-      icon: 'file-export' as IconProp,
+      label: "Generate Attendance Report",
+      icon: "file-export" as IconProp,
       onPress: () => {
         handleOptionsMenuClose();
       },
