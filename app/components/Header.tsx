@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { Box, Text, Pressable } from '@gluestack-ui/themed';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { useNavigation } from '@react-navigation/native';
-import { Colors } from '../services/utils/colors';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import OptionsMenu from './OptionsMenu';
-import ConfirmationDialog from './ConfirmationDialog';
-import BackArrowButton from './BackArrowButton';
+import React, { useContext, useState } from "react";
+import { Box, Text, Pressable } from "@gluestack-ui/themed";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { useNavigation } from "@react-navigation/native";
+import { Colors } from "../services/utils/colors";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import OptionsMenu from "./OptionsMenu";
+import ConfirmationDialog from "./ConfirmationDialog";
+import BackArrowButton from "./BackArrowButton";
+import { CaptureAttendanceContext } from "../services/utils/api/useAttendanceLogic";
 
 interface Option {
   label: string;
@@ -16,58 +17,54 @@ interface Option {
 
 interface HeaderProps {
   title: string;
-  icon?: IconProp;
-  options?: Option[];
-  onIconPress?: () => void;
-  isPopoverOpen?: boolean;
-  onPopoverOpen?: () => void;
-  onPopoverClose?: () => void;
+  secondaryActionIcon?: IconProp;
+  onSecondaryAction?: () => void;
   showConfirmation?: boolean;
+  setShowConfirmation: React.Dispatch<React.SetStateAction<boolean>>;
   confirmationHeading?: string;
   confirmationText?: string;
-  isOptionsMenuOpen?: boolean;
-  handleOptionsMenuOpen?: () => void;
-  handleOptionsMenuClose?: () => void;
-  handleIconPress?: () => void;
-  checkChanges?: () => boolean;
+  options?: Option[];
+  onPrimaryAction?: () => void;
+  onBackArrowPress?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   title,
-  icon,
-  options,
-  onIconPress,
-  isPopoverOpen,
-  onPopoverOpen,
-  onPopoverClose,
+  secondaryActionIcon,
   showConfirmation = false,
+  setShowConfirmation,
+  onPrimaryAction,
+  onSecondaryAction,
   confirmationHeading = "",
   confirmationText = "",
-  isOptionsMenuOpen,
-  handleOptionsMenuOpen,
-  handleOptionsMenuClose,
-  handleIconPress,
-  checkChanges,
+  options,
+  onBackArrowPress,
 }) => {
+  const {
+    handleSaveAttendance,
+    toggleAttendanceCaptureMenu,
+    checkAttendanceChanges,
+    isOptionsMenuOpen,
+    handleOptionsMenuClose,
+    checkChanges,
+  } = useContext(CaptureAttendanceContext);
+
   const navigation = useNavigation();
-  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const handleLeftArrowPress = () => {
-    if (checkChanges && checkChanges()) {
-      setConfirmVisible(true);
-    } else {
-      navigation.goBack();
-    }
+    if (onBackArrowPress) onBackArrowPress();
+    else navigation.goBack();
   };
 
   const handleConfirm = () => {
-    setConfirmVisible(false);
+    setShowConfirmation(false);
     navigation.goBack();
   };
 
   const handleCancel = () => {
-    setConfirmVisible(false);
+    setShowConfirmation(false);
   };
+
   return (
     <Box
       bg="$pixWhite"
@@ -82,32 +79,31 @@ const Header: React.FC<HeaderProps> = ({
     >
       <Box display="flex" flexDirection="row">
         <BackArrowButton onPress={handleLeftArrowPress} />
-        <Text color={Colors.Text100} fontSize="$lg" px="$8" py="$4" fontWeight="$medium">
+        <Text color={Colors.Text100} fontSize="$xl" px="$8" py="$4" fontWeight="$medium">
           {title}
         </Text>
       </Box>
-      <Box flexDirection='row'>
-        {icon && (
-          <Pressable onPress={onIconPress} p="$4">
-            <FontAwesomeIcon icon={icon} size={18} color={Colors.Text100} />
+      <Box flexDirection="row">
+        {secondaryActionIcon && (
+          <Pressable onPress={onSecondaryAction} p="$4">
+            <FontAwesomeIcon icon={secondaryActionIcon} size={22} color={Colors.Text100} />
           </Pressable>
         )}
         {options && (
           <>
-            <Pressable onPress={handleIconPress} p="$4">
-              <FontAwesomeIcon icon="ellipsis-vertical" size={18} color={Colors.Text100} />
+            <Pressable onPress={onPrimaryAction} p="$4">
+              <FontAwesomeIcon icon="ellipsis-vertical" size={22} color={Colors.Text100} />
             </Pressable>
             <OptionsMenu
               isOpen={isOptionsMenuOpen}
               onClose={handleOptionsMenuClose}
-              onOpen={handleOptionsMenuOpen}
               options={options}
             />
           </>
         )}
       </Box>
       <ConfirmationDialog
-        isOpen={confirmVisible}
+        isOpen={showConfirmation}
         onClose={handleCancel}
         onConfirm={handleConfirm}
         heading={confirmationHeading}

@@ -11,7 +11,7 @@ interface CaptureAttendanceProps {
 interface AttendanceProviderProps {
   attendanceStatus: Record<string, AttendanceStatus | null>;
   handleAttendanceStatusChange: (studentId: string, status: AttendanceStatus | null) => void;
-  handleIconPress: () => void;
+  toggleAttendanceCaptureMenu: () => void;
   handlePopoverOpen: (studentId: string) => void;
   handlePopoverClose: (studentId: string) => void;
   handleSaveAttendance: () => Promise<void>;
@@ -96,7 +96,7 @@ const AttendanceProvider = ({
     setIsOptionsMenuOpen(false);
   };
 
-  const handleIconPress = async () => {
+  const toggleAttendanceCaptureMenu = async () => {
     if (isOptionsMenuOpen) {
       handleOptionsMenuClose();
     } else {
@@ -246,7 +246,7 @@ const AttendanceProvider = ({
         isOptionsMenuOpen,
         handleOptionsMenuOpen,
         handleOptionsMenuClose,
-        handleIconPress,
+        toggleAttendanceCaptureMenu,
         session,
         handleSessionToggle,
         checkAttendanceChanges,

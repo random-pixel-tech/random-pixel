@@ -14,7 +14,6 @@ interface OptionsMenuProps {
   options: Option[];
   isOpen?: boolean;
   onClose?: () => void;
-  onOpen?: () => void;
 }
 
 const OptionsMenu: React.FC<OptionsMenuProps> = ({ options, isOpen, onClose }) => {

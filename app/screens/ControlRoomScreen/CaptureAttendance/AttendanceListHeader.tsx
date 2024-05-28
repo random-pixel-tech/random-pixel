@@ -16,37 +16,43 @@ const AttendanceListHeader: React.FC<AttendanceListHeaderProps> = ({
   SecondColumnText,
   ThirdColumnText,
   FourthColumnText,
-  icon
+  icon,
 }) => {
   return (
-    <Box display="flex" py="$2" flexDirection="row" bg="$pixSecondaryLight50">
-      <Box w="$1/6" px="$4" justifyContent="center">
+    <Box display="flex" px="$4" py="$2" gap={"$2"} flexDirection="row" bg="$pixSecondaryLight50">
+      <Box w="$8">
         <Text color="$pixTextDark100" size="lg">
           {FirstColumnText}
         </Text>
       </Box>
-      <Box w="$2/5" px="$4" justifyContent="center">
+      <Box display="flex" flex={1}>
         <Text color="$pixTextDark100" size="lg">
           {SecondColumnText}
         </Text>
       </Box>
-      <Box w="$1/6" px="$4" justifyContent="center">
-        <Text color="$pixTextDark100" size="lg">
-          {ThirdColumnText}
-        </Text>
-      </Box>
-      <Box w="$1/6" px="$4" justifyContent="center">
-        <Text color="$pixTextDark100" size="lg">
-          {FourthColumnText}
-        </Text>
-      </Box>
-      {icon && (
-        <Box justifyContent="center" w="$1/6" p="$1">
-          <FontAwesomeIcon icon={icon} size={24} />
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        flex={1}
+        alignItems="center"
+        flexDirection="row"
+      >
+        <Box display="flex" alignItems="center" flex={1}>
+          <Text size="lg" py="$1" px="$3">
+            {ThirdColumnText}
+          </Text>
         </Box>
-      )}
+        <Box display="flex" alignItems="center" flex={1}>
+          <Text color="$pixTextDark100" size="lg">
+            {FourthColumnText}
+          </Text>
+        </Box>
+        <Box backgroundColor="black" display="flex" alignItems="center" flex={1}>
+          {icon && <FontAwesomeIcon icon={icon} size={24} />}
+        </Box>
+      </Box>
     </Box>
   );
 };
 
-export default AttendanceListHeader;
+export default React.memo(AttendanceListHeader);

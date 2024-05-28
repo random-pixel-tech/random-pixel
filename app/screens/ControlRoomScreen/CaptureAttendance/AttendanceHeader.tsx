@@ -1,38 +1,21 @@
-import React from 'react';
-import { Box, Heading, Text } from '@gluestack-ui/themed';
-import { AttendanceSession } from '../../../services/utils/enums';
+import React, { useContext } from "react";
+import { Box, Heading, Text } from "@gluestack-ui/themed";
+import { AttendanceSession } from "../../../services/utils/enums";
+import { CaptureAttendanceContext } from "../../../services/utils/api/useAttendanceLogic";
 
-interface SummaryValues {
-  [key: string]: number;
-}
+const AttendanceHeader = () => {
+  const { className, section, today, session, isHoliday, markedStudents, totalStudents } =
+    useContext(CaptureAttendanceContext) || {};
 
-interface AttendanceHeaderProps {
-  className: string;
-  section: string;
-  today: string;
-  summaryValues: SummaryValues;
-  session: AttendanceSession;
-  isHoliday: boolean;
-}
-
-const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({
-  className,
-  section,
-  today,
-  summaryValues,
-  session,
-  isHoliday
-}) => {
-  const summaryKeys = Object.keys(summaryValues);
+  const summaryKeys = Object.keys({ markedStudents, totalStudents } ?? {});
 
   return (
     <Box
       bg="$pixSecondary"
       w="$full"
-      h="$16"
-      alignContent="center"
-      p="$1"
-      px="$4"
+      h="$20"
+      alignItems="center"
+      p="$4"
       justifyContent="space-between"
       flexDirection="row"
     >
@@ -41,17 +24,15 @@ const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({
           Class: {className} {section}
         </Heading>
         <Text fontSize="$md">
-        {today} {!isHoliday && `| ${session === AttendanceSession.Morning ? 'Session one' : 'Session two'}`}
-          </Text>
+          {today}{" "}
+          {!isHoliday &&
+            `| ${session === AttendanceSession.Morning ? "Session one" : "Session two"}`}
+        </Text>
       </Box>
       {!isHoliday && (
         <Box>
           <Heading fontSize="$lg" alignSelf="flex-end">
-            {summaryKeys.map((key, index) => (
-              <React.Fragment key={key}>
-                {summaryValues[key]} {index < summaryKeys.length - 1 && '/'}
-              </React.Fragment>
-            ))}
+            {`${markedStudents} / ${totalStudents}`}
           </Heading>
           <Text fontSize="$md">Summary</Text>
         </Box>

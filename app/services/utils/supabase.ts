@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // export const supabaseUrl = "https://ytahqfinlppzoomvyyuj.supabase.co";
 
-export const supabaseUrl = 'http://192.168.1.2:54321';
+export const supabaseUrl = 'http://192.168.1.3:54321';
 
 // const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0YWhxZmlubHBwem9vbXZ5eXVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1NjgwNzEsImV4cCI6MjAzMDE0NDA3MX0.NV9BXbxsSa0qcIfZJViEQxfk4dX9VHzztsZ-He6XNDY";
 

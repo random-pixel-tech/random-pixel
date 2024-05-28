@@ -1,51 +1,76 @@
-import React from 'react';
-import { Box, FlatList, Text } from '@gluestack-ui/themed';
-import AttendanceListHeader from './AttendanceListHeader';
-import AttendanceListItem from './AttendanceListItem';
-import { Student, AttendanceRecord } from '../../../services/utils/api/useStudentAttendance';
-import { AttendanceStatus } from '../../../services/utils/enums';
-import HolidayMessage from '../../../components/HolidayMessage';
+import React, { useCallback, useContext } from "react";
+import { Box, FlatList } from "@gluestack-ui/themed";
+import AttendanceListHeader from "./AttendanceListHeader";
+import AttendanceListItem from "./AttendanceListItem";
+import HolidayMessage from "../../../components/HolidayMessage";
+import { CaptureAttendanceContext } from "../../../services/utils/api/useAttendanceLogic";
+import { AttendanceStatus } from "../../../services/utils/enums";
 
-interface AttendanceListProps {
-  studentAttendanceData: Array<{
-    student: Student;
-    attendanceRecord: AttendanceRecord | null;
-  }>;
-  isPopoverOpen: Record<string, boolean>;
-  onPopoverOpen: (studentId: string) => void;
-  onPopoverClose: (studentId: string) => void;
-  attendanceStatus: Record<string, AttendanceStatus | null>;
-  onAttendanceStatusChange: (studentId: string, status: AttendanceStatus) => void;
-  onLeaveClick: (studentId: string) => void;
-  isHoliday: boolean;
-}
+const AttendanceList = () => {
+  const {
+    isPopoverOpen,
+    handlePopoverOpen: onPopoverOpen,
+    handlePopoverClose: onPopoverClose,
+    attendanceStatus,
+    handleAttendanceStatusChange: onAttendanceStatusChange,
+    handleLeaveClick: onLeaveClick,
+    studentAttendanceData,
+  } = useContext(CaptureAttendanceContext) || {};
 
-const AttendanceList: React.FC<AttendanceListProps> = ({
-  studentAttendanceData,
-  isPopoverOpen,
-  onPopoverOpen,
-  onPopoverClose,
-  attendanceStatus,
-  onAttendanceStatusChange,
-  onLeaveClick,
-  isHoliday,
-}) => {
-  if (isHoliday) {
-    return <HolidayMessage />;
-  }
+  const handlePopoverOpenCb = useCallback(
+    (studentId) => {
+      onPopoverOpen(studentId);
+    },
 
-  const renderItem = ({ item }: { item: { student: Student; attendanceRecord: AttendanceRecord | null } }) => (
-    <AttendanceListItem
-      key={item.student.scholar_id}
-      student={item.student}
-      attendanceRecord={item.attendanceRecord}
-      isPopoverOpen={isPopoverOpen[item.student.scholar_id] || false}
-      onPopoverOpen={() => onPopoverOpen(item.student.scholar_id)}
-      onPopoverClose={() => onPopoverClose(item.student.scholar_id)}
-      attendanceStatus={attendanceStatus[item.student.scholar_id]}
-      onAttendanceStatusChange={(status) => onAttendanceStatusChange(item.student.scholar_id, status)}
-      onLeaveClick={() => onLeaveClick(item.student.scholar_id)}
-    />
+    [onPopoverOpen]
+  );
+
+  const handlePopoverCloseCb = useCallback(
+    (studentId) => {
+      onPopoverClose(studentId);
+    },
+    [onPopoverClose]
+  );
+
+  const handleAttendanceStatusChangeCb = useCallback(
+    (studentId, status: AttendanceStatus | null) => {
+      onAttendanceStatusChange(studentId, status);
+    },
+    [onAttendanceStatusChange]
+  );
+
+  const handleLeaveClickCb = useCallback(
+    (studentId) => {
+      onLeaveClick(studentId);
+    },
+    [onLeaveClick]
+  );
+
+  const renderItem = useCallback(
+    ({ item }) => {
+      const studentId = item.student.scholar_id;
+
+      return (
+        <AttendanceListItem
+          key={studentId}
+          student={item.student}
+          isPopoverOpen={isPopoverOpen[studentId]}
+          onPopoverOpen={() => handlePopoverOpenCb(studentId)}
+          onPopoverClose={() => handlePopoverCloseCb(studentId)}
+          attendanceStatus={attendanceStatus[studentId] || null}
+          onAttendanceStatusChange={(status) => handleAttendanceStatusChangeCb(studentId, status)}
+          onLeaveClick={() => handleLeaveClickCb(studentId)}
+        />
+      );
+    },
+    [
+      isPopoverOpen,
+      handlePopoverOpenCb,
+      handlePopoverCloseCb,
+      attendanceStatus,
+      handleAttendanceStatusChangeCb,
+      handleLeaveClickCb,
+    ]
   );
 
   return (
@@ -59,12 +84,12 @@ const AttendanceList: React.FC<AttendanceListProps> = ({
       <Box flex={1}>
         <FlatList
           data={studentAttendanceData}
-          renderItem={({ item }) => renderItem({ item: item as { student: Student; attendanceRecord: AttendanceRecord | null } })}
-          keyExtractor={(item) => (item as { student: Student; attendanceRecord: AttendanceRecord | null }).student.scholar_id}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.student.scholar_id}
         />
       </Box>
     </Box>
   );
 };
 
-export default AttendanceList;
+export default React.memo(AttendanceList);

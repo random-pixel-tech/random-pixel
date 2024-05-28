@@ -1,36 +1,21 @@
-import React, { useContext } from "react";
-import { Box } from "@gluestack-ui/themed";
+import React, { useContext, useMemo, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import ConfirmationDialog from "../../../components/ConfirmationDialog";
-import SuccessAlert from "../../../components/SuccessAlert";
-import { CaptureAttendanceContext } from "../../../services/utils/api/useAttendanceLogic";
-import Header from "../../../components/Header";
+import { Box } from "@gluestack-ui/themed";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import AttendanceList from "./AttendanceList";
 import AttendanceHeader from "./AttendanceHeader";
+import { CaptureAttendanceContext } from "../../../services/utils/api/useAttendanceLogic";
 import { RouteNames, RootStackParamList } from "../../../services/utils/RouteNames";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { AttendanceSession } from "../../../services/utils/enums";
+import { Header, HolidayMessage, ConfirmationDialog, SuccessAlert } from "../../../components";
 
 const CaptureAttendance = () => {
   const {
-    attendanceStatus,
-    handleAttendanceStatusChange,
     handleSaveAttendance,
     saveAttendance,
-    isOptionsMenuOpen,
-    handleOptionsMenuOpen,
-    handleOptionsMenuClose,
-    handlePopoverOpen,
-    handlePopoverClose,
-    handleIconPress,
-    handleLeaveClick,
-    totalStudents,
-    markedStudents,
-    studentAttendanceData,
-    isPopoverOpen,
+    toggleAttendanceCaptureMenu,
     unmarkedStudentCount,
-    checkAttendanceChanges,
     showConfirmationDialog,
     setShowConfirmationDialog,
     setShowAlertDialog,
@@ -38,67 +23,44 @@ const CaptureAttendance = () => {
     alertMessage,
     session,
     handleSessionToggle,
-    className,
-    today,
-    section,
     isHoliday,
+    checkAttendanceChanges,
   } = useContext(CaptureAttendanceContext) || {};
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const options = [
-    {
-      label:
-        session === AttendanceSession.Morning ? "Switch to Session Two" : "Switch to Session One",
-      icon: "toggle-on" as IconProp,
-      onPress: () => {
-        handleSessionToggle();
-        handleOptionsMenuClose();
-      },
-    },
-    {
-      label: "Generate Attendance Report",
-      icon: "file-export" as IconProp,
-      onPress: () => {
-        handleOptionsMenuClose();
-      },
-    },
-  ];
+  const attendanceCaptureMenuOptions = useMemo(
+    () =>
+      getAttendanceCaptureMenuOptions(session, handleSessionToggle, toggleAttendanceCaptureMenu),
+    [session, handleSessionToggle]
+  );
+
+  const [showLeaveConfirmation, setShowLeaveConfirmation] = useState(false);
+
+  const handleBackArrowPress = () => {
+    if (checkAttendanceChanges()) {
+      setShowLeaveConfirmation(true);
+    } else {
+      navigation.goBack();
+    }
+  };
 
   return (
     <Box bg="$pixWhite" w="$full" h="$full">
       <Header
         title="Attendance"
-        icon="check"
-        onIconPress={handleSaveAttendance}
-        showConfirmation={true}
+        secondaryActionIcon="check"
+        showConfirmation={showLeaveConfirmation}
+        setShowConfirmation={setShowLeaveConfirmation}
         confirmationHeading="Are you sure you want to leave?"
         confirmationText="You will lose the captured attendance if you leave without saving."
-        options={options}
-        isOptionsMenuOpen={isOptionsMenuOpen}
-        handleOptionsMenuOpen={handleOptionsMenuOpen}
-        handleOptionsMenuClose={handleOptionsMenuClose}
-        handleIconPress={handleIconPress}
-        checkChanges={checkAttendanceChanges}
+        onSecondaryAction={handleSaveAttendance}
+        options={attendanceCaptureMenuOptions}
+        onPrimaryAction={toggleAttendanceCaptureMenu}
+        onBackArrowPress={handleBackArrowPress}
       />
-      <AttendanceHeader
-        section={section}
-        session={session}
-        className={className}
-        today={today}
-        summaryValues={{ markedStudents, totalStudents }}
-        isHoliday={isHoliday}
-      />
-      <AttendanceList
-        studentAttendanceData={studentAttendanceData}
-        isPopoverOpen={isPopoverOpen}
-        onPopoverOpen={handlePopoverOpen}
-        onPopoverClose={handlePopoverClose}
-        attendanceStatus={attendanceStatus}
-        onAttendanceStatusChange={handleAttendanceStatusChange}
-        onLeaveClick={handleLeaveClick}
-        isHoliday={isHoliday}
-      />
+      <AttendanceHeader />
+      {isHoliday === true ? <HolidayMessage /> : <AttendanceList />}
       <ConfirmationDialog
         isOpen={showConfirmationDialog}
         onClose={() => setShowConfirmationDialog(false)}
@@ -126,5 +88,28 @@ const CaptureAttendance = () => {
     </Box>
   );
 };
+
+const getAttendanceCaptureMenuOptions = (
+  session,
+  handleSessionToggle,
+  toggleAttendanceCaptureMenu
+) => [
+  {
+    label:
+      session === AttendanceSession.Morning ? "Switch to Session Two" : "Switch to Session One",
+    icon: "toggle-on" as IconProp,
+    onPress: () => {
+      handleSessionToggle();
+      toggleAttendanceCaptureMenu();
+    },
+  },
+  {
+    label: "Generate Attendance Report",
+    icon: "file-export" as IconProp,
+    onPress: () => {
+      toggleAttendanceCaptureMenu();
+    },
+  },
+];
 
 export default CaptureAttendance;
