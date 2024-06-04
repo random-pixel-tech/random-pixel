@@ -24,7 +24,9 @@ const InsightBox: React.FC<InsightBoxProps> = ({
     p="$4"
     m="$4"
     $sm-w="$32"
-    $md-w="$40">
+    $md-w="$40"
+    hardShadow="1"
+    >
       <Center flexDirection="column" justifyContent="space-between" height="100%" alignContent='space-between'>
         <Text>
           {state}
