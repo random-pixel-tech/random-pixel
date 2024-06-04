@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, VStack } from '@gluestack-ui/themed';
 import Header from '../../../components/Header';
 import SelectDropdown from '../../../components/SelectDropdown';
+import InsightBox from '../../../components/InsightBox';
 
 const GenerateReport = () => {
   const [selectedDuration, setSelectedDuration] = useState('');
@@ -46,6 +47,15 @@ const GenerateReport = () => {
           onChange={handleClassChange}
         />
       </VStack>
+
+
+<InsightBox
+  state="Success"
+  count={56}
+  countLabel="Students"
+  percentageText="< 75% in last 30 days"
+  isSuccess
+/>
     </Box>
   );
 };
