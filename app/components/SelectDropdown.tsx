@@ -23,8 +23,8 @@ const SelectDropdown: React.FC<{
   };
 
   return (
-    <VStack>
-      <Text mb="$2">{label}</Text>
+    <VStack mb="$2">
+      <Text mb="$0.5" fontSize="$xs">{label}</Text>
       <select
         value={selectedValue}
         onChange={handleValueChange}
