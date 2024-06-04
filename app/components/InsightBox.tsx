@@ -3,42 +3,74 @@ import { Box, Center, Text } from '@gluestack-ui/themed';
 import { Colors } from '../services/utils/colors';
 
 interface InsightBoxProps {
-  state: string;
+  labelType: 'warn' | 'info' | 'error' | 'success';
+  labelText: string;
   count: number;
   countLabel: string;
-  percentageText: string;
-  isSuccess?: boolean;
+  timeDuration: string;
+  benchmark: string;
 }
 
 const InsightBox: React.FC<InsightBoxProps> = ({
-  state,
+  labelType,
+  labelText,
   count,
   countLabel,
-  percentageText,
-  isSuccess = false,
+  timeDuration,
+  benchmark,
 }) => {
+  const getLabelColor = () => {
+    switch (labelType) {
+      case 'warn':
+        return Colors.Warning400;
+      case 'info':
+        return Colors.Info400;
+      case 'error':
+        return Colors.Error400;
+      case 'success':
+        return Colors.Success400;
+      default:
+        return Colors.Text100;
+    }
+  };
+
+  const getLabelBgColor = () => {
+    switch (labelType) {
+      case 'warn':
+        return Colors.Warning50;
+      case 'info':
+        return Colors.Info50;
+      case 'error':
+        return Colors.Error50;
+      case 'success':
+        return Colors.Success50;
+      default:
+        return Colors.White;
+    }
+  };
+
   return (
-    <Box 
-    bg="$pixWhite"
-    rounded="$lg"
-    p="$4"
-    m="$4"
-    $sm-w="$32"
-    $md-w="$40"
-    hardShadow="1"
+    <Box
+      bg={getLabelBgColor()}
+      rounded="$lg"
+      p="$4"
+      m="$4"
+      $sm-w="$32"
+      $md-w="$40"
+      hardShadow="1"
     >
       <Center flexDirection="column" justifyContent="space-between" height="100%" alignContent='space-between'>
-        <Text>
-          {state}
+        <Text color={getLabelColor()} fontWeight="bold">
+          {labelText}
         </Text>
         <Box pt="$4" pb="$4" justifyContent='center'>
-        <Text fontSize="$4xl" textAlign='center'>
-          {count}
-        </Text>
-        <Text fontSize="$xs">{countLabel}</Text>
+          <Text fontSize="$4xl" textAlign='center'>
+            {count}
+          </Text>
+          <Text fontSize="$xs">{countLabel}</Text>
         </Box>
         <Text fontSize="$xs">
-          {percentageText}
+          {benchmark} in {timeDuration}
         </Text>
       </Center>
     </Box>
