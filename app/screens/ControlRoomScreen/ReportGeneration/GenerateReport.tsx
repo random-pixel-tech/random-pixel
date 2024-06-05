@@ -5,6 +5,15 @@ import SelectDropdown from '../../../components/SelectDropdown';
 import InsightBox from '../../../components/InsightBox';
 import InsightStadium from '../../../components/InsightStadium';
 import InsightRect from '../../../components/InsightRect';
+import AttendanceBarGraph from '../../../components/AttendanceBarGraph';
+
+const attendanceData = [
+    { label: 'Class 1', value: 80 },
+    { label: 'Class 2', value: 75 },
+    { label: 'Class 3', value: 90 },
+    { label: 'Class 4', value: 65 },
+    { label: 'Class 5', value: 85 },
+  ];
 const GenerateReport = () => {
     const [selectedDuration, setSelectedDuration] = useState('');
     const [selectedClass, setSelectedClass] = useState('');
@@ -92,14 +101,18 @@ const GenerateReport = () => {
             timeDuration="last 30 days"
             benchmark="> 90%"
             /> */}
-              <InsightRect
+              {/* <InsightRect
             labelType="warn"
             labelText="LOW ATTENDANCE"
             timeDuration="last 30 days"
             benchmark="> 90%"
             icon="arrow-down"
-            />
+            /> */}
+
+<AttendanceBarGraph data={attendanceData} />
+
         </Box>
+
     );
 };
 
