@@ -3,7 +3,7 @@ import { Box, VStack } from '@gluestack-ui/themed';
 import Header from '../../../components/Header';
 import SelectDropdown from '../../../components/SelectDropdown';
 import InsightBox from '../../../components/InsightBox';
-
+import InsightStadium from '../../../components/InsightStadium';
 const GenerateReport = () => {
     const [selectedDuration, setSelectedDuration] = useState('');
     const [selectedClass, setSelectedClass] = useState('');
@@ -85,6 +85,12 @@ const GenerateReport = () => {
                     benchmark="> 90%"
                 />
             </Box>
+            <InsightStadium
+            labelType="warn"
+            labelText="LOW ATTENDANCE"
+            timeDuration="last 30 days"
+            benchmark="> 90%"
+            />
         </Box>
     );
 };
