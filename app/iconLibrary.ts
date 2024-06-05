@@ -33,9 +33,10 @@ import { faGear } from '@fortawesome/free-solid-svg-icons/faGear'
 import { faUserCheck } from '@fortawesome/free-solid-svg-icons/faUserCheck'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons/faBullhorn'
 import { faPersonChalkboard } from '@fortawesome/free-solid-svg-icons/faPersonChalkboard'
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown'
 
 
 
 export function initializeIconLibrary() {
-  library.add(fab, faGear, faPersonChalkboard, faBullhorn, faUserCheck, faMagnifyingGlass, faArrowUpZA, faToggleOn, faArrowUpAZ, faArrowUp91, faArrowUp19, faPersonArrowUpFromLine, faPersonArrowDownToLine, faFilter, faArrowRight, faFilter, faCircleCheck, faCalendar, faPenToSquare, faShare, faHouseUser, faFileExport, faArrowLeft, faCheck, faXmark, faPlaneDeparture, faCalendarCheck, faAddressCard, faSquareCheck, faHouse, faComment, faBookOpen, faChartSimple, faPaperclip, faEllipsisVertical)
+  library.add(fab, faGear, faArrowDown, faPersonChalkboard, faBullhorn, faUserCheck, faMagnifyingGlass, faArrowUpZA, faToggleOn, faArrowUpAZ, faArrowUp91, faArrowUp19, faPersonArrowUpFromLine, faPersonArrowDownToLine, faFilter, faArrowRight, faFilter, faCircleCheck, faCalendar, faPenToSquare, faShare, faHouseUser, faFileExport, faArrowLeft, faCheck, faXmark, faPlaneDeparture, faCalendarCheck, faAddressCard, faSquareCheck, faHouse, faComment, faBookOpen, faChartSimple, faPaperclip, faEllipsisVertical)
 }

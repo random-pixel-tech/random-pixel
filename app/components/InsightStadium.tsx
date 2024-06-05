@@ -51,7 +51,7 @@ const InsightStadium: React.FC<InsightStadiumProps> = ({
       rounded="$lg"
       p="$4"
       m="$4"
-      w="$6/6"
+      w="$full"
       hardShadow="1"
     >
       <Center flexDirection="column" justifyContent="space-between" height="100%" alignContent='space-between'>

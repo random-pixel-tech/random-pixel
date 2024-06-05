@@ -4,6 +4,7 @@ import Header from '../../../components/Header';
 import SelectDropdown from '../../../components/SelectDropdown';
 import InsightBox from '../../../components/InsightBox';
 import InsightStadium from '../../../components/InsightStadium';
+import InsightRect from '../../../components/InsightRect';
 const GenerateReport = () => {
     const [selectedDuration, setSelectedDuration] = useState('');
     const [selectedClass, setSelectedClass] = useState('');
@@ -67,7 +68,7 @@ const GenerateReport = () => {
                     benchmark="> 80%"
                 /> */}
 
-                <InsightBox
+                {/* <InsightBox
                     labelType="error"
                     labelText="Error Occurred"
                     count={10}
@@ -83,13 +84,20 @@ const GenerateReport = () => {
                     countLabel="Subjects"
                     timeDuration="last 30 days"
                     benchmark="> 90%"
-                />
+                /> */}
             </Box>
-            <InsightStadium
+            {/* <InsightStadium
             labelType="warn"
             labelText="LOW ATTENDANCE"
             timeDuration="last 30 days"
             benchmark="> 90%"
+            /> */}
+              <InsightRect
+            labelType="warn"
+            labelText="LOW ATTENDANCE"
+            timeDuration="last 30 days"
+            benchmark="> 90%"
+            icon="arrow-down"
             />
         </Box>
     );
