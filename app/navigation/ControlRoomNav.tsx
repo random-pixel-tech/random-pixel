@@ -5,6 +5,7 @@ import AttendanceSummary from '../screens/ControlRoomScreen/AttendanceSummary/At
 import { RouteNames } from '../services/utils/RouteNames';
 import AttendanceStats from '../screens/DashboardScreen/AttendanceStats';
 import GenerateReport from '../screens/ControlRoomScreen/ReportGeneration/GenerateReport';
+import Timeline from '../screens/HomeScreen/Timeline';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +18,7 @@ const ControlRoomNav = () => {
      <Stack.Screen name={RouteNames.AttendanceSummary} component={AttendanceSummary} options={{ headerShown: false }} />
      <Stack.Screen name={RouteNames.AttendanceStats} component={AttendanceStats} options={{ headerShown: false }}/>
      <Stack.Screen name={RouteNames.GenerateReport} component={GenerateReport} options={{ headerShown: false }}/>
+     <Stack.Screen name={RouteNames.Timeline} component={Timeline} options={{ headerShown: false }}/>
    </Stack.Navigator>
  );
 };

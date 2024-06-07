@@ -33,7 +33,7 @@ const AttendanceActionSheetComponent: React.FC<ActionSheetProps> = ({
        <ActionsheetItem onPress={() => handleControlRoomNavigation(RouteNames.AttendanceStats)}>
          <ActionsheetItemText>View Attendance Data</ActionsheetItemText>
        </ActionsheetItem>
-       <ActionsheetItem onPress={() => handleControlRoomNavigation(RouteNames.GenerateReport)}>
+       <ActionsheetItem onPress={() => handleControlRoomNavigation(RouteNames.Timeline)}>
          <ActionsheetItemText>Generate Report</ActionsheetItemText>
        </ActionsheetItem>
      </ActionsheetContent>

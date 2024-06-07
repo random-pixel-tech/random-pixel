@@ -14,7 +14,10 @@ export enum RouteNames {
     AttendanceStats = 'AttendanceStats',
 
     // Capture Attendance
-    GenerateReport = 'GenerateReport'
+    GenerateReport = 'GenerateReport',
+
+    // Home
+    Timeline = 'Timeline'
   }
   
   export type RootStackParamList = {
@@ -31,4 +34,8 @@ export enum RouteNames {
 
     // Capture Attendance
     [RouteNames.GenerateReport]: undefined
+
+    // Home
+    [RouteNames.Timeline]: undefined
+
   };
