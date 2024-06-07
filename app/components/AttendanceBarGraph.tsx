@@ -21,9 +21,11 @@ const AttendanceBarGraph: React.FC<AttendanceBarGraphProps> = ({ data }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Class-wise Attendance</Text>
-      <BarChart
-        data={chartData}
-      />
+      <View style={styles.chartContainer}>
+        <BarChart
+          data={chartData}
+        />
+      </View>
     </View>
   );
 };
@@ -33,11 +35,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%'
   },
   heading: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  chartContainer: {
+    alignItems: 'center',
   },
 });
 
