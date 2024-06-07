@@ -108,8 +108,9 @@ const GenerateReport = () => {
             benchmark="> 90%"
             icon="arrow-down"
             /> */}
-
+<Box p="$4">
 <AttendanceBarGraph data={attendanceData} />
+</Box>
 
         </Box>
 

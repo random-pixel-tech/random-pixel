@@ -32,10 +32,14 @@ const AttendanceBarGraph: React.FC<AttendanceBarGraphProps> = ({ data }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
+    backgroundColor: '#ffffff',
+    borderLeftWidth: 4,
+    borderLeftColor: "#391D85",
+    paddingVertical: 14,
+
   },
   heading: {
     fontSize: 20,
