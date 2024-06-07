@@ -9,6 +9,7 @@ interface TimelineBlockProps {
 
 const TimelineBlock: React.FC<TimelineBlockProps> = ({ title, description }) => {
     return (
+        <Box>
         <Box flexDirection='row' mb="$1" p="$2" bg="$pixSecondaryLight50" rounded="$sm" alignItems='center' justifyContent='space-around'>
             <FontAwesomeIcon icon="circle-xmark" size={16} />
             <Box px="$2" w="$1/2">
@@ -22,6 +23,7 @@ const TimelineBlock: React.FC<TimelineBlockProps> = ({ title, description }) => 
                 )}
             </Box>
             <FontAwesomeIcon icon="chevron-right" size={16} />
+        </Box>
         </Box>
     );
 };
