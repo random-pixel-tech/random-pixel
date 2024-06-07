@@ -11,9 +11,9 @@ interface TimeStampProps {
 
 const TimeStamp: React.FC<TimeStampProps> = ({ startTime, endTime }) => {
     return (
-        <Box flexDirection='row' p="$2">
+        <Box flexDirection='row' py="$1" px="$2" alignItems='center'>
             <FontAwesomeIcon icon="clock" size={18}/>
-            <Text px="$1">
+            <Text px="$1" fontSize="$xs">
                 {startTime} to {endTime}
             </Text>
         </Box>

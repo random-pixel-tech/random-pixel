@@ -10,12 +10,13 @@ const PeriodChip: React.FC<PeriodChipProps> = ({ label }) => {
     <Box>
       <Box
         bg="$pixAccentLight50"
-        p="$2"
+        py="$1"
+        px="$2"
         rounded="$md"
         borderColor="$pixPrimary"
         alignContent='center'
       >
-        <Text color="$pixPrimaryDark100">
+        <Text color="$pixPrimaryDark100" fontSize="$xs">
           {label}
         </Text>
       </Box>
