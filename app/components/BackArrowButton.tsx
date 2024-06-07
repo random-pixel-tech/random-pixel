@@ -2,7 +2,6 @@ import React from 'react';
 import { Pressable } from '@gluestack-ui/themed';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Colors } from '../services/utils/colors';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 interface BackArrowButtonProps {
   onPress: () => void;

@@ -1,26 +1,23 @@
 import React from 'react';
 import { Box, Pressable, Text } from '@gluestack-ui/themed';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+
 
 interface TimeStampProps {
-  label: string;
+    startTime: string;
+    endTime: string;
+
 }
 
-const TimeStamp: React.FC<TimeStampProps> = ({ label }) => {
-  return (
-    <Box>
-      <Box
-        bg="$pixAccentLight50"
-        p="$2"
-        rounded="$md"
-        borderColor="$pixPrimary"
-        alignContent='center'
-      >
-        <Text color="$pixPrimaryDark100">
-          {label}
-        </Text>
-      </Box>
-      </Box>
-  );
+const TimeStamp: React.FC<TimeStampProps> = ({ startTime, endTime }) => {
+    return (
+        <Box flexDirection='row' p="$2">
+            <FontAwesomeIcon icon="clock" size={18}/>
+            <Text px="$1">
+                {startTime} to {endTime}
+            </Text>
+        </Box>
+    );
 };
 
 export default TimeStamp;
