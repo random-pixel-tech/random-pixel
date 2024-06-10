@@ -7,4 +7,12 @@ export const Colors = {
     SecondaryLight100: '#DFD6F8',
     Secondary2: '#8C85FF',
     White: '#FFFFFF',
+    Warning50: '#fff7ed',
+    Warning400: '#fb923c',
+    Info50: '#f0f9ff',
+    Info400: '#38bdf8',
+    Error50: '#FEE2E2',
+    Error400: '#EF4444',
+    Success50: '#CAFFE8',
+    Success400: '#489766',
   };
