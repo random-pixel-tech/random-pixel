@@ -1,12 +1,13 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
 import dayjs from "dayjs";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-import { supabase } from "../supabase";
-import { AttendanceStatus, SelectedDuration, Segment } from "../enums";
-import useStudentAttendance, { AllStudentAttendanceData } from "./useStudentAttendance";
-import { useDateAndTimeUtil } from "../dateAndTimeUtils";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import useStudentAttendance, {
+  AllStudentAttendanceData,
+} from "../services/utils/api/useStudentAttendance";
+import { SelectedDuration, Segment, AttendanceStatus } from "../services/utils/enums";
+import { supabase } from "../services/utils/supabase";
+import { useDateAndTimeUtil } from "../services/utils/dateAndTimeUtils";
 
-dayjs.extend(weekOfYear);
+export const AttendanceStatsContext = React.createContext({});
 
 interface StudentAttendanceDataWithPercentage extends AllStudentAttendanceData {
   attendancePercentage: number;
@@ -24,13 +25,41 @@ export interface ClassData {
   presentPercentage: number;
 }
 
-export const useAttendanceStats = () => {
+const isValidDay = (day: string, month: string, year: string) => {
+  const parsedDay = parseInt(day, 10);
+  const parsedMonth = parseInt(month, 10);
+  const parsedYear = parseInt(year, 10);
+  const maxDays = dayjs(`${parsedYear}-${parsedMonth}-01`).daysInMonth();
+  return parsedDay >= 1 && parsedDay <= maxDays;
+};
+
+const isValidMonth = (month: string) => {
+  const parsedMonth = parseInt(month, 10);
+  return parsedMonth >= 1 && parsedMonth <= 12;
+};
+
+const isValidYear = (year: string) => {
+  const parsedYear = parseInt(year, 10);
+  const currentYear = dayjs().year();
+  return parsedYear >= currentYear - 10 && parsedYear <= currentYear + 10;
+};
+
+const isValidDate = (day: string, month: string, year: string) => {
+  return isValidDay(day, month, year) && isValidMonth(month) && isValidYear(year);
+};
+
+const isEndDateValid = (startDate: string, endDate: string) => {
+  return dayjs(endDate).isAfter(startDate) || dayjs(endDate).isSame(startDate);
+};
+
+const AttendanceStatsProvider = ({ children }) => {
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [selectedDuration, setSelectedDuration] = useState(SelectedDuration.Daily);
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [startDate, setStartDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [endDate, setEndDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [showDatePicker, setShowDatePicker] = useState(false);
+
   const [isClassOptionSelected, setIsClassOptionSelected] = useState(false);
   const [sortOption, setSortOption] = useState("");
   const [selectedFilterOption, setSelectedFilterOption] = useState("Attendance Percentage");
@@ -46,7 +75,7 @@ export const useAttendanceStats = () => {
     [studentId: string]: { totalAttendance: number; presentAttendance: number };
   }>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { currentDay } = useDateAndTimeUtil();
+  const { currentDay, isDayHoliday } = useDateAndTimeUtil();
   const { fetchAllStudentAttendance } = useStudentAttendance(currentDay);
 
   const [allStudentAttendanceData, setAllStudentAttendanceData] = useState<
@@ -61,7 +90,7 @@ export const useAttendanceStats = () => {
   const [endYear, setEndYear] = useState("");
 
   const [classData, setClassData] = useState<ClassData[]>([]);
-  const [selectedSegment, setSelectedSegment] = useState<Segment>(Segment.ClassSegment);
+  const [selectedSegment, setSelectedSegment] = useState<Segment>(Segment.StudentSegment);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [showSearchInput, setShowSearchInput] = useState(false);
@@ -85,33 +114,6 @@ export const useAttendanceStats = () => {
     setSearchButtonPress(false);
   };
 
-  const isValidDay = (day: string, month: string, year: string) => {
-    const parsedDay = parseInt(day, 10);
-    const parsedMonth = parseInt(month, 10);
-    const parsedYear = parseInt(year, 10);
-    const maxDays = dayjs(`${parsedYear}-${parsedMonth}-01`).daysInMonth();
-    return parsedDay >= 1 && parsedDay <= maxDays;
-  };
-
-  const isValidMonth = (month: string) => {
-    const parsedMonth = parseInt(month, 10);
-    return parsedMonth >= 1 && parsedMonth <= 12;
-  };
-
-  const isValidYear = (year: string) => {
-    const parsedYear = parseInt(year, 10);
-    const currentYear = dayjs().year();
-    return parsedYear >= currentYear - 10 && parsedYear <= currentYear + 10;
-  };
-
-  const isValidDate = (day: string, month: string, year: string) => {
-    return isValidDay(day, month, year) && isValidMonth(month) && isValidYear(year);
-  };
-
-  const isEndDateValid = (startDate: string, endDate: string) => {
-    return dayjs(endDate).isAfter(startDate) || dayjs(endDate).isSame(startDate);
-  };
-
   const handleCustomDateChange = () => {
     const startDate = `${startYear}-${startMonth}-${startDay}`;
     const endDate = `${endYear}-${endMonth}-${endDay}`;
@@ -129,10 +131,7 @@ export const useAttendanceStats = () => {
   };
 
   // Memoize fetchAllStudentAttendance to prevent unnecessary re-renders
-  const memoizedFetchAllStudentAttendance = useCallback(
-    (currentDay:string) => fetchAllStudentAttendance(currentDay),
-    [fetchAllStudentAttendance, currentDay]
-  );
+  const memoizedFetchAllStudentAttendance = useMemo(() => fetchAllStudentAttendance, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -696,75 +695,86 @@ export const useAttendanceStats = () => {
       }
     };
 
-    fetchClassData();
-  }, [currentDate, startDate, endDate]);
+    if (selectedSegment === Segment.ClassSegment) {
+      fetchClassData();
+    }
+  }, [currentDate, startDate, endDate, selectedSegment]);
 
   const handleSegmentChange = (segment: Segment) => {
     setSelectedSegment(segment);
   };
 
-  return {
-    currentDate,
-    selectedDuration,
-    handlePrevDay,
-    handleNextDay,
-    handleOptionSelect,
-    isOptionsMenuOpen,
-    handleRangeOptionsMenuOpen,
-    handleRangeOptionsMenuClose,
-    startDate,
-    endDate,
-    fetchAttendanceByTime,
-    handleDatePickerCancel,
-    handleDatePickerOk,
-    showDatePicker,
-    showFilterActionsheet,
-    setShowFilterActionsheet,
-    selectedFilterTab,
-    selectedFilters,
-    handleCloseFilterActionsheet,
-    handleFilterOptionSelect,
-    handleFilterTabSelect,
-    handleFilterSortOptionSelect,
-    handleFilterClear,
-    handleFilterApply,
-    selectedFilterOption,
-    setSelectedFilterOption,
-    sortOption,
-    handleCategoryOptionSelect,
-    isLoading,
-    filteredAttendanceData,
-    attendanceDataByTime,
-    attendanceDataWithPercentage,
-    isNextDisabled,
-    handleCustomDateChange,
-    startDay,
-    startMonth,
-    startYear,
-    endDay,
-    endMonth,
-    endYear,
-    setStartDay,
-    setStartMonth,
-    setStartYear,
-    setEndDay,
-    setEndMonth,
-    setEndYear,
-    isValidDay,
-    isValidMonth,
-    isValidYear,
-    classData,
-    selectedSegment,
-    handleSegmentChange,
-    searchQuery,
-    showSearchInput,
-    handleSearchButtonClick,
-    handleSearchInputChange,
-    handleClearSearch,
-    isClassOptionSelected,
-    searchButtonPress,
-    filterButtonPress,
-    handleOpenFilterActionsheet,
-    handleClearCategoryFilters,
-  };
+  return (
+    <AttendanceStatsContext.Provider
+      value={{
+        currentDate,
+        selectedDuration,
+        handlePrevDay,
+        handleNextDay,
+        handleOptionSelect,
+        isOptionsMenuOpen,
+        handleRangeOptionsMenuOpen,
+        handleRangeOptionsMenuClose,
+        startDate,
+        endDate,
+        fetchAttendanceByTime,
+        handleDatePickerCancel,
+        handleDatePickerOk,
+        showDatePicker,
+        showFilterActionsheet,
+        setShowFilterActionsheet,
+        selectedFilterTab,
+        selectedFilters,
+        handleCloseFilterActionsheet,
+        handleFilterOptionSelect,
+        handleFilterTabSelect,
+        handleFilterSortOptionSelect,
+        handleFilterClear,
+        handleFilterApply,
+        selectedFilterOption,
+        setSelectedFilterOption,
+        sortOption,
+        handleCategoryOptionSelect,
+        isLoading,
+        filteredAttendanceData,
+        attendanceDataByTime,
+        attendanceDataWithPercentage,
+        isNextDisabled,
+        handleCustomDateChange,
+        startDay,
+        startMonth,
+        startYear,
+        endDay,
+        endMonth,
+        endYear,
+        setStartDay,
+        setStartMonth,
+        setStartYear,
+        setEndDay,
+        setEndMonth,
+        setEndYear,
+        isValidDay,
+        isValidMonth,
+        isValidYear,
+        classData,
+        selectedSegment,
+        handleSegmentChange,
+        searchQuery,
+        showSearchInput,
+        handleSearchButtonClick,
+        handleSearchInputChange,
+        handleClearSearch,
+        isClassOptionSelected,
+        searchButtonPress,
+        filterButtonPress,
+        handleOpenFilterActionsheet,
+        handleClearCategoryFilters,
+        isDayHoliday,
+      }}
+    >
+      {children}
+    </AttendanceStatsContext.Provider>
+  );
 };
+
+export default AttendanceStatsProvider;

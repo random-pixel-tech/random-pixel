@@ -1,13 +1,19 @@
 import React, { useContext } from "react";
 import { Box, Heading, Text } from "@gluestack-ui/themed";
-import { AttendanceSession } from "../../../services/utils/enums";
-import { CaptureAttendanceContext } from "../../../services/utils/api/useAttendanceLogic";
+import { AttendanceSession } from "../../../../../services/utils/enums";
+import { CaptureAttendanceContext } from "../../../../../services/utils/api/useAttendanceLogic";
+import { useDateAndTimeUtil } from "../../../../../services/utils/dateAndTimeUtils";
 
-const AttendanceHeader = () => {
-  const { className, section, today, session, isHoliday, markedStudents, totalStudents } =
-    useContext(CaptureAttendanceContext) || {};
-
-  const summaryKeys = Object.keys({ markedStudents, totalStudents } ?? {});
+const AttendanceCaptureHeader = () => {
+  const {
+    className,
+    section,
+    session,
+    isHoliday,
+    markedStudents,
+    totalStudents,
+  } = useContext(CaptureAttendanceContext) || {};
+  const { currentDay } = useDateAndTimeUtil();
 
   return (
     <Box
@@ -24,9 +30,13 @@ const AttendanceHeader = () => {
           Class: {className} {section}
         </Heading>
         <Text fontSize="$md">
-          {today}{" "}
+          {currentDay}{" "}
           {!isHoliday &&
-            `| ${session === AttendanceSession.Morning ? "Session one" : "Session two"}`}
+            `| ${
+              session === AttendanceSession.Morning
+                ? "Session one"
+                : "Session two"
+            }`}
         </Text>
       </Box>
       {!isHoliday && (
@@ -41,4 +51,4 @@ const AttendanceHeader = () => {
   );
 };
 
-export default AttendanceHeader;
+export default AttendanceCaptureHeader;

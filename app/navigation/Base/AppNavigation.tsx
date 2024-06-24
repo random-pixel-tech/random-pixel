@@ -1,14 +1,16 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import ControlRoomNav from "../ControlRoomNav";
 
-import TabNavigator from './TabNavigator';
+const Stack = createNativeStackNavigator();
 
 const AppNavigation: React.FC = () => {
-    return (
-        <NavigationContainer>
-            <TabNavigator/>
-        </NavigationContainer>
-    );
+  return (
+    <NavigationContainer>
+      <ControlRoomNav />
+    </NavigationContainer>
+  );
 };
 
 export default AppNavigation;

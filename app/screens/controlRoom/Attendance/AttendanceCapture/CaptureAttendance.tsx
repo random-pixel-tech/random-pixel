@@ -1,16 +1,46 @@
 import React, { useContext, useMemo, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Box } from "@gluestack-ui/themed";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import AttendanceList from "./AttendanceList";
-import AttendanceHeader from "./AttendanceHeader";
-import { CaptureAttendanceContext } from "../../../services/utils/api/useAttendanceLogic";
-import { RouteNames, RootStackParamList } from "../../../services/utils/RouteNames";
-import { AttendanceSession } from "../../../services/utils/enums";
-import { Header, HolidayMessage, ConfirmationDialog, SuccessAlert } from "../../../components";
+import AttendanceList from "./components/AttendanceList";
+import AttendanceCaptureHeader from "./components/AttendanceHeader";
+import { CaptureAttendanceContext } from "../../../../services/utils/api/useAttendanceLogic";
+import {
+  RouteNames,
+  RootStackParamList,
+} from "../../../../services/utils/RouteNames";
+import { AttendanceSession } from "../../../../services/utils/enums";
+import {
+  Header,
+  HolidayMessage,
+  ConfirmationDialog,
+  SuccessAlert,
+} from "../../../../components";
+import { StyleSheet, View } from "react-native";
 
-const CaptureAttendance = () => {
+const getAttendanceCaptureMenuOptions = (
+  session,
+  handleSessionToggle,
+  toggleAttendanceCaptureMenu
+) => [
+  {
+    label:
+      session === AttendanceSession.Morning
+        ? "Switch to Session Two"
+        : "Switch to Session One",
+    icon: "toggle-on" as IconProp,
+    onPress: () => {
+      handleSessionToggle();
+      toggleAttendanceCaptureMenu();
+    },
+  },
+  {
+    label: "Generate Attendance Report",
+    icon: "file-export" as IconProp,
+    onPress: () => {
+      toggleAttendanceCaptureMenu();
+    },
+  },
+];
+const CaptureAttendance = ({ navigation }) => {
   const {
     handleSaveAttendance,
     saveAttendance,
@@ -27,15 +57,18 @@ const CaptureAttendance = () => {
     checkAttendanceChanges,
   } = useContext(CaptureAttendanceContext) || {};
 
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
   const attendanceCaptureMenuOptions = useMemo(
     () =>
-      getAttendanceCaptureMenuOptions(session, handleSessionToggle, toggleAttendanceCaptureMenu),
+      getAttendanceCaptureMenuOptions(
+        session,
+        handleSessionToggle,
+        toggleAttendanceCaptureMenu
+      ),
     [session, handleSessionToggle]
   );
 
-  const [showLeaveConfirmation, setShowLeaveConfirmation] = useState(false);
+  const [showLeaveConfirmation, setShowLeaveConfirmation] =
+    useState(false);
 
   const handleBackArrowPress = () => {
     if (checkAttendanceChanges()) {
@@ -46,7 +79,7 @@ const CaptureAttendance = () => {
   };
 
   return (
-    <Box bg="$pixWhite" w="$full" h="$full">
+    <View style={styles.container}>
       <Header
         title="Attendance"
         secondaryActionIcon="check"
@@ -59,7 +92,7 @@ const CaptureAttendance = () => {
         onPrimaryAction={toggleAttendanceCaptureMenu}
         onBackArrowPress={handleBackArrowPress}
       />
-      <AttendanceHeader />
+      <AttendanceCaptureHeader />
       {isHoliday === true ? <HolidayMessage /> : <AttendanceList />}
       <ConfirmationDialog
         isOpen={showConfirmationDialog}
@@ -78,38 +111,23 @@ const CaptureAttendance = () => {
         onClose={() => setShowAlertDialog(false)}
         onConfirm={() => {
           setShowAlertDialog(false);
-          navigation.navigate(RouteNames.AttendanceSummary, { session });
+          navigation.navigate(RouteNames.AttendanceSummary, {
+            session,
+          });
         }}
         message={alertMessage}
         heading="Attendance Complete!"
         confirmButtonText="Ok"
         cancelButtonText="Cancel"
       />
-    </Box>
+    </View>
   );
 };
 
-const getAttendanceCaptureMenuOptions = (
-  session,
-  handleSessionToggle,
-  toggleAttendanceCaptureMenu
-) => [
-  {
-    label:
-      session === AttendanceSession.Morning ? "Switch to Session Two" : "Switch to Session One",
-    icon: "toggle-on" as IconProp,
-    onPress: () => {
-      handleSessionToggle();
-      toggleAttendanceCaptureMenu();
-    },
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
   },
-  {
-    label: "Generate Attendance Report",
-    icon: "file-export" as IconProp,
-    onPress: () => {
-      toggleAttendanceCaptureMenu();
-    },
-  },
-];
+});
 
 export default CaptureAttendance;

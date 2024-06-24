@@ -5,23 +5,38 @@ import useAttendanceLogic, {
   CaptureAttendanceContext,
 } from "../../../services/utils/api/useAttendanceLogic";
 import Header from "../../../components/Header";
-import AttendanceHeader from "../CaptureAttendance/AttendanceHeader";
+import AttendanceCaptureHeader from "../AttendanceCapture/components/AttendanceHeader";
 import SummaryList from "./AttendanceSummaryList";
 import FilterBar from "../../../components/FilterBar";
-import { AttendanceStatusOrNull, filterOptions } from "../../../services/utils/constants";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { RouteNames, RootStackParamList } from "../../../services/utils/RouteNames";
+import {
+  AttendanceStatusOrNull,
+  filterOptions,
+} from "../../../services/utils/constants";
+import {
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
+import {
+  RouteNames,
+  RootStackParamList,
+} from "../../../services/utils/RouteNames";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { AttendanceSession } from "../../../services/utils/enums";
-import CaptureAttendance from "../CaptureAttendance/CaptureAttendance";
+import CaptureAttendance from "../AttendanceCapture/CaptureAttendance";
 
-type AttendanceSummaryRouteProp = RouteProp<RootStackParamList, RouteNames.AttendanceSummary>;
+type AttendanceSummaryRouteProp = RouteProp<
+  RootStackParamList,
+  RouteNames.AttendanceSummary
+>;
 
 const AttendanceSummary = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const route = useRoute<AttendanceSummaryRouteProp>();
-  const initialSession = route.params?.session || AttendanceSession.Morning;
+  const initialSession =
+    route.params?.session || AttendanceSession.Morning;
   const {
     className,
     section,
@@ -49,7 +64,9 @@ const AttendanceSummary = () => {
   const options = [
     {
       label:
-        session === AttendanceSession.Morning ? "Switch to Session Two" : "Switch to Session One",
+        session === AttendanceSession.Morning
+          ? "Switch to Session Two"
+          : "Switch to Session One",
       icon: "toggle-on" as IconProp,
       onPress: () => {
         handleSessionToggle();
@@ -86,7 +103,7 @@ const AttendanceSummary = () => {
         handleOptionsMenuClose={handleOptionsMenuClose}
         handleIconPress={handleIconPress}
       />
-      <AttendanceHeader
+      <AttendanceCaptureHeader
         className={className}
         section={section}
         today={today}
@@ -99,7 +116,12 @@ const AttendanceSummary = () => {
           <FilterBar<AttendanceStatusOrNull>
             selectedValue={selectedStatus}
             onFilterSelection={handleStatusClick}
-            filterOptions={filterOptions(totalStudents, presentCount, absentCount, onLeaveCount)}
+            filterOptions={filterOptions(
+              totalStudents,
+              presentCount,
+              absentCount,
+              onLeaveCount
+            )}
           />
         </ScrollView>
       </Box>

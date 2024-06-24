@@ -2,47 +2,11 @@ import { useState, useEffect, createContext } from "react";
 import useStudentAttendance from "./useStudentAttendance";
 import { getInitialAttendanceState, getUpdatedRecords } from "../attendanceUtils";
 import { AttendanceStatus, AttendanceSession } from "../enums";
+import { useDateAndTimeUtil } from "../dateAndTimeUtils";
 
 interface CaptureAttendanceProps {
   children: React.ReactNode;
   initialSession?: AttendanceSession;
-}
-
-interface AttendanceProviderProps {
-  attendanceStatus: Record<string, AttendanceStatus | null>;
-  handleAttendanceStatusChange: (studentId: string, status: AttendanceStatus | null) => void;
-  toggleAttendanceCaptureMenu: () => void;
-  handlePopoverOpen: (studentId: string) => void;
-  handlePopoverClose: (studentId: string) => void;
-  handleSaveAttendance: () => Promise<void>;
-  handleStatusClick: (status: AttendanceStatus | null) => void;
-  handleLeaveClick: (studentId: string) => void;
-  totalStudents: number;
-  markedStudents: number;
-  presentCount: number;
-  absentCount: number;
-  onLeaveCount: number;
-  isPopoverOpen: Record<string, boolean>;
-  checkAttendanceChanges: () => boolean;
-  alertMessage: string | undefined;
-  showAlertDialog: boolean;
-  setShowAlertDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  showConfirmationDialog: boolean;
-  setShowConfirmationDialog: React.Dispatch<React.SetStateAction<boolean>>;
-  unmarkedStudentCount: number;
-  studentAttendanceData: any[];
-  className: string;
-  today: string;
-  section: string;
-  isHoliday: boolean;
-  session: AttendanceSession;
-  handleSessionToggle: () => void;
-  saveAttendance: () => Promise<void>;
-  selectedStatus: AttendanceStatus | null;
-  getFilteredStudents: () => any[];
-  isOptionsMenuOpen: boolean;
-  handleOptionsMenuClose: () => void;
-  handleOptionsMenuOpen: () => void;
 }
 
 export const CaptureAttendanceContext = createContext<any | null>(null);
@@ -59,16 +23,16 @@ const AttendanceProvider = ({
     Record<string, AttendanceStatus | null>
   >({});
 
+  const { currentDay } = useDateAndTimeUtil();
+
   const {
     studentAttendanceData,
     updateAttendanceRecord,
     setStudentAttendanceData,
     fetchUpdatedAttendanceData,
     className,
-    today,
     section,
-    isHoliday,
-  } = useStudentAttendance();
+  } = useStudentAttendance(currentDay);
 
   const [isPopoverOpen, setIsPopoverOpen] = useState<Record<string, boolean>>({});
   const [attendanceStatus, setAttendanceStatus] = useState<Record<string, AttendanceStatus | null>>(
@@ -195,7 +159,7 @@ const AttendanceProvider = ({
       updatedRecords.map(async ({ student }) => {
         const selectedStatus = attendanceStatus[student.scholar_id];
         if (selectedStatus !== null) {
-          await updateAttendanceRecord(student.scholar_id, session, selectedStatus);
+          await updateAttendanceRecord(student.scholar_id, session, selectedStatus, currentDay);
         }
       })
     );
@@ -233,7 +197,6 @@ const AttendanceProvider = ({
         handleLeaveClick,
         unmarkedStudentCount,
         className,
-        today,
         totalStudents,
         markedStudents,
         selectedStatus,
@@ -250,7 +213,6 @@ const AttendanceProvider = ({
         session,
         handleSessionToggle,
         checkAttendanceChanges,
-        isHoliday,
       }}
     >
       {children}

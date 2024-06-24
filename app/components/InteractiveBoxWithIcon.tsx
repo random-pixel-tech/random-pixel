@@ -1,40 +1,75 @@
-import React from 'react';
-import { Pressable, Box, Center, Text } from '@gluestack-ui/themed';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { Colors } from '../services/utils/colors';
+import React from "react";
+import {
+  TouchableOpacity,
+  View,
+  Text,
+  StyleSheet,
+} from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { Colors } from "../services/utils/colors"; // Assuming you have a Colors utility
+import {
+  SECONDARY_LIGHT_50,
+  TEXT_LIGHT_100,
+} from "../theme/color-tokens";
 
 interface InteractiveBoxWithIconProps {
   onPress?: () => void;
   title: string;
   icon: IconProp;
-  disabled?: boolean; // Add disabled prop
+  disabled?: boolean;
 }
 
-const InteractiveBoxWithIcon: React.FC<InteractiveBoxWithIconProps> = ({
-  onPress,
-  title,
-  icon,
-  disabled,
-}) => {
+const InteractiveBoxWithIcon: React.FC<
+  InteractiveBoxWithIconProps
+> = ({ onPress, title, icon, disabled }) => {
   return (
-    <Pressable onPress={onPress} disabled={disabled}>
-      <Box
-        bg='$pixSecondaryLight50'
-        aspectRatio={1}
-        rounded="$lg"
-        p="$4"
-        m="$4"
-        $sm-w="$32"
-        $md-w="$40"
-      >
-        <Center height="100%" justifyContent="space-evenly">
-          <FontAwesomeIcon icon={icon} size={40} color={disabled ? Colors.TextLight100 : Colors.Text100} />
-          <Text color={disabled ? Colors.TextLight100 : Colors.Text100}>{title}</Text>
-        </Center>
-      </Box>
-    </Pressable>
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
+      <View style={[styles.box, disabled && styles.disabledBox]}>
+        <View style={styles.center}>
+          <FontAwesomeIcon
+            icon={icon}
+            size={40}
+            color={disabled ? Colors.TextLight100 : Colors.Text100}
+          />
+          <Text
+            style={[
+              styles.text,
+              {
+                color: disabled
+                  ? Colors.TextLight100
+                  : Colors.Text100,
+              },
+            ]}
+          >
+            {title}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  box: {
+    backgroundColor: "#e6e6ff", // Adjust as needed
+    aspectRatio: 1,
+    borderRadius: 10,
+    padding: 16,
+    width: 150, // Adjust as needed for different screen sizes
+  },
+  disabledBox: {
+    color: TEXT_LIGHT_100,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    marginTop: 10,
+    fontSize: 16,
+  },
+});
 
 export default InteractiveBoxWithIcon;

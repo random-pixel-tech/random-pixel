@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Modal,
   ModalBackdrop,
@@ -11,11 +11,11 @@ import {
   Text,
   Pressable,
   Box,
-} from '@gluestack-ui/themed';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { Colors } from '../../../services/utils/colors';
-import { Divider } from '@gluestack-ui/themed';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+} from "@gluestack-ui/themed";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { Colors } from "../../../../../services/utils/colors";
+import { Divider } from "@gluestack-ui/themed";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 interface AttendanceOption {
   label: string;
@@ -44,13 +44,23 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
 }) => {
   return (
     <>
-      <Pressable justifyContent="center" onPress={onOpen} aria-label="Open Options" py="$3" px="$3">
+      <Pressable
+        justifyContent="center"
+        onPress={onOpen}
+        aria-label="Open Options"
+        py="$3"
+        px="$3"
+      >
         <FontAwesomeIcon size={24} icon="ellipsis-vertical" />
       </Pressable>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalBackdrop />
         <ModalContent bg="$pixSecondaryLight50" p="$2">
-          <ModalHeader display="flex" justifyContent="flex-start" alignItems="center">
+          <ModalHeader
+            display="flex"
+            justifyContent="flex-start"
+            alignItems="center"
+          >
             <Box
               borderRadius="$full"
               borderWidth={2}
@@ -60,7 +70,9 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
               justifyContent="center"
               alignItems="center"
             >
-              <Heading color="$pixPrimaryDark50">{student.roll_number}</Heading>
+              <Heading color="$pixPrimaryDark50">
+                {student.roll_number}
+              </Heading>
             </Box>
             <Heading color="$pixPrimaryDark50" px="$4">
               {student.student_name}
@@ -70,9 +82,17 @@ const AttendanceOptions: React.FC<AttendanceOptionsProps> = ({
           <ModalBody>
             <VStack>
               {options.map((option, index) => (
-                <Pressable key={index} p="$2" onPress={option.onPress}>
+                <Pressable
+                  key={index}
+                  p="$2"
+                  onPress={option.onPress}
+                >
                   <HStack py="$2">
-                    <FontAwesomeIcon icon={option.icon} color={Colors.PrimaryDark50} size={20} />
+                    <FontAwesomeIcon
+                      icon={option.icon}
+                      color={Colors.PrimaryDark50}
+                      size={20}
+                    />
                     <Text color="$pixPrimaryDark50" px="$4">
                       {option.label}
                     </Text>
