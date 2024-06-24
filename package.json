@@ -31,6 +31,7 @@
     "axios": "^1.6.8",
     "dayjs": "^1.11.10",
     "expo": "^51.0.14",
+    "expo-checkbox": "~3.0.0",
     "expo-image-picker": "~14.7.1",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
