@@ -1,13 +1,17 @@
 import React, { useContext } from "react";
-import { Box, Input, InputField } from "@gluestack-ui/themed";
-import AttendanceFilterPanel from "./AttendanceFilterPanel";
-import SegmentedControl from "../../../components/SegmentedControl";
-import SearchButton from "../../../components/SearchButton";
+import {
+  Box,
+  Input,
+  InputField,
+  Pressable,
+} from "@gluestack-ui/themed";
+import { AttendanceStatsContext } from "../../../../../providers/attendanceStatsProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { Colors } from "../../../services/utils/colors";
-import { Pressable } from "@gluestack-ui/themed";
-import { Segment } from "../../../services/utils/enums";
-import { AttendanceStatsContext } from "../../../providers/attendanceStatsProvider";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+import SearchButton from "../../../../../components/SearchButton";
+import SegmentedControl from "../../../../../components/SegmentedControl";
+import { Segment } from "../../../../../services/utils/enums";
+import AttendanceFilterPanel from "./AttendanceFilterPanel";
 
 const StatsSearchAndFilterBar = () => {
   const {

@@ -1,20 +1,22 @@
 import React, { useCallback, useContext, useState } from "react";
 import { Box, Text, FlatList } from "@gluestack-ui/themed";
-import StudentAttendanceCard from "./StudentAttendanceCard";
-import { AllStudentAttendanceData } from "../../../services/utils/api/useStudentAttendance";
-import ClassAttendanceCard from "./ClassAttendanceCard";
-import { ClassData } from "../../../services/utils/api/useAttendanceStats";
-import {
-  SelectedDuration,
-  Segment,
-} from "../../../services/utils/enums";
 import HolidayMessage from "./HolidayMessage";
 import {
-  NativeSyntheticEvent,
   NativeScrollEvent,
+  NativeSyntheticEvent,
 } from "react-native";
-import { useDateAndTimeUtil } from "../../../services/utils/dateAndTimeUtils";
-import { AttendanceStatsContext } from "../../../providers/attendanceStatsProvider";
+import {
+  ClassData,
+  AttendanceStatsContext,
+} from "../../../../../providers/attendanceStatsProvider";
+import { AllStudentAttendanceData } from "../../../../../services/utils/api/useStudentAttendance";
+import { useDateAndTimeUtil } from "../../../../../services/utils/dateAndTimeUtils";
+import {
+  Segment,
+  SelectedDuration,
+} from "../../../../../services/utils/enums";
+import ClassAttendanceCard from "./ClassAttendanceCard";
+import StudentAttendanceCard from "./StudentAttendanceCard";
 
 interface StudentAttendanceDataWithPercentage
   extends AllStudentAttendanceData {

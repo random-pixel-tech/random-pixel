@@ -1,30 +1,20 @@
 // AttendanceSummary.tsx
 import React, { useContext } from "react";
 import { Box, ScrollView } from "@gluestack-ui/themed";
-import useAttendanceLogic, {
-  CaptureAttendanceContext,
-} from "../../../services/utils/api/useAttendanceLogic";
-import Header from "../../../components/Header";
-import AttendanceCaptureHeader from "../AttendanceCapture/components/AttendanceHeader";
-import SummaryList from "./AttendanceSummaryList";
-import FilterBar from "../../../components/FilterBar";
-import {
-  AttendanceStatusOrNull,
-  filterOptions,
-} from "../../../services/utils/constants";
 import {
   RouteProp,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
-import {
-  RouteNames,
-  RootStackParamList,
-} from "../../../services/utils/RouteNames";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { AttendanceSession } from "../../../services/utils/enums";
-import CaptureAttendance from "../AttendanceCapture/CaptureAttendance";
+import {
+  RootStackParamList,
+  RouteNames,
+} from "../../../../../services/utils/RouteNames";
+import { CaptureAttendanceContext } from "../../../../../services/utils/api/useAttendanceLogic";
+import { AttendanceSession } from "../../../../../services/utils/enums";
+
 
 type AttendanceSummaryRouteProp = RouteProp<
   RootStackParamList,

@@ -2,14 +2,13 @@ import React, { useContext } from "react";
 import { Box, Text, Pressable } from "@gluestack-ui/themed";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from "@react-navigation/native";
-import { Colors } from "../../../services/utils/colors";
-import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
-import OptionsMenu from "../../../components/OptionsMenu";
 import dayjs from "dayjs";
-import { SelectedDuration } from "../../../services/utils/enums";
-import BackArrowButton from "../../../components/BackArrowButton";
-import DatePicker from "../../../components/DatePicker";
-import { AttendanceStatsContext } from "../../../providers/attendanceStatsProvider";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+import { DatePicker } from "../../../../../components";
+import BackArrowButton from "../../../../../components/BackArrowButton";
+import OptionsMenu from "../../../../../components/OptionsMenu";
+import { AttendanceStatsContext } from "../../../../../providers/attendanceStatsProvider";
+import { SelectedDuration } from "../../../../../services/utils/enums";
 
 interface StatsHeaderProps {
   title: string;
@@ -180,7 +179,7 @@ const StatsHeader: React.FC<StatsHeaderProps> = ({ title }) => {
         minWidth="$16"
       >
         <FontAwesomeIcon
-          icon={faCalendarAlt}
+          icon={"calendar"}
           size={18}
           color={Colors.Primary}
         />
