@@ -1,9 +1,11 @@
 import React from "react";
-import { Box } from "@gluestack-ui/themed";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { StyleSheet, View, Text } from "react-native";
-import { SECONDARY_LIGHT_50 } from "../../../../../theme/color-tokens";
+import {
+  SECONDARY_LIGHT_50,
+  TEXT_DARK_100,
+} from "../../../../../theme/color-tokens";
 
 interface AttendanceListHeaderProps {
   FirstColumnText?: string;
@@ -28,23 +30,17 @@ const AttendanceListHeader: React.FC<AttendanceListHeaderProps> = ({
       <Text style={[styles.headerText, { width: 172 }]}>
         {SecondColumnText}
       </Text>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        flex={1}
-        alignItems="center"
-        flexDirection="row"
-      >
-        <Text style={[styles.headerText, { flex: 1, padding: 12 }]}>
+      <View style={styles.statusHeaderContainer}>
+        <Text style={[styles.headerText, styles.statusHeaderText]}>
           {ThirdColumnText}
         </Text>
-        <Text style={[styles.headerText, { flex: 1, padding: 12 }]}>
+        <Text style={[styles.headerText, styles.statusHeaderText]}>
           {FourthColumnText}
         </Text>
-        <Box display="flex" alignItems="center" flex={1} padding={12}>
+        <View style={[styles.statusHeaderText]}>
           {icon && <FontAwesomeIcon icon={icon} size={24} />}
-        </Box>
-      </Box>
+        </View>
+      </View>
     </View>
   );
 };
@@ -53,15 +49,23 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: SECONDARY_LIGHT_50,
+    backgroundColor: SECONDARY_LIGHT_50,
     paddingHorizontal: 16,
-    paddingVertical: 8,
+  },
+  statusHeaderContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flex: 1,
+  },
+  statusHeaderText: {
+    flex: 1,
+    padding: 12,
   },
   headerText: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#000000",
+    color: TEXT_DARK_100,
   },
 });
 

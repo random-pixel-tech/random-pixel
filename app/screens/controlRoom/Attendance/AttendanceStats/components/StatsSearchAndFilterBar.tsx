@@ -5,7 +5,7 @@ import {
   InputField,
   Pressable,
 } from "@gluestack-ui/themed";
-import { AttendanceStatsContext } from "../../../../../providers/attendanceStatsProvider";
+import { AttendanceStatsContext } from "../../../../../providers/AttendanceStatsProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import SearchButton from "../../../../../components/SearchButton";

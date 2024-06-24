@@ -18,10 +18,10 @@ import {
   Text,
 } from "@gluestack-ui/themed";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { Colors } from "../../../services/utils/colors";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { AttendanceStatsContext } from "../../../../../providers/AttendanceStatsProvider";
-import { Segment } from "../../../../../services/utils/enums";
-import { Colors } from "../../../../../services/utils/colors";
+import { Segment } from "../../../services/utils/enums";
+import { AttendanceStatsContext } from "../../../providers/AttendanceStatsProvider";
 
 interface AttendanceFilterPanelProps {
   isLoading: boolean;

@@ -1,8 +1,12 @@
 import React, { useContext } from "react";
-import { Box, Heading, Text } from "@gluestack-ui/themed";
 import { AttendanceSession } from "../../../../../services/utils/enums";
-import { CaptureAttendanceContext } from "../../../../../services/utils/api/useAttendanceLogic";
 import { useDateAndTimeUtil } from "../../../../../services/utils/dateAndTimeUtils";
+import { StyleSheet, Text, View } from "react-native";
+import {
+  SECONDARY,
+  TEXT_DARK_100,
+} from "../../../../../theme/color-tokens";
+import { CaptureAttendanceContext } from "../../../../../providers/CaptureAttendanceProvider";
 
 const AttendanceCaptureHeader = () => {
   const {
@@ -16,20 +20,12 @@ const AttendanceCaptureHeader = () => {
   const { currentDay } = useDateAndTimeUtil();
 
   return (
-    <Box
-      bg="$pixSecondary"
-      w="$full"
-      h="$20"
-      alignItems="center"
-      p="$4"
-      justifyContent="space-between"
-      flexDirection="row"
-    >
-      <Box>
-        <Heading fontSize="$lg">
+    <View style={styles.container}>
+      <View>
+        <Text style={styles.headerText}>
           Class: {className} {section}
-        </Heading>
-        <Text fontSize="$md">
+        </Text>
+        <Text style={{ fontSize: 14 }}>
           {currentDay}{" "}
           {!isHoliday &&
             `| ${
@@ -38,17 +34,35 @@ const AttendanceCaptureHeader = () => {
                 : "Session two"
             }`}
         </Text>
-      </Box>
+      </View>
       {!isHoliday && (
-        <Box>
-          <Heading fontSize="$lg" alignSelf="flex-end">
+        <View>
+          <Text style={[styles.headerText, { fontSize: 20 }]}>
             {`${markedStudents} / ${totalStudents}`}
-          </Heading>
-          <Text fontSize="$md">Summary</Text>
-        </Box>
+          </Text>
+          <Text style={{ fontSize: 14 }}>Summary</Text>
+        </View>
       )}
-    </Box>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: SECONDARY,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+
+  headerText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: TEXT_DARK_100,
+  },
+});
 
 export default AttendanceCaptureHeader;

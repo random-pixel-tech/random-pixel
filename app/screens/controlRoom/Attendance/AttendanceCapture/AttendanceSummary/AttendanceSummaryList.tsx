@@ -1,13 +1,13 @@
 // AttendanceSummaryList.tsx
 import React from "react";
-import { Box, FlatList } from "@gluestack-ui/themed";
+import AttendanceSummaryListItem from "./AttendanceSummaryListItem";
 import {
   Student,
   AttendanceRecord,
-} from "../../../services/utils/api/useStudentAttendance";
-import AttendanceSummaryListItem from "./AttendanceSummaryListItem";
-import AttendanceListHeader from "../AttendanceCapture/components/AttendanceListHeader";
-import { AttendanceSession } from "../../../services/utils/enums";
+} from "../../../../../services/utils/api/useStudentAttendance";
+import { AttendanceSession } from "../../../../../services/utils/enums";
+import AttendanceListHeader from "../components/AttendanceListHeader";
+import { FlatList, StyleSheet, View } from "react-native";
 
 interface AttendanceSummaryListProps {
   filteredStudents: Array<{
@@ -15,16 +15,16 @@ interface AttendanceSummaryListProps {
     attendanceRecord: AttendanceRecord | null;
   }>;
   isPopoverOpen: Record<string, boolean>;
-  handlePopoverOpen: (studentId: string) => void;
-  handlePopoverClose: (studentId: string) => void;
+  handleSummaryPopoverOpen: (studentId: string) => void;
+  handleSummaryPopoverClose: (studentId: string) => void;
   session: AttendanceSession;
 }
 
 const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
   filteredStudents,
   isPopoverOpen,
-  handlePopoverOpen,
-  handlePopoverClose,
+  handleSummaryPopoverOpen,
+  handleSummaryPopoverClose,
   session,
 }) => {
   const renderItem = ({
@@ -39,23 +39,26 @@ const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
       key={item.student.scholar_id}
       student={item.student}
       attendanceRecord={item.attendanceRecord}
-      isPopoverOpen={isPopoverOpen[item.student.scholar_id]}
-      onPopoverOpen={() => handlePopoverOpen(item.student.scholar_id)}
-      onPopoverClose={() =>
-        handlePopoverClose(item.student.scholar_id)
+      isSummaryPopoverOpen={
+        isPopoverOpen[item.student.scholar_id] ?? false
+      }
+      onSummaryPopoverOpen={() =>
+        handleSummaryPopoverOpen(item.student.scholar_id)
+      }
+      onSummaryPopoverClose={() =>
+        handleSummaryPopoverClose(item.student.scholar_id)
       }
       session={session}
     />
   );
 
   return (
-    <Box display="flex" flexDirection="column" flex={1}>
+    <View style={styles.container}>
       <AttendanceListHeader
         FirstColumnText="R.N."
         SecondColumnText="Name"
-        icon="ellipsis-vertical"
       />
-      <Box flex={1}>
+      <View style={styles.listContainer}>
         <FlatList
           data={filteredStudents}
           renderItem={({ item }) =>
@@ -75,9 +78,19 @@ const AttendanceSummaryList: React.FC<AttendanceSummaryListProps> = ({
             ).student.scholar_id
           }
         />
-      </Box>
-    </Box>
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
+  listContainer: {
+    flex: 1,
+  },
+});
 
 export default AttendanceSummaryList;

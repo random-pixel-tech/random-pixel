@@ -1,9 +1,11 @@
 import React, { useCallback, useContext } from "react";
+import { Box, FlatList } from "@gluestack-ui/themed";
 import AttendanceListHeader from "./AttendanceListHeader";
 import AttendanceListItem from "./AttendanceListItem";
-import { AttendanceStatus } from "../../../../../services/utils/enums";
-import { FlatList, StyleSheet, View } from "react-native";
-import { CaptureAttendanceContext } from "../../../../../providers/CaptureAttendanceProvider";
+import HolidayMessage from "../../../AttendanceStats/components/HolidayMessage";
+import { CaptureAttendanceContext } from "../../../../services/utils/api/useAttendanceLogic_old";
+import { AttendanceStatus } from "../../../../services/utils/enums";
+import { StyleSheet, View } from "react-native";
 
 const AttendanceList = () => {
   const {
@@ -53,7 +55,7 @@ const AttendanceList = () => {
         <AttendanceListItem
           key={studentId}
           student={item.student}
-          isPopoverOpen={isPopoverOpen[studentId] ?? false}
+          isPopoverOpen={isPopoverOpen[studentId]}
           onPopoverOpen={() => handlePopoverOpenCb(studentId)}
           onPopoverClose={() => handlePopoverCloseCb(studentId)}
           attendanceStatus={attendanceStatus[studentId] || null}

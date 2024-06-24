@@ -1,13 +1,12 @@
-import React, { useContext, useState } from "react";
-import { Box, Text, Pressable } from "@gluestack-ui/themed";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from "@react-navigation/native";
 import { Colors } from "../services/utils/colors";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import OptionsMenu from "./OptionsMenu";
-import ConfirmationDialog from "./ConfirmationDialog";
 import BackArrowButton from "./BackArrowButton";
-import { CaptureAttendanceContext } from "../services/utils/api/useAttendanceLogic";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { PRIMARY_WHITE, TEXT_DARK_100 } from "../theme/color-tokens";
 
 interface Option {
   label: string;
@@ -19,36 +18,23 @@ interface HeaderProps {
   title: string;
   secondaryActionIcon?: IconProp;
   onSecondaryAction?: () => void;
-  showConfirmation?: boolean;
-  setShowConfirmation: React.Dispatch<React.SetStateAction<boolean>>;
-  confirmationHeading?: string;
-  confirmationText?: string;
   options?: Option[];
   onPrimaryAction?: () => void;
   onBackArrowPress?: () => void;
+  isOptionsMenuOpen?: boolean;
+  handleOptionsMenuClose?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   title,
   secondaryActionIcon,
-  showConfirmation = false,
-  setShowConfirmation,
   onPrimaryAction,
   onSecondaryAction,
-  confirmationHeading = "",
-  confirmationText = "",
   options,
   onBackArrowPress,
+  isOptionsMenuOpen,
+  handleOptionsMenuClose,
 }) => {
-  const {
-    handleSaveAttendance,
-    toggleAttendanceCaptureMenu,
-    checkAttendanceChanges,
-    isOptionsMenuOpen,
-    handleOptionsMenuClose,
-    checkChanges,
-  } = useContext(CaptureAttendanceContext);
-
   const navigation = useNavigation();
 
   const handleLeftArrowPress = () => {
@@ -56,43 +42,36 @@ const Header: React.FC<HeaderProps> = ({
     else navigation.goBack();
   };
 
-  const handleConfirm = () => {
-    setShowConfirmation(false);
-    navigation.goBack();
-  };
-
-  const handleCancel = () => {
-    setShowConfirmation(false);
-  };
-
   return (
-    <Box
-      bg="$pixWhite"
-      w="$full"
-      h="$20"
-      pt="$4"
-      display="flex"
-      flexDirection="row"
-      alignItems="center"
-      justifyContent="space-between"
-      px="$4"
-    >
-      <Box display="flex" flexDirection="row">
+    <View style={styles.container}>
+      <View style={styles.leadingContainer}>
         <BackArrowButton onPress={handleLeftArrowPress} />
-        <Text color={Colors.Text100} fontSize="$xl" px="$8" py="$4" fontWeight="$medium">
-          {title}
-        </Text>
-      </Box>
-      <Box flexDirection="row">
+        <Text style={[styles.headerText]}>{title}</Text>
+      </View>
+      <View style={styles.trailingContainer}>
         {secondaryActionIcon && (
-          <Pressable onPress={onSecondaryAction} p="$4">
-            <FontAwesomeIcon icon={secondaryActionIcon} size={22} color={Colors.Text100} />
+          <Pressable
+            onPress={onSecondaryAction}
+            style={styles.actionIcon}
+          >
+            <FontAwesomeIcon
+              icon={secondaryActionIcon}
+              size={22}
+              color={Colors.Text100}
+            />
           </Pressable>
         )}
         {options && (
           <>
-            <Pressable onPress={onPrimaryAction} p="$4">
-              <FontAwesomeIcon icon="ellipsis-vertical" size={22} color={Colors.Text100} />
+            <Pressable
+              onPress={onPrimaryAction}
+              style={styles.actionIcon}
+            >
+              <FontAwesomeIcon
+                icon="ellipsis-vertical"
+                size={22}
+                color={Colors.Text100}
+              />
             </Pressable>
             <OptionsMenu
               isOpen={isOptionsMenuOpen}
@@ -101,18 +80,51 @@ const Header: React.FC<HeaderProps> = ({
             />
           </>
         )}
-      </Box>
-      <ConfirmationDialog
-        isOpen={showConfirmation}
-        onClose={handleCancel}
-        onConfirm={handleConfirm}
-        heading={confirmationHeading}
-        text={confirmationText}
-        confirmButtonText="Yes"
-        cancelButtonText="Cancel"
-      />
-    </Box>
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: PRIMARY_WHITE,
+    width: "100%",
+    height: 60,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+  },
+
+  leadingContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+
+  headerText: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: TEXT_DARK_100,
+  },
+
+  trailingContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  actionIcon: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 48,
+    width: 48,
+    padding: 12,
+  },
+});
 
 export default Header;

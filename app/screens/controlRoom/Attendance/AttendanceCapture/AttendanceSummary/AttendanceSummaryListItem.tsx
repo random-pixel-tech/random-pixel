@@ -1,20 +1,20 @@
 // AttendanceSummaryListItem.tsx
 import React from "react";
-import { Box, Text } from "@gluestack-ui/themed";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
   Student,
   AttendanceRecord,
-} from "../../../services/utils/api/useStudentAttendance";
-import AttendanceOptions from "../AttendanceCapture/components/AttendanceOptions";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { AttendanceSession } from "../../../services/utils/enums";
+} from "../../../../../services/utils/api/useStudentAttendance";
+import { AttendanceSession } from "../../../../../services/utils/enums";
+import AttendanceOptions from "../components/AttendanceOptions";
+import { StyleSheet, Text, View } from "react-native";
 
 interface AttendanceSummaryListItemProps {
   student: Student;
   attendanceRecord: AttendanceRecord | null;
-  isPopoverOpen: boolean;
-  onPopoverOpen: () => void;
-  onPopoverClose: () => void;
+  isSummaryPopoverOpen: boolean;
+  onSummaryPopoverOpen: () => void;
+  onSummaryPopoverClose: () => void;
   session: AttendanceSession;
 }
 
@@ -22,11 +22,9 @@ const AttendanceSummaryListItem: React.FC<
   AttendanceSummaryListItemProps
 > = ({
   student,
-  attendanceRecord,
-  isPopoverOpen,
-  onPopoverOpen,
-  onPopoverClose,
-  session,
+  isSummaryPopoverOpen,
+  onSummaryPopoverOpen,
+  onSummaryPopoverClose,
 }) => {
   const options = [
     {
@@ -38,30 +36,23 @@ const AttendanceSummaryListItem: React.FC<
     },
   ];
 
-  const attendanceStatus =
-    attendanceRecord?.[`${session.toLowerCase()}_status`];
-
   return (
-    <Box
-      display="flex"
-      py="$2"
-      my="$0.25"
-      flexDirection="row"
-      minHeight={36}
-    >
-      <Box w="$1/6" px="$4" py="$3">
-        <Text size="lg">{student.roll_number || "-"}</Text>
-      </Box>
-      <Box w="$4/6" px="$4" py="$3">
-        <Text numberOfLines={1} size="lg">
+    <View style={styles.container}>
+      <View style={styles.rollNumberContainer}>
+        <Text style={styles.rollNumberText}>
+          {student.roll_number || "-"}
+        </Text>
+      </View>
+      <View style={styles.studentNameContainer}>
+        <Text style={styles.studentNameText}>
           {student.student_name}
         </Text>
-      </Box>
-      <Box w="$1/6" justifyContent="center" alignItems="center">
+      </View>
+      <View style={styles.attendanceContainer}>
         <AttendanceOptions
-          isOpen={isPopoverOpen}
-          onClose={onPopoverClose}
-          onOpen={onPopoverOpen}
+          isOpen={isSummaryPopoverOpen}
+          onClose={onSummaryPopoverClose}
+          onOpen={onSummaryPopoverOpen}
           student={{
             scholar_id: student.scholar_id,
             student_name: student.student_name,
@@ -69,9 +60,39 @@ const AttendanceSummaryListItem: React.FC<
           }}
           options={options}
         />
-      </Box>
-    </Box>
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    minHeight: 36,
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  rollNumberContainer: {
+    width: 48,
+  },
+  rollNumberText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  studentNameContainer: {
+    width: 172,
+  },
+  studentNameText: {
+    fontSize: 16,
+  },
+  attendanceContainer: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  checkBoxContainer: {
+    padding: 12,
+  },
+});
 
 export default AttendanceSummaryListItem;

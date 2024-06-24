@@ -1,8 +1,8 @@
 import React, { useContext, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import InteractiveBoxWithIcon from "../../components/InteractiveBoxWithIcon";
-import { CaptureAttendanceContext } from "../../services/utils/api/useAttendanceLogic";
 import AttendanceActions from "./Attendance/AttendanceActions";
+import { CaptureAttendanceContext } from "../../providers/CaptureAttendanceProvider";
 
 const ControlRoom = () => {
   const [showActionSheet, setShowActionSheet] = useState(false);

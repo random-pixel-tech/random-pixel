@@ -1,32 +1,20 @@
 // AttendanceSummary.tsx
 import React, { useContext } from "react";
-import { Box, ScrollView } from "@gluestack-ui/themed";
-import {
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import {
-  RootStackParamList,
-  RouteNames,
-} from "../../../../../services/utils/RouteNames";
-import { CaptureAttendanceContext } from "../../../../../services/utils/api/useAttendanceLogic";
+import { RouteNames } from "../../../../../services/utils/RouteNames";
 import { AttendanceSession } from "../../../../../services/utils/enums";
+import AttendanceCaptureHeader from "../components/AttendanceHeader";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { FilterBar, Header } from "../../../../../components";
+import {
+  AttendanceStatusOrNull,
+  filterOptions,
+} from "../../../../../services/utils/constants";
+import AttendanceSummaryList from "./AttendanceSummaryList";
+import { PRIMARY_WHITE } from "../../../../../theme/color-tokens";
+import { CaptureAttendanceContext } from "../../../../../providers/CaptureAttendanceProvider";
 
-
-type AttendanceSummaryRouteProp = RouteProp<
-  RootStackParamList,
-  RouteNames.AttendanceSummary
->;
-
-const AttendanceSummary = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const route = useRoute<AttendanceSummaryRouteProp>();
-  const initialSession =
-    route.params?.session || AttendanceSession.Morning;
+const AttendanceSummary = ({ navigation }) => {
   const {
     className,
     section,
@@ -39,16 +27,15 @@ const AttendanceSummary = () => {
     presentCount,
     absentCount,
     onLeaveCount,
-    isPopoverOpen,
-    handlePopoverOpen,
-    handlePopoverClose,
-    isOptionsMenuOpen,
-    handleOptionsMenuOpen,
+    isSummaryPopoverOpen,
+    handleSummaryPopoverOpen,
+    handleSummaryPopoverClose,
     handleOptionsMenuClose,
-    handleIconPress,
     session,
     handleSessionToggle,
     isHoliday,
+    toggleAttendanceCaptureMenu,
+    isOptionsMenuOpen,
   } = useContext(CaptureAttendanceContext) || {};
 
   const options = [
@@ -84,14 +71,13 @@ const AttendanceSummary = () => {
   ];
 
   return (
-    <Box bg="$pixWhite" w="$full" h="$full">
+    <View style={styles.container}>
       <Header
         title="Attendance Summary"
         options={options}
         isOptionsMenuOpen={isOptionsMenuOpen}
-        handleOptionsMenuOpen={handleOptionsMenuOpen}
         handleOptionsMenuClose={handleOptionsMenuClose}
-        handleIconPress={handleIconPress}
+        onPrimaryAction={toggleAttendanceCaptureMenu}
       />
       <AttendanceCaptureHeader
         className={className}
@@ -101,7 +87,7 @@ const AttendanceSummary = () => {
         session={session}
         isHoliday={isHoliday}
       />
-      <Box>
+      <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <FilterBar<AttendanceStatusOrNull>
             selectedValue={selectedStatus}
@@ -114,16 +100,23 @@ const AttendanceSummary = () => {
             )}
           />
         </ScrollView>
-      </Box>
-      <SummaryList
+      </View>
+      <AttendanceSummaryList
         filteredStudents={getFilteredStudents()}
-        isPopoverOpen={isPopoverOpen}
-        handlePopoverOpen={handlePopoverOpen}
-        handlePopoverClose={handlePopoverClose}
+        isPopoverOpen={isSummaryPopoverOpen ?? false}
+        handleSummaryPopoverOpen={handleSummaryPopoverOpen}
+        handleSummaryPopoverClose={handleSummaryPopoverClose}
         session={session}
       />
-    </Box>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: PRIMARY_WHITE,
+  },
+});
 
 export default AttendanceSummary;

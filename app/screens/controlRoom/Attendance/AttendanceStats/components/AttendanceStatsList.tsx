@@ -8,7 +8,7 @@ import {
 import {
   ClassData,
   AttendanceStatsContext,
-} from "../../../../../providers/attendanceStatsProvider";
+} from "../../../../../providers/AttendanceStatsProvider";
 import { AllStudentAttendanceData } from "../../../../../services/utils/api/useStudentAttendance";
 import { useDateAndTimeUtil } from "../../../../../services/utils/dateAndTimeUtils";
 import {

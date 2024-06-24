@@ -1,18 +1,22 @@
 import React, { useMemo } from "react";
-import {
-  Box,
-  Checkbox,
-  CheckboxIcon,
-  CheckboxIndicator,
-  CheckIcon,
-} from "@gluestack-ui/themed";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import AttendanceOptions from "./AttendanceOptions";
-import { Student } from "../../../../../services/utils/api/useStudentAttendance";
-import { Colors } from "../../../../../services/utils/colors";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import AttendanceOptions from "./AttendanceOptions";
+import { Colors } from "../../../../../services/utils/colors";
 import { AttendanceStatus } from "../../../../../services/utils/enums";
-import { StyleSheet, View, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+
+import {
+  PRIMARY,
+  STATUS_ERROR,
+} from "../../../../../theme/color-tokens";
+import CheckBox from "../../../../../components/CheckBox";
+import { Student } from "../../../../../services/utils/api/useStudentAttendance";
 
 interface AttendanceListItemProps {
   student: Student;
@@ -67,91 +71,44 @@ const AttendanceListItem: React.FC<AttendanceListItemProps> =
 
       return (
         <View style={styles.container}>
-          <View style={{ width: 48 }}>
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+          <View style={styles.rollNumberContainer}>
+            <Text style={styles.rollNumberText}>
               {student.roll_number || "-"}
             </Text>
           </View>
-          <View style={{ width: 172 }}>
-            <Text style={{ fontSize: 16 }}>
+          <View style={styles.studentNameContainer}>
+            <Text style={styles.studentNameText}>
               {student.student_name}
             </Text>
           </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <View>
-              <Checkbox
-                value={`morning-present-${student.scholar_id}`}
-                isChecked={
-                  attendanceStatus === AttendanceStatus.Present
-                }
-                onChange={() =>
+          <View style={styles.attendanceContainer}>
+            <View style={styles.checkBoxContainer}>
+              <CheckBox
+                value={attendanceStatus === AttendanceStatus.Present}
+                onValueChange={() =>
                   onAttendanceStatusChange(AttendanceStatus.Present)
                 }
-                rounded="$md"
-                aria-label={`Mark present for ${student.student_name}`}
-                size="lg"
-                py="$3"
-                px="$3"
-              >
-                <CheckboxIndicator
-                  borderColor="$pixPrimary"
-                  bg={
-                    attendanceStatus === AttendanceStatus.Present
-                      ? "$pixPrimary"
-                      : "transparent"
-                  }
-                >
-                  <CheckboxIcon as={CheckIcon} />
-                </CheckboxIndicator>
-              </Checkbox>
+                color={PRIMARY}
+              />
             </View>
-            <View>
-              <Box
-                display="flex"
-                flexDirection="row"
-                alignItems="center"
-              >
-                <Checkbox
-                  py="$3"
-                  px="$3"
-                  value={`morning-absent-${student.scholar_id}`}
-                  isChecked={
-                    attendanceStatus === AttendanceStatus.Absent ||
-                    attendanceStatus === AttendanceStatus.OnLeave
-                  }
-                  onChange={() =>
-                    onAttendanceStatusChange(AttendanceStatus.Absent)
-                  }
-                  aria-label={`Mark absent for ${student.student_name}`}
-                  rounded="$md"
-                  size="lg"
-                >
-                  <CheckboxIndicator
-                    borderColor="$pixOrange"
-                    bg={
-                      attendanceStatus === AttendanceStatus.Absent ||
-                      attendanceStatus === AttendanceStatus.OnLeave
-                        ? "$pixOrange"
-                        : "transparent"
-                    }
-                  >
-                    <CheckboxIcon as={CheckIcon} />
-                  </CheckboxIndicator>
-                </Checkbox>
-                {attendanceStatus === AttendanceStatus.OnLeave && (
-                  <FontAwesomeIcon
-                    icon="house-user"
-                    size={24}
-                    color={Colors.Accent}
-                  />
-                )}
-              </Box>
+            <View style={styles.checkBoxContainer}>
+              <CheckBox
+                value={
+                  attendanceStatus === AttendanceStatus.Absent ||
+                  attendanceStatus === AttendanceStatus.OnLeave
+                }
+                onValueChange={() =>
+                  onAttendanceStatusChange(AttendanceStatus.Absent)
+                }
+                color={STATUS_ERROR}
+              />
+              {attendanceStatus === AttendanceStatus.OnLeave && (
+                <FontAwesomeIcon
+                  icon="house-user"
+                  size={24}
+                  color={Colors.Accent}
+                />
+              )}
             </View>
             <AttendanceOptions
               isOpen={isPopoverOpen}
@@ -181,7 +138,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  textEntries: {},
+  rollNumberContainer: {
+    width: 48,
+  },
+  rollNumberText: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  studentNameContainer: {
+    width: 172,
+  },
+  studentNameText: {
+    fontSize: 16,
+  },
+  attendanceContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flex: 1,
+  },
+  checkBoxContainer: {
+    padding: 12,
+  },
 });
 
 export default AttendanceListItem;

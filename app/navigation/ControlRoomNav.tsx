@@ -2,15 +2,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ControlRoom from "../screens/controlRoom/ControlRoom";
 import CaptureAttendance from "../screens/controlRoom/Attendance/AttendanceCapture/CaptureAttendance";
 import { RouteNames } from "../services/utils/RouteNames";
-import AttendanceProvider from "../services/utils/api/useAttendanceLogic";
 import AttendanceSummary from "../screens/controlRoom/Attendance/AttendanceCapture/AttendanceSummary/AttendanceSummary";
 import AttendanceStats from "../screens/controlRoom/Attendance/AttendanceStats/AttendanceStats";
+import CaptureAttendanceProvider from "../providers/CaptureAttendanceProvider";
 
 const Stack = createNativeStackNavigator();
 
 const ControlRoomNav = () => {
   return (
-    <AttendanceProvider>
+    <CaptureAttendanceProvider>
       <Stack.Navigator initialRouteName={RouteNames.ControlRoom}>
         <Stack.Group>
           <Stack.Screen
@@ -35,7 +35,7 @@ const ControlRoomNav = () => {
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
-    </AttendanceProvider>
+    </CaptureAttendanceProvider>
   );
 };
 

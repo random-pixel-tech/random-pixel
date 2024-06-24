@@ -1,18 +1,17 @@
-import React from 'react';
+import React from "react";
 import {
-  AlertDialog,
-  AlertDialogBackdrop,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogCloseButton,
-  AlertDialogBody,
-  Heading,
+  Modal,
+  View,
   Text,
-} from '@gluestack-ui/themed';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { AlertDialogFooter } from '@gluestack-ui/themed';
-import { Button } from '@gluestack-ui/themed';
-import { ButtonText } from '@gluestack-ui/themed';
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import {
+  PRIMARY,
+  SECONDARY_LIGHT_50,
+  STATUS_ERROR,
+} from "../theme/color-tokens";
 
 interface SuccessAlertProps {
   isOpen: boolean;
@@ -34,29 +33,102 @@ const SuccessAlert: React.FC<SuccessAlertProps> = ({
   cancelButtonText,
 }) => {
   return (
-    <AlertDialog isOpen={isOpen} onClose={onClose}>
-      <AlertDialogBackdrop />
-      <AlertDialogContent bg='$pixSecondaryLight50'>
-        <AlertDialogHeader>
-          <Heading size="md">{heading}</Heading>
-          <AlertDialogCloseButton p="$4">
-            <FontAwesomeIcon icon="xmark" size={18} />
-          </AlertDialogCloseButton>
-        </AlertDialogHeader>
-        <AlertDialogBody pb="$4">
-          <Text size="md">{message}</Text>
-        </AlertDialogBody>
-        <AlertDialogFooter alignSelf='flex-end'>
-          <Button onPress={onClose} mr="$4" variant="outline">
-            <ButtonText color='$pixBackgroundLight700'>{cancelButtonText}</ButtonText>
-          </Button>
-          <Button onPress={onConfirm}>
-            <ButtonText>{confirmButtonText}</ButtonText>
-          </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <Modal
+      visible={isOpen}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.backdrop}>
+        <View style={styles.dialogContent}>
+          <View style={styles.header}>
+            <Text style={styles.heading}>{heading}</Text>
+            <TouchableOpacity
+              onPress={onClose}
+              style={styles.closeButton}
+            >
+              <FontAwesomeIcon icon="xmark" size={18} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.body}>
+            <Text style={styles.text}>{message}</Text>
+          </View>
+          <View style={styles.footer}>
+            <TouchableOpacity
+              onPress={onClose}
+              style={[styles.button, styles.cancelButton]}
+            >
+              <Text style={styles.buttonText}>
+                {cancelButtonText}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={onConfirm}
+              style={[styles.button, styles.confirmButton]}
+            >
+              <Text style={styles.buttonText}>
+                {confirmButtonText}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  backdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dialogContent: {
+    width: "80%",
+    backgroundColor: SECONDARY_LIGHT_50,
+    borderRadius: 10,
+    padding: 20,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  closeButton: {
+    padding: 8,
+  },
+  body: {
+    marginBottom: 20,
+  },
+  text: {
+    fontSize: 16,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  confirmButton: {
+    backgroundColor: PRIMARY,
+    marginLeft: 10,
+  },
+  cancelButton: {
+    backgroundColor: STATUS_ERROR,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+});
 
 export default SuccessAlert;

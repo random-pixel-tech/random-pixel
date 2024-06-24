@@ -2,19 +2,16 @@ import React, { useContext, useMemo, useState } from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import AttendanceList from "./components/AttendanceList";
 import AttendanceCaptureHeader from "./components/AttendanceHeader";
-import { CaptureAttendanceContext } from "../../../../services/utils/api/useAttendanceLogic";
-import {
-  RouteNames,
-  RootStackParamList,
-} from "../../../../services/utils/RouteNames";
+import { RouteNames } from "../../../../services/utils/RouteNames";
 import { AttendanceSession } from "../../../../services/utils/enums";
 import {
   Header,
-  HolidayMessage,
   ConfirmationDialog,
   SuccessAlert,
 } from "../../../../components";
 import { StyleSheet, View } from "react-native";
+import HolidayMessage from "../AttendanceStats/components/HolidayMessage";
+import { CaptureAttendanceContext } from "../../../../providers/CaptureAttendanceProvider";
 
 const getAttendanceCaptureMenuOptions = (
   session,
@@ -55,6 +52,7 @@ const CaptureAttendance = ({ navigation }) => {
     handleSessionToggle,
     isHoliday,
     checkAttendanceChanges,
+    isOptionsMenuOpen,
   } = useContext(CaptureAttendanceContext) || {};
 
   const attendanceCaptureMenuOptions = useMemo(
@@ -78,16 +76,22 @@ const CaptureAttendance = ({ navigation }) => {
     }
   };
 
+  const handleConfirm = () => {
+    setShowLeaveConfirmation(false);
+    navigation.goBack();
+  };
+
+  const handleCancel = () => {
+    setShowLeaveConfirmation(false);
+  };
+
   return (
     <View style={styles.container}>
       <Header
         title="Attendance"
         secondaryActionIcon="check"
-        showConfirmation={showLeaveConfirmation}
-        setShowConfirmation={setShowLeaveConfirmation}
-        confirmationHeading="Are you sure you want to leave?"
-        confirmationText="You will lose the captured attendance if you leave without saving."
         onSecondaryAction={handleSaveAttendance}
+        isOptionsMenuOpen={isOptionsMenuOpen}
         options={attendanceCaptureMenuOptions}
         onPrimaryAction={toggleAttendanceCaptureMenu}
         onBackArrowPress={handleBackArrowPress}
@@ -118,6 +122,15 @@ const CaptureAttendance = ({ navigation }) => {
         message={alertMessage}
         heading="Attendance Complete!"
         confirmButtonText="Ok"
+        cancelButtonText="Cancel"
+      />
+      <ConfirmationDialog
+        isOpen={showLeaveConfirmation}
+        onClose={handleCancel}
+        onConfirm={handleConfirm}
+        heading="Are you sure you want to leave?"
+        text="You will lose the captured attendance if you leave without saving."
+        confirmButtonText="Yes"
         cancelButtonText="Cancel"
       />
     </View>

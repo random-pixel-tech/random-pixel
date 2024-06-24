@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box } from "@gluestack-ui/themed";
-import AttendanceStatsProvider from "../../../../providers/attendanceStatsProvider";
+import AttendanceStatsProvider from "../../../../providers/AttendanceStatsProvider";
 import StatsHeader from "./components/StatsHeader";
 import StatsSearchAndFilterBar from "./components/StatsSearchAndFilterBar";
 import AttendanceStatsList from "./components/AttendanceStatsList";
